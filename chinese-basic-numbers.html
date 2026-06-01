@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>数字学习 — Chinese Number Learning App (V2)</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <script src="https://code.responsivevoice.org/voice.js?key=80H5K83O"></script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #dcdde1;
+            --grid-line: #fab1a0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+        }
+
+        /* Tabs Navigation */
+        .nav-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            display: flex;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 5px;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .tab-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Container View */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* Cards & UI Blocks */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent);
+            padding-left: 8px;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Helper Grid / Layout */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            background-color: #fff;
+            outline: none;
+        }
+
+        /* Interactive Buttons */
+        .btn-num {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            user-select: none;
+        }
+
+        .btn-num:active {
+            transform: scale(0.95);
+            background-color: #f1f2f6;
+        }
+
+        .btn-num.pulse {
+            animation: pulse-anim 0.4s ease-out;
+        }
+
+        @keyframes pulse-anim {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); }
+        }
+
+        .zh-char {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .pinyin {
+            font-size: 0.8rem;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .arabic {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: block;
+        }
+
+        .btn-action {
+            display: block;
+            width: 100%;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn-action:active {
+            background-color: #c0392b;
+        }
+
+        .btn-secondary {
+            background-color: var(--primary);
+        }
+        .btn-secondary:active {
+            background-color: #1a252f;
+        }
+
+        /* Confused Numbers List */
+        .confused-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #f1f2f6;
+        }
+        .confused-item:last-child {
+            border-bottom: none;
+        }
+        .confused-num {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            width: 65px;
+            flex-shrink: 0;
+        }
+        .confused-content {
+            flex-grow: 1;
+        }
+        .confused-zh {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .confused-desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* Modal Writing Practice */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 16px;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 15px auto;
+            border: 2px solid var(--accent);
+            background-color: #fff;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            touch-action: none;
+        }
+
+        .ghost-char {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 180px;
+            color: rgba(0, 0, 0, 0.06);
+            font-family: "SimSun", "STSong", serif;
+            z-index: 1;
+            user-select: none;
+        }
+
+        /* Order Game Layout - Buttons Style */
+        .pool-zone, .drop-zone {
+            min-height: 85px;
+            background: #f1f2f6;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .drop-zone {
+            background: #eef9f1;
+            border-color: #a3e4d7;
+        }
+
+        /* Styled as interactive button */
+        .game-item-btn {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            min-width: 75px;
+            user-select: none;
+            outline: none;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            transition: all 0.1s ease;
+        }
+
+        .game-item-btn:active {
+            transform: scale(0.94);
+            background-color: #f1f2f6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .game-item-btn .zh-char {
+            font-size: 1.3rem;
+        }
+
+        /* Listen Game Layout */
+        .question-box {
+            text-align: center;
+            padding: 20px;
+            background: #edf2f7;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .q-num {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .listen-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 18px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            transition: all 0.1s ease;
+            outline: none;
+        }
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+            box-shadow: none;
+        }
+        .option-btn.wrong {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+            box-shadow: none;
+        }
+
+        .feedback-banner {
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script>
+    window.onload = function() {
+        const { useState, useEffect, useRef } = React;
+
+        // --- Core Speech Engine with Queue ---
+        const SpeechEngine = {
+            queue: [],
+            isPlaying: false,
+
+            speak(text, lang, callback) {
+                this.queue.push({ text, lang, callback });
+                if (!this.isPlaying) {
+                    this.processQueue();
+                }
+            },
+
+            processQueue() {
+                if (this.queue.length === 0) {
+                    this.isPlaying = false;
+                    return;
+                }
+
+                this.isPlaying = true;
+                const item = this.queue.shift();
+                
+                let voice = "Chinese Female";
+                if (item.lang === 'en') voice = "UK English Female";
+
+                if (typeof responsiveVoice !== 'undefined' && responsiveVoice.speak) {
+                    responsiveVoice.speak(item.text, voice, {
+                        onend: () => {
+                            if (item.callback) item.callback();
+                            this.processQueue();
+                        },
+                        onerror: () => {
+                            this.fallbackSpeak(item);
+                        }
+                    });
+                } else {
+                    this.fallbackSpeak(item);
+                }
+            },
+
+            fallbackSpeak(item) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(item.text);
+                    utterance.lang = item.lang === 'en' ? 'en-GB' : 'zh-CN';
+                    utterance.onend = () => {
+                        if (item.callback) item.callback();
+                        this.processQueue();
+                    };
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    console.log("TTS not supported: " + item.text);
+                    if (item.callback) item.callback();
+                    this.processQueue();
+                }
+            },
+
+            clear() {
+                this.queue = [];
+                if (typeof responsiveVoice !== 'undefined' && responsiveVoice.cancel) {
+                    responsiveVoice.cancel();
+                }
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
+                this.isPlaying = false;
+            }
+        };
+
+        // --- Number Conversion Logic (0 - 1,000,000) ---
+        const cnNums = ['\u96f6', '\u4e00', '\u4e8c', '\u4e09', '\u56db', '\u4e94', '\u516d', '\u4e03', '\u516b', '\u4e5d'];
+        const cnDigits = ['', '\u5341', '\u767e', '\u5343'];
+        
+        const pinyinMap = {
+            '\u96f6': 'l\u00edng', '\u4e00': 'y\u012b', '\u4e8c': '\u00e8r', '\u4e09': 's\u0101n', '\u56db': 's\u00ec',
+            '\u4e94': 'w\u01d4', '\u516d': 'li\u00f9', '\u4e03': 'q\u012b', '\u516b': 'b\u0101', '\u4e5d': 'ji\u01d4',
+            '\u5341': 'sh\u00ed', '\u767e': 'b\u01cei', '\u5343': 'qi\u0101n', '\u4e07': 'w\u00e0n'
+        };
+
+        function getPinyinStr(zhStr) {
+            return zhStr.split('').map(char => pinyinMap[char] || char).join(' ');
+        }
+
+        function convertSection(num) {
+            let str = '';
+            let numStr = num.toString();
+            let len = numStr.length;
+            let zero = false;
+
+            for (let i = 0; i < len; i++) {
+                let n = parseInt(numStr[i]);
+                if (n !== 0) {
+                    if (zero) {
+                        str += cnNums[0];
+                        zero = false;
+                    }
+                    if (i === 0 && n === 1 && (len === 2)) {
+                        str += cnDigits[len - 1 - i];
+                    } else {
+                        str += cnNums[n] + cnDigits[len - 1 - i];
+                    }
+                } else {
+                    zero = true;
+                }
+            }
+            if (str.endsWith(cnNums[0]) && str.length > 1) {
+                str = str.slice(0, -1);
+            }
+            return str === '' ? cnNums[0] : str;
+        }
+
+        function numToChinese(num) {
+            if (num === 0) return cnNums[0];
+            if (num === 1000000) return '\u4e00\u767e\u4e07';
+
+            let result = '';
+            let wan = Math.floor(num / 10000);
+            let remainder = num % 10000;
+
+            if (wan > 0) {
+                result += convertSection(wan) + '\u4e07';
+                if (remainder > 0) {
+                    if (remainder < 1000) {
+                        result += cnNums[0];
+                    }
+                    result += convertSection(remainder);
+                }
+            } else {
+                result += convertSection(remainder);
+            }
+            return result;
+        }
+
+        // --- Data Sources ---
+        const confusedNumbersList = [
+            { num: '14', zh: '\u5341\u56db', py: 'sh\u00ed s\u00ec', desc: 'Syllable starts with Sh\u00ed (rising tone) followed by S\u00ec (falling tone).' },
+            { num: '40', zh: '\u56db\u5341', py: 's\u00ec sh\u00ed', desc: 'Starts with S\u00ec (falling tone) followed by Sh\u00ed (rising tone). Do not flip!' },
+            { num: '101', zh: '\u4e00\u767e\u96f6\u4e00', py: 'y\u012b b\u01cei l\u00edng y\u012b', desc: 'Zero Bridge Rule: Internal zero must be read explicitly as "l\u00edng".' },
+            { num: '110', zh: '\u4e00\u767e\u4e00\u5341', py: 'y\u012b b\u01cei y\u012b sh\u00ed', desc: 'No internal lone zero, so "l\u00edng" is not used here.' },
+            { num: '1,001', zh: '\u4e00\u5343\u96f6\u4e00', py: 'y\u012b qi\u0101n l\u00edng y\u012b', desc: 'Multiple interior zeros are compressed into a single "\u96f6" (l\u00edng).' },
+            { num: '10,000', zh: '\u4e00\u4e07', py: 'y\u012b w\u00e0n', desc: 'Chinese uses base-10,000 unit (\u4e07). Never read it as "ten thousand" (\u5341\u5343).' },
+            { num: '2', zh: '\u4e8c / \u4e24', py: '\u00e8r / li\u01ceng', desc: 'Use "\u4e8c" for counting, but "\u4e24" (li\u01ceng) when specifying quantities like 2,000 (\u4e24\u5343).' },
+            { num: '10,100', zh: '\u4e00\u4e07\u96f6\u4e00\u767e', py: 'y\u012b w\u00e0n l\u00edng y\u012b b\u01cei', desc: 'Notice the lone missing thousand slot triggers the "\u96f6" bridge.' },
+            { num: '14,000', zh: '\u4e00\u4e07\u56db\u5343', py: 'y\u012b w\u00e0n s\u00ec qi\u0101n', desc: 'Read as 1 Wan 4 Qian. Pay attention to chunking units by 4 digits.' },
+            { num: '414', zh: '\u56db\u767e\u4e00\u5341\u56db', py: 's\u00ec b\u01cei y\u012b sh\u00ed s\u00ec', desc: 'A tongue twister combining multiple tones of "si" and "shi".' },
+            { num: '100,000', zh: '\u5341\u4e07', py: 'sh\u00ed w\u00e0n', desc: 'One hundred thousand maps directly to 10 Ten-Thousands (\u5341\u4e07).' },
+            { num: '1,000,000', zh: '\u4e00\u767e\u4e07', py: 'y\u012b b\u01cei w\u00e0n', desc: 'One million translates into One Hundred Ten-Thousands (\u4e00\u767e\u4e07).' }
+        ];
+
+        const practiceChars = [
+            { char: '\u96f6', strokes: 13, desc: 'Top Rain radical, bottom phonetic component. Take your time.' },
+            { char: '\u4e00', strokes: 1, desc: 'A simple horizontal stroke from left to right.' },
+            { char: '\u4e8c', strokes: 2, desc: 'Two horizontal lines; top is shorter, bottom is longer.' },
+            { char: '\u4e09', strokes: 3, desc: 'Three horizontal strokes; middle is shortest, bottom is longest.' },
+            { char: '\u56db', strokes: 5, desc: 'Outer enclosure box first, fill inside, then seal the bottom.' },
+            { char: '\u4e94', strokes: 4, desc: 'Top horizontal, short falling stroke, angular corner, bottom horizontal.' },
+            { char: '\u516d', strokes: 4, desc: 'Top dot, horizontal line, then left dot and right slant downward.' },
+            { char: '\u4e03', strokes: 2, desc: 'Horizontal slightly angled upwards, intersected by hooked vertical.' },
+            { char: '\u516b', strokes: 2, desc: 'Left falling slice followed by a separated right dropping stroke.' },
+            { char: '\u4e5d', strokes: 2, desc: 'Left curve stroke first, then horizontal-turn-bend hook.' },
+            { char: '\u5341', strokes: 2, desc: 'Horizontal line first, crossed cleanly by a vertical downward line.' },
+            { char: '\u767e', strokes: 6, desc: 'Top horizontal line, followed by the frame character "\u767d".' },
+            { char: '\u5343', strokes: 3, desc: 'Top short slash downward-left, crossed by horizontal and vertical.' },
+            { char: '\u4e07', strokes: 3, desc: 'Top horizontal line, side corner frame, followed by a sweeping turn-hook.' }
+        ];
+
+        // --- Canvas Writing Component ---
+        function WritingModal({ onClose }) {
+            const [charIdx, setCharIdx] = useState(0);
+            const canvasRef = useRef(null);
+            const ctxRef = useRef(null);
+            const [isDrawing, setIsDrawing] = useState(false);
+
+            const currentChar = practiceChars[charIdx];
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                canvas.width = 260;
+                canvas.height = 260;
+                const ctx = canvas.getContext('2d');
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.lineWidth = 6;
+                ctx.strokeStyle = '#2c3e50';
+                ctxRef.current = ctx;
+                drawGrid();
+            }, [charIdx]);
+
+            const drawGrid = () => {
+                const canvas = canvasRef.current;
+                const ctx = ctxRef.current;
+                if (!ctx) return;
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.strokeStyle = '#fab1a0';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+
+                ctx.beginPath();
+                ctx.moveTo(130, 0); ctx.lineTo(130, 260);
+                ctx.moveTo(0, 130); ctx.lineTo(260, 130);
+                ctx.moveTo(0, 0); ctx.lineTo(260, 260);
+                ctx.moveTo(260, 0); ctx.lineTo(0, 260);
+                ctx.stroke();
+                ctx.restore();
+            };
+
+            const getTouchPos = (e) => {
+                const rect = canvasRef.current.getBoundingClientRect();
+                const touch = e.touches[0];
+                return {
+                    x: touch.clientX - rect.left,
+                    y: touch.clientY - rect.top
+                };
+            };
+
+            const getMousePos = (e) => {
+                const rect = canvasRef.current.getBoundingClientRect();
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            };
+
+            const startDrawing = (x, y) => {
+                setIsDrawing(true);
+                ctxRef.current.beginPath();
+                ctxRef.current.moveTo(x, y);
+            };
+
+            const draw = (x, y) => {
+                if (!isDrawing) return;
+                ctxRef.current.lineTo(x, y);
+                ctxRef.current.stroke();
+            };
+
+            const stopDrawing = () => {
+                setIsDrawing(false);
+            };
+
+            const clearCanvas = () => {
+                drawGrid();
+            };
+
+            const playSound = () => {
+                SpeechEngine.clear();
+                SpeechEngine.speak(currentChar.char, 'zh');
+            };
+
+            return React.createElement('div', { className: 'modal' },
+                React.createElement('div', { className: 'modal-content' },
+                    React.createElement('span', { className: 'modal-close', onClick: onClose }, '\u00d7'),
+                    React.createElement('h3', { style: { textAlign: 'center', marginBottom: '5px' } }, '\u270f\ufe0f \u0e1d\u0e36\u0e01\u0e40\u0e02\u0e35\u0e22\u0e19\u0e2d\u0e31\u0e01\u0e29\u0e23\u0e08\u0e35\u0e19'),
+                    
+                    React.createElement('div', { style: { textAlign: 'center', margin: '5px 0' } },
+                        React.createElement('span', { style: { fontSize: '2rem', fontWeight: 'bold', color: 'var(--accent)' } }, currentChar.char),
+                        React.createElement('span', { style: { marginLeft: '10px', fontSize: '0.9rem', color: 'var(--text-light)' } }, '(' + getPinyinStr(currentChar.char) + ')')
+                    ),
+
+                    React.createElement('div', { className: 'canvas-container' },
+                        React.createElement('div', { className: 'ghost-char' }, currentChar.char),
+                        React.createElement('canvas', {
+                            ref: canvasRef,
+                            onTouchStart: (e) => { e.preventDefault(); const p = getTouchPos(e); startDrawing(p.x, p.y); },
+                            onTouchMove: (e) => { e.preventDefault(); const p = getTouchPos(e); draw(p.x, p.y); },
+                            onTouchEnd: stopDrawing,
+                            onMouseDown: (e) => { const p = getMousePos(e); startDrawing(p.x, p.y); },
+                            onMouseMove: (e) => { if (isDrawing) { const p = getMousePos(e); draw(p.x, p.y); } },
+                            onMouseUp: stopDrawing,
+                            onMouseLeave: stopDrawing
+                        })
+                    ),
+
+                    React.createElement('div', { style: { fontSize: '0.85rem', color: 'var(--text)', marginBottom: '10px' } },
+                        React.createElement('p', null, React.createElement('strong', null, '\u0e08\u0e33\u0e19\u0e27\u0e19\u0e40\u0e2a\u0e49\u0e19 (Strokes): ' + currentChar.strokes)),
+                        React.createElement('p', { style: { color: 'var(--text-light)', marginTop: '2px' } }, currentChar.desc)
+                    ),
+
+                    React.createElement('div', { className: 'grid-2' },
+                        React.createElement('button', { className: 'btn-action btn-secondary', onClick: () => setCharIdx(prev => Math.max(0, prev - 1)), disabled: charIdx === 0 }, '\u2190 Prev'),
+                        React.createElement('button', { className: 'btn-action btn-secondary', onClick: () => setCharIdx(prev => Math.min(practiceChars.length - 1, prev + 1)), disabled: charIdx === practiceChars.length - 1 }, 'Next \u2192')
+                    ),
+                    React.createElement('div', { className: 'grid-2', style: { marginTop: '8px' } },
+                        React.createElement('button', { className: 'btn-action', style: { backgroundColor: '#34495e' }, onClick: playSound }, '\ud83d\udd0a Hear'),
+                        React.createElement('button', { className: 'btn-action', style: { backgroundColor: '#95a5a6' }, onClick: clearCanvas }, '\ud83d\uddd1 Clear')
+                    )
+                )
+            );
+        }
+
+        // --- Tab 1: Chart ---
+        function ChartTab() {
+            const [pulseBtn, setPulseBtn] = useState(null);
+            const [showModal, setShowModal] = useState(false);
+
+            const handleNumberClick = (numValue) => {
+                setPulseBtn(numValue);
+                setTimeout(() => setPulseBtn(null), 400);
+                const zhText = numToChinese(numValue);
+                SpeechEngine.clear();
+                SpeechEngine.speak(zhText, 'zh');
+            };
+
+            const renderNumButton = (v) => {
+                const zh = numToChinese(v);
+                const py = getPinyinStr(zh);
+                return React.createElement('div', {
+                    key: v,
+                    className: 'btn-num ' + (pulseBtn === v ? 'pulse' : ''),
+                    onClick: () => handleNumberClick(v)
+                },
+                    React.createElement('span', { className: 'zh-char' }, zh),
+                    React.createElement('span', { className: 'pinyin' }, py),
+                    React.createElement('span', { className: 'arabic' }, v.toLocaleString())
+                );
+            };
+
+            return React.createElement('div', null,
+                React.createElement('button', { className: 'btn-action', style: { marginBottom: '15px' }, onClick: () => setShowModal(true) }, '\u270f\ufe0f \u0e40\u0e1b\u0e34\u0e14\u0e2b\u0e19\u0e49\u0e32\u0e15\u0e48\u0e32\u0e07\u0e1d\u0e36\u0e01\u0e40\u0e02\u0e35\u0e22\u0e19\u0e08\u0e35\u0e19 (Writing Practice)'),
+
+                React.createElement('div', { className: 'card' },
+                    React.createElement('div', { className: 'card-title' }, '\ud83d\udcca \u0e01\u0e25\u0e38\u0e48\u0e21\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02\u0e1e\u0e37\u0e49\u0e19\u0e10\u0e32\u0e19 0\u201310'),
+                    React.createElement('div', { className: 'grid-3' }, [0,1,2,3,4,5,6,7,8,9,10].map(v => renderNumButton(v)))
+                ),
+
+                React.createElement('div', { className: 'card' },
+                    React.createElement('div', { className: 'card-title' }, '\ud83d\udcca \u0e01\u0e25\u0e38\u0e48\u0e21\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02 11\u201320'),
+                    React.createElement('div', { className: 'grid-3' }, [11,12,13,14,15,16,17,18,19,20].map(v => renderNumButton(v)))
+                ),
+
+                React.createElement('div', { className: 'card' },
+                    React.createElement('div', { className: 'card-title' }, '\ud83d\udcca \u0e15\u0e31\u0e27\u0e40\u0e25\u0e02\u0e2b\u0e25\u0e31\u0e01\u0e43\u0e2b\u0e0d\u0e48 (Big Numbers)'),
+                    React.createElement('div', { className: 'grid-2' }, [100,1000,10000,100000,1000000].map(v => renderNumButton(v)))
+                ),
+
+                React.createElement('div', { className: 'card' },
+                    React.createElement('div', { className: 'card-title' }, '\u26a0\ufe0f \u0e08\u0e38\u0e14\u0e2a\u0e31\u0e1a\u0e2a\u0e19\u0e22\u0e2d\u0e14\u0e2e\u0e34\u0e15 (Commonly Confused)'),
+                    confusedNumbersList.map((item, idx) =>
+                        React.createElement('div', { key: idx, className: 'confused-item', onClick: () => handleNumberClick(parseInt(item.num.replace(/,/g,''))) },
+                            React.createElement('div', { className: 'confused-num' }, item.num),
+                            React.createElement('div', { className: 'confused-content' },
+                                React.createElement('div', { className: 'confused-zh' }, item.zh + ' '),
+                                React.createElement('span', { style: { fontSize: '0.8rem', color: 'var(--accent)' } }, '(' + item.py + ')'),
+                                React.createElement('div', { className: 'confused-desc' }, item.desc)
+                            ),
+                            React.createElement('span', { style: { fontSize: '0.9rem' } }, '\ud83d\udd0a')
+                        )
+                    )
+                ),
+
+                showModal && React.createElement(WritingModal, { onClose: () => setShowModal(false) })
+            );
+        }
+
+        // --- Tab 2: Order Game ---
+        function OrderGameTab() {
+            const [numSet, setNumSet] = useState('0-10');
+            const [orderMode, setOrderMode] = useState('Sequential');
+            const [count, setCount] = useState(5);
+            const [pool, setPool] = useState([]);
+            const [userOrder, setUserOrder] = useState([]);
+            const [checked, setChecked] = useState(false);
+            const [scoreFeedback, setScoreFeedback] = useState('');
+
+            useEffect(() => { generateGame(); }, [numSet, orderMode, count]);
+
+            const generateGame = () => {
+                let poolNums = [];
+                if (numSet === '0-10') { for(let i=0;i<=10;i++) poolNums.push(i); }
+                else if (numSet === '0-100') { for(let i=0;i<=100;i++) poolNums.push(i); }
+                else if (numSet === '1k-10k') { for(let i=1000;i<=10000;i+=100) poolNums.push(i); }
+                else { for(let i=10000;i<=1000000;i+=25000) poolNums.push(i); }
+
+                let selected = [];
+                const targetCount = parseInt(count);
+                if (orderMode === 'Sequential' && numSet !== '1k-10k' && numSet !== '10k-1M') {
+                    let maxStart = Math.max(0, poolNums.length - targetCount);
+                    let startIdx = Math.floor(Math.random() * maxStart);
+                    selected = poolNums.slice(startIdx, startIdx + targetCount);
+                } else {
+                    let shuffled = [...poolNums].sort(() => 0.5 - Math.random());
+                    selected = shuffled.slice(0, Math.min(targetCount, shuffled.length));
+                }
+
+                const initialPool = selected.map(v => ({
+                    id: Math.random(), value: v,
+                    zh: numToChinese(v), py: getPinyinStr(numToChinese(v))
+                }));
+                setPool([...initialPool].sort(() => 0.5 - Math.random()));
+                setUserOrder([]); setChecked(false); setScoreFeedback('');
+            };
+
+            const moveToOrder = (item) => {
+                if (checked) return;
+                SpeechEngine.clear(); SpeechEngine.speak(item.zh, 'zh');
+                setPool(pool.filter(p => p.id !== item.id));
+                setUserOrder([...userOrder, item]);
+            };
+
+            const removeFromOrder = (item) => {
+                if (checked) return;
+                setUserOrder(userOrder.filter(o => o.id !== item.id));
+                setPool([...pool, item]);
+            };
+
+            const checkAnswer = () => {
+                if (userOrder.length !== parseInt(count)) { alert('\u0e01\u0e23\u0e38\u0e13\u0e32\u0e40\u0e23\u0e35\u0e22\u0e07\u0e25\u0e33\u0e14\u0e31\u0e1a\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02\u0e43\u0e2b\u0e49\u0e04\u0e23\u0e1a!'); return; }
+                const values = userOrder.map(o => o.value);
+                let sortedValues = [...values].sort((a,b) => a-b);
+                if (orderMode === 'Descending') sortedValues.reverse();
+                const isCorrect = values.every((v,i) => v === sortedValues[i]);
+                setChecked(true);
+                if (isCorrect) { setScoreFeedback('\ud83c\udfc6 Correct! Excellent work!'); SpeechEngine.speak('\u6b63\u786e\uff01','zh'); }
+                else { setScoreFeedback('\ud83d\udcaa Incorrect! Try analyzing ranges again.'); SpeechEngine.speak('\u518d\u8bd5','zh'); }
+            };
+
+            return React.createElement('div', null,
+                React.createElement('div', { className: 'card' },
+                    React.createElement('div', { className: 'card-title' }, '\u2699\ufe0f \u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e40\u0e01\u0e21\u0e40\u0e23\u0e35\u0e22\u0e07\u0e25\u0e33\u0e14\u0e31\u0e1a'),
+                    React.createElement('div', { className: 'form-group' },
+                        React.createElement('label', null, 'Number Set'),
+                        React.createElement('select', { className: 'form-control', value: numSet, onChange: e => setNumSet(e.target.value) },
+                            React.createElement('option', { value: '0-10' }, '0\u201310'),
+                            React.createElement('option', { value: '0-100' }, '0\u2013100'),
+                            React.createElement('option', { value: '1k-10k' }, '1k\u201310k'),
+                            React.createElement('option', { value: '10k-1M' }, '10k\u20131M')
+                        )
+                    ),
+                    React.createElement('div', { className: 'form-group' },
+                        React.createElement('label', null, 'Order Mode'),
+                        React.createElement('select', { className: 'form-control', value: orderMode, onChange: e => setOrderMode(e.target.value) },
+                            React.createElement('option', { value: 'Sequential' }, 'Sequential'),
+                            React.createElement('option', { value: 'Ascending' }, '\u2191 Ascending'),
+                            React.createElement('option', { value: 'Descending' }, '\u2193 Descending')
+                        )
+                    ),
+                    React.createElement('div', { className: 'form-group' },
+                        React.createElement('label', null, 'Number Count'),
+                        React.createElement('select', { className: 'form-control', value: count, onChange: e => setCount(e.target.value) },
+                            React.createElement('option', { value: '5' }, '5'),
+                            React.createElement('option', { value: '10' }, '10'),
+                            React.createElement('option', { value: '15' }, '15')
+                        )
+                    )
+                ),
+                React.createElement('div', { className: 'card' },
+                    React.createElement('div', { className: 'card-title' }, '\ud83d\udd22 \u0e40\u0e25\u0e37\u0e2d\u0e01\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02 (\u0e01\u0e14\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e40\u0e25\u0e37\u0e2d\u0e01)'),
+                    React.createElement('div', { className: 'pool-zone' },
+                        pool.map(item => React.createElement('button', { key: item.id, className: 'game-item-btn', onClick: () => moveToOrder(item) },
+                            React.createElement('span', { className: 'zh-char' }, item.zh),
+                            React.createElement('span', { className: 'pinyin', style: { fontSize: '0.75rem' } }, item.py)
+                        ))
+                    ),
+                    React.createElement('div', { className: 'card-title' }, '\ud83d\udce5 Your Order (\u0e25\u0e33\u0e14\u0e31\u0e1a\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13)'),
+                    React.createElement('div', { className: 'drop-zone' },
+                        userOrder.map(item => React.createElement('button', { key: item.id, className: 'game-item-btn', style: { borderColor: 'var(--success)' }, onClick: () => removeFromOrder(item) },
+                            React.createElement('span', { className: 'zh-char' }, item.zh),
+                            React.createElement('span', { className: 'pinyin', style: { fontSize: '0.75rem' } }, item.py)
+                        ))
+                    ),
+                    scoreFeedback && React.createElement('div', {
+                        className: 'feedback-banner',
+                        style: { backgroundColor: scoreFeedback.includes('\ud83c\udfc6') ? '#d4edda' : '#f8d7da', color: scoreFeedback.includes('\ud83c\udfc6') ? '#155724' : '#721c24' }
+                    }, scoreFeedback),
+                    React.createElement('button', { className: 'btn-action', onClick: checkAnswer, disabled: checked }, '\u2713 Check Answer'),
+                    React.createElement('button', { className: 'btn-action btn-secondary', onClick: generateGame }, '\ud83d\udd04 Reset / \u0e2a\u0e38\u0e48\u0e21\u0e43\u0e2b\u0e21\u0e48')
+                )
+            );
+        }
+
+        // --- Tab 3: Listen Game ---
+        function ListenGameTab() {
+            const [totalQ, setTotalQ] = useState(5);
+            const [range, setRange] = useState('0-10');
+            const [gameStarted, setGameStarted] = useState(false);
+            const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
+            const [questions, setQuestions] = useState([]);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [correctCount, setCorrectCount] = useState(0);
+            const [phaseComplete, setPhaseComplete] = useState(false);
+
+            const buildGameQuiz = () => {
+                let pool = [];
+                if (range === '0-10') { for(let i=0;i<=10;i++) pool.push(i); }
+                else if (range === '0-100') { for(let i=0;i<=100;i++) pool.push(i); }
+                else if (range === '1k-10k') { for(let i=1000;i<=10000;i+=100) pool.push(i); }
+                else { for(let i=10000;i<=1000000;i+=10000) pool.push(i); }
+
+                let qList = [];
+                for (let i = 0; i < parseInt(totalQ); i++) {
+                    let correctVal = pool[Math.floor(Math.random() * pool.length)];
+                    let optionsSet = new Set([correctVal]);
+                    while(optionsSet.size < 4) { optionsSet.add(pool[Math.floor(Math.random() * pool.length)]); }
+                    let optionsArr = Array.from(optionsSet).map(v => ({ value:v, zh:numToChinese(v), py:getPinyinStr(numToChinese(v)) })).sort(() => 0.5 - Math.random());
+                    qList.push({ correctValue: correctVal, options: optionsArr });
+                }
+                setQuestions(qList); setCurrentQuestionIdx(0); setSelectedAnswer(null);
+                setCorrectCount(0); setPhaseComplete(false); setGameStarted(true);
+            };
+
+            useEffect(() => {
+                if (gameStarted && questions.length > 0 && currentQuestionIdx < questions.length) {
+                    setTimeout(() => {
+                        SpeechEngine.clear();
+                        SpeechEngine.speak(questions[currentQuestionIdx].correctValue.toString(), 'en');
+                    }, 300);
+                }
+            }, [gameStarted, currentQuestionIdx, questions]);
+
+            const playQuestionAudio = () => {
+                if (!questions[currentQuestionIdx]) return;
+                SpeechEngine.clear();
+                SpeechEngine.speak(questions[currentQuestionIdx].correctValue.toString(), 'en');
+            };
+
+            const selectAnswer = (opt) => {
+                if (selectedAnswer !== null) return;
+                setSelectedAnswer(opt.value);
+                const currentQ = questions[currentQuestionIdx];
+                if (opt.value === currentQ.correctValue) {
+                    setCorrectCount(prev => prev + 1);
+                    SpeechEngine.clear();
+                    SpeechEngine.speak('\u6b63\u786e\uff01', 'zh');
+                    SpeechEngine.speak(numToChinese(currentQ.correctValue), 'zh');
+                } else {
+                    SpeechEngine.clear();
+                    SpeechEngine.speak('\u518d\u8bd5', 'zh');
+                    SpeechEngine.speak(numToChinese(currentQ.correctValue), 'zh');
+                }
+            };
+
+            const nextQuestion = () => {
+                setSelectedAnswer(null);
+                if (currentQuestionIdx + 1 < questions.length) { setCurrentQuestionIdx(prev => prev + 1); }
+                else { setPhaseComplete(true); }
+            };
+
+            if (!gameStarted) return React.createElement('div', { className: 'card' },
+                React.createElement('div', { className: 'card-title' }, '\ud83c\udfa7 \u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e40\u0e01\u0e21\u0e1f\u0e31\u0e07\u0e40\u0e2a\u0e35\u0e22\u0e07'),
+                React.createElement('div', { className: 'form-group' },
+                    React.createElement('label', null, 'Number of Questions'),
+                    React.createElement('select', { className: 'form-control', value: totalQ, onChange: e => setTotalQ(e.target.value) },
+                        React.createElement('option', { value: '5' }, '5'),
+                        React.createElement('option', { value: '10' }, '10'),
+                        React.createElement('option', { value: '15' }, '15')
+                    )
+                ),
+                React.createElement('div', { className: 'form-group' },
+                    React.createElement('label', null, 'Number Range'),
+                    React.createElement('select', { className: 'form-control', value: range, onChange: e => setRange(e.target.value) },
+                        React.createElement('option', { value: '0-10' }, '0\u201310'),
+                        React.createElement('option', { value: '0-100' }, '0\u2013100'),
+                        React.createElement('option', { value: '1k-10k' }, '1k\u201310k'),
+                        React.createElement('option', { value: '10k-1M' }, '10k\u20131M')
+                    )
+                ),
+                React.createElement('button', { className: 'btn-action', style: { marginTop: '15px' }, onClick: buildGameQuiz }, '\ud83d\ude80 \u0e40\u0e23\u0e34\u0e48\u0e21\u0e40\u0e25\u0e48\u0e19\u0e40\u0e01\u0e21\u0e1f\u0e31\u0e07\u0e40\u0e2a\u0e35\u0e22\u0e07')
+            );
+
+            if (phaseComplete) {
+                const perfect = correctCount === questions.length;
+                return React.createElement('div', { className: 'card', style: { textAlign: 'center' } },
+                    React.createElement('h2', { style: { fontSize: '2rem', marginBottom: '10px' } }, perfect ? '\ud83c\udfc6' : '\ud83d\udcaa'),
+                    React.createElement('h3', { style: { marginBottom: '10px' } }, perfect ? 'You are perfect !!!' : 'Keep it up. You can do it !!!'),
+                    React.createElement('p', { style: { fontSize: '1.2rem', marginBottom: '20px' } }, '\u0e04\u0e30\u0e41\u0e19\u0e19: ' + correctCount + ' / ' + questions.length),
+                    React.createElement('button', { className: 'btn-action', onClick: () => setGameStarted(false) }, '\u0e40\u0e25\u0e48\u0e19\u0e43\u0e2b\u0e21\u0e48\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07')
+                );
+            }
+
+            const currentQ = questions[currentQuestionIdx];
+            return React.createElement('div', null,
+                React.createElement('div', { className: 'card' },
+                    React.createElement('div', { style: { display:'flex', justifyContent:'space-between', marginBottom:'10px', fontSize:'0.9rem', color:'var(--text-light)' } },
+                        React.createElement('span', null, '\u0e02\u0e49\u0e2d\u0e17\u0e35\u0e48: ' + (currentQuestionIdx+1) + ' / ' + questions.length),
+                        React.createElement('span', null, '\u0e04\u0e30\u0e41\u0e19\u0e19: ' + correctCount)
+                    ),
+                    React.createElement('div', { className: 'question-box' },
+                        React.createElement('div', { className: 'arabic q-num' }, currentQ.correctValue.toLocaleString()),
+                        React.createElement('button', { className: 'btn-action btn-secondary', style: { width:'auto', display:'inline-block', padding:'6px 15px', fontSize:'0.85rem', marginTop:'10px' }, onClick: playQuestionAudio }, '\ud83d\udd0a Hear Number')
+                    ),
+                    React.createElement('div', { className: 'listen-options' },
+                        currentQ.options.map((opt, i) => {
+                            let cls = 'option-btn';
+                            if (selectedAnswer !== null) {
+                                if (opt.value === currentQ.correctValue) cls += ' correct';
+                                else if (selectedAnswer === opt.value) cls += ' wrong';
+                            }
+                            return React.createElement('button', { key: i, className: cls, onClick: () => selectAnswer(opt) },
+                                React.createElement('span', { className: 'zh-char', style: { display:'block', fontSize:'1.4rem' } }, opt.zh),
+                                React.createElement('span', { className: 'pinyin', style: { display:'block', fontSize:'0.85rem' } }, opt.py)
+                            );
+                        })
+                    ),
+                    selectedAnswer !== null && React.createElement('button', { className: 'btn-action', style: { marginTop:'20px' }, onClick: nextQuestion },
+                        currentQuestionIdx + 1 === questions.length ? '\u0e14\u0e39\u0e2a\u0e23\u0e38\u0e1b\u0e04\u0e30\u0e41\u0e19\u0e19' : '\u0e04\u0e33\u0e16\u0e32\u0e21\u0e16\u0e31\u0e14\u0e44\u0e1b \u2192'
+                    )
+                )
+            );
+        }
+
+        // --- Main App ---
+        function App() {
+            const [activeTab, setActiveTab] = useState('chart');
+            const handleTabChange = (tabID) => { SpeechEngine.clear(); setActiveTab(tabID); };
+            return React.createElement('div', null,
+                React.createElement('div', { className: 'header' },
+                    React.createElement('a', { href: 'index.html', style: {
+                        display: 'inline-flex', alignItems: 'center', gap: '5px',
+                        color: '#ecf0f1', fontSize: '0.85rem', textDecoration: 'none',
+                        background: 'rgba(255,255,255,0.15)', borderRadius: '20px',
+                        padding: '5px 14px', marginBottom: '8px',
+                        border: '1px solid rgba(255,255,255,0.25)',
+                    }}, '\u2190 \u0e01\u0e25\u0e31\u0e1a\u0e2b\u0e19\u0e49\u0e32\u0e2b\u0e25\u0e31\u0e01'),
+                    React.createElement('h1', null, '\u6570\u5b57\u5b66\u4e60 \u2014 Chinese Numbers'),
+                    React.createElement('p', null, '\u0e40\u0e23\u0e35\u0e22\u0e19\u0e23\u0e39\u0e49\u0e41\u0e25\u0e30\u0e1d\u0e36\u0e01\u0e1d\u0e19\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02\u0e20\u0e32\u0e29\u0e32\u0e08\u0e35\u0e19\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e35\u0e1b\u0e23\u0e30\u0e2a\u0e34\u0e17\u0e18\u0e34\u0e20\u0e32\u0e1e')
+                ),
+                React.createElement('div', { className: 'container' },
+                    activeTab === 'chart' && React.createElement(ChartTab),
+                    activeTab === 'order' && React.createElement(OrderGameTab),
+                    activeTab === 'listen' && React.createElement(ListenGameTab)
+                ),
+                React.createElement('div', { className: 'nav-tabs' },
+                    React.createElement('a', { href: 'index.html', style: {
+                        flex: 1, padding: '12px 5px', display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center', gap: '2px',
+                        color: '#7f8c8d', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 'bold',
+                        borderRight: '1px solid #dcdde1',
+                    }},
+                        React.createElement('span', { style: { fontSize: '1.2rem' } }, '\ud83c\udfe0'),
+                        React.createElement('span', null, 'Index')
+                    ),
+                    React.createElement('button', { className: 'tab-btn ' + (activeTab === 'chart' ? 'active' : ''), onClick: () => handleTabChange('chart') },
+                        React.createElement('span', { className: 'tab-icon' }, '\ud83d\udcca'),
+                        React.createElement('span', null, 'Chart')
+                    ),
+                    React.createElement('button', { className: 'tab-btn ' + (activeTab === 'order' ? 'active' : ''), onClick: () => handleTabChange('order') },
+                        React.createElement('span', { className: 'tab-icon' }, '\ud83d\udd22'),
+                        React.createElement('span', null, 'Order Game')
+                    ),
+                    React.createElement('button', { className: 'tab-btn ' + (activeTab === 'listen' ? 'active' : ''), onClick: () => handleTabChange('listen') },
+                        React.createElement('span', { className: 'tab-icon' }, '\ud83c\udfa7'),
+                        React.createElement('span', null, 'Listen Game')
+                    )
+                )
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+    }; // end window.onload
+    </script>
+</body>
+</html>
