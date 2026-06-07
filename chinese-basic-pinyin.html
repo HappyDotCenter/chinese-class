@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinese Basic Pinyin</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;900&family=Noto+Sans+SC:wght@400;700;900&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#d93025;--gold:#f5c518;--ink:#12141d;--cream:#faf7f2;
+  --teal:#00a896;--peach:#ff6b6b;--green:#27ae60;--purple:#7c3aed;
+  --blue:#2563eb;--orange:#ea580c;--border:#e2ddd6;--card:#fff;
+  --shadow:0 2px 12px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans Thai',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+
+/* NAV */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:#fff;border-bottom:3px solid var(--gold);
+  padding:0 16px;
+  display:flex;flex-direction:column;
+}
+.top-row{display:flex;align-items:center;gap:12px;padding:10px 0 8px;}
+.home-btn{
+  background:var(--red);color:#fff;border:none;border-radius:50px;
+  padding:7px 18px;font-size:14px;font-family:inherit;font-weight:700;
+  cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:0 2px 8px rgba(217,48,37,.3);
+}
+.home-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(217,48,37,.4);}
+.page-title{font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;color:var(--ink);}
+
+/* TABS */
+.main-tabs{display:flex;gap:4px;padding-bottom:10px;overflow-x:auto;}
+.main-tabs::-webkit-scrollbar{height:3px;}
+.main-tabs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.mtab{
+  background:transparent;border:2px solid var(--border);border-radius:50px;
+  padding:6px 16px;font-size:13px;font-family:inherit;font-weight:700;
+  cursor:pointer;white-space:nowrap;color:#888;
+  transition:all .15s;
+}
+.mtab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+/* PAGES */
+.page{display:none;padding:20px 16px 32px;}
+.page.active{display:block;}
+
+/* SECTION HEAD */
+.sec-head{margin-bottom:18px;}
+.sec-title{
+  font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;
+  display:flex;align-items:center;gap:8px;margin-bottom:3px;
+}
+.zh{font-family:'Noto Sans SC',sans-serif;}
+.sec-sub{font-size:13px;color:#888;}
+.badge{
+  display:inline-block;border-radius:50px;
+  padding:2px 12px;font-size:12px;font-weight:700;
+  background:var(--gold);color:var(--ink);
+}
+
+/* PINYIN CARDS */
+.py-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;}
+.pcard{
+  background:var(--card);border:2px solid var(--border);border-radius:16px;
+  padding:10px 14px;min-width:68px;text-align:center;
+  cursor:pointer;transition:all .18s;user-select:none;
+  position:relative;overflow:hidden;
+}
+.pcard:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 6px 20px rgba(0,0,0,.1);}
+.pcard.flash{animation:flash .5s ease;}
+@keyframes flash{0%{background:#fff}40%{background:#fffde7;border-color:var(--gold);}100%{background:#fff}}
+.pcard .py{font-size:19px;font-weight:800;font-family:'Baloo 2',cursive;}
+.pcard .th{font-size:11px;color:#999;margin-top:2px;}
+.pcard .sound{font-size:10px;color:#ccc;margin-top:1px;}
+.pcard.con .py{color:var(--red);}
+.pcard.vow .py{color:var(--teal);}
+
+/* VOWEL GROUP HEADER */
+.vg-head{
+  display:flex;align-items:center;gap:10px;
+  margin:20px 0 10px;
+}
+.vg-label{
+  font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;
+  color:var(--teal);min-width:30px;
+}
+.vg-line{flex:1;height:2px;background:linear-gradient(90deg,var(--teal),transparent);}
+
+/* TONE PAGE */
+.tone-intro{
+  background:#fff;border-radius:16px;border:2px solid var(--border);
+  padding:18px;margin-bottom:20px;
+}
+.tone-row{display:flex;gap:6px;margin-top:12px;flex-wrap:nowrap;}
+.tone-card{
+  flex:1 1 0;min-width:0;
+  background:var(--cream);border:2px solid var(--border);
+  border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;
+  transition:all .18s;
+}
+.tone-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.tone-card.flash{animation:flash .5s ease;}
+.tone-num{font-size:18px;font-family:'Baloo 2',cursive;font-weight:800;line-height:1.1;}
+.tone-mark{font-size:22px;font-family:'Noto Sans SC',sans-serif;color:var(--red);line-height:1.2;}
+.tone-desc{font-size:9px;color:#888;margin-top:2px;line-height:1.2;}
+.tone-th{font-size:10px;font-weight:700;margin-top:2px;}
+.t1{border-color:#2563eb;} .t1 .tone-num{color:#2563eb;}
+.t2{border-color:#27ae60;} .t2 .tone-num{color:#27ae60;}
+.t3{border-color:#ea580c;} .t3 .tone-num{color:#ea580c;}
+.t4{border-color:#d93025;} .t4 .tone-num{color:#d93025;}
+.t0{border-color:#888;}    .t0 .tone-num{color:#888;}
+
+.tone-example{background:#fff;border-radius:16px;border:2px solid var(--border);padding:16px;margin-top:14px;}
+.tone-example h3{font-family:'Baloo 2',cursive;font-size:16px;margin-bottom:10px;}
+.tone-ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.tex-card{
+  background:var(--cream);border:2px solid var(--border);border-radius:12px;
+  padding:10px;text-align:center;cursor:pointer;transition:all .15s;
+}
+.tex-card:hover{border-color:var(--gold);transform:scale(1.03);}
+.tex-card.flash{animation:flash .5s ease;}
+.tex-zh{font-family:'Noto Sans SC',sans-serif;font-size:24px;}
+.tex-py{font-size:14px;font-weight:700;color:var(--red);}
+.tex-th{font-size:12px;color:#888;}
+
+/* GAME SECTION */
+.game-box{background:#fff;border-radius:20px;border:2px solid var(--border);padding:18px;margin-bottom:20px;}
+.game-box-title{font-family:'Baloo 2',cursive;font-size:17px;font-weight:800;margin-bottom:4px;}
+.game-desc{font-size:13px;color:#888;margin-bottom:14px;}
+
+/* sub-game tabs */
+.stabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.stab{
+  background:var(--cream);border:2px solid var(--border);border-radius:50px;
+  padding:5px 14px;font-size:12px;font-family:inherit;font-weight:700;
+  cursor:pointer;transition:all .15s;color:#666;
+}
+.stab.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+/* listen game */
+.listen-box{text-align:center;padding:10px 0;}
+.listen-btn{
+  width:90px;height:90px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),#ff6b6b);
+  border:none;cursor:pointer;color:#fff;font-size:36px;
+  box-shadow:0 4px 20px rgba(217,48,37,.4);
+  transition:all .18s;display:inline-flex;align-items:center;justify-content:center;
+}
+.listen-btn:hover{transform:scale(1.08);}
+.listen-btn.pulse{animation:pulse .6s ease;}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+.listen-label{font-size:13px;color:#aaa;margin-top:8px;}
+.choices{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;margin-top:16px;}
+.choice{
+  background:var(--cream);border:2px solid var(--border);border-radius:14px;
+  padding:10px 6px;text-align:center;cursor:pointer;
+  font-size:15px;font-weight:700;font-family:'Baloo 2',cursive;
+  transition:all .18s;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  user-select:none;
+}
+.choice .csub{font-size:10px;color:#bbb;font-weight:400;font-family:'Noto Sans Thai',sans-serif;}
+.choice:hover{border-color:var(--purple);transform:scale(1.04);}
+.choice.correct{background:#e8f5e9;border-color:var(--green);animation:pop .3s ease;}
+.choice.wrong{background:#ffebee;border-color:var(--peach);animation:shake .3s ease;}
+.choice.disabled{pointer-events:none;opacity:.5;}
+
+/* combo game */
+.combo-area{display:flex;flex-direction:column;gap:14px;}
+.combo-row{display:flex;flex-direction:column;gap:6px;}
+.combo-row-label{font-size:12px;color:#aaa;font-weight:700;letter-spacing:.5px;}
+.combo-answer{
+  background:var(--cream);border:2px solid var(--border);border-radius:12px;
+  padding:10px 16px;min-height:44px;display:flex;align-items:center;gap:8px;
+  font-size:16px;font-weight:700;
+}
+.combo-slot{
+  border-bottom:2px solid var(--border);min-width:40px;padding:2px 6px;
+  text-align:center;font-family:'Baloo 2',cursive;
+  transition:all .2s;
+}
+.combo-slot.filled{border-bottom-color:var(--teal);color:var(--teal);}
+.combo-slot.correct{border-bottom-color:var(--green);color:var(--green);}
+.combo-slot.wrong{border-bottom-color:var(--peach);color:var(--peach);}
+
+/* score bar */
+.score-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.score-badge{
+  background:var(--gold);border-radius:50px;
+  padding:4px 14px;font-weight:700;font-size:14px;
+}
+.restart-btn{
+  background:var(--ink);color:#fff;border:none;border-radius:50px;
+  padding:6px 16px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:700;
+  transition:background .15s;
+}
+.restart-btn:hover{background:#333;}
+.win-msg{
+  text-align:center;padding:16px;background:linear-gradient(135deg,#fffde7,#fff9c4);
+  border-radius:14px;border:2px solid var(--gold);display:none;margin-top:10px;
+}
+.win-msg.show{display:block;animation:pop .4s ease;}
+.win-msg .wemoji{font-size:38px;}
+.win-msg p{font-weight:700;font-size:16px;margin-top:4px;}
+
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* TONE CHANT */
+.tone-chant-box{background:#fff;border-radius:16px;border:2px solid var(--border);padding:18px;margin:14px 0;}
+.chant-title{font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;margin-bottom:4px;}
+.chant-sub{font-size:13px;color:#888;margin-bottom:14px;}
+.chant-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.chant-set{display:flex;gap:8px;align-items:stretch;}
+.chant-set-label{
+  writing-mode:vertical-lr;text-orientation:mixed;
+  font-size:10px;font-weight:800;color:#bbb;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:center;
+  min-width:18px;flex-shrink:0;
+}
+.chant-card{
+  flex:1;min-width:0;
+  border-radius:12px;border:2px solid var(--border);padding:8px 4px;
+  text-align:center;cursor:pointer;transition:all .18s;
+  background:var(--cream);
+}
+.chant-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.chant-card.flash{animation:flash .5s ease;}
+.chant-emoji{font-size:20px;line-height:1;}
+.chant-zh{font-family:'Noto Sans SC',sans-serif;font-size:22px;}
+.chant-py{font-size:13px;font-weight:800;font-family:'Baloo 2',cursive;}
+.chant-meaning{font-size:10px;color:#666;margin-top:1px;line-height:1.2;}
+.chant-tone{font-size:10px;font-weight:700;border-radius:50px;padding:1px 6px;display:inline-block;margin-top:3px;}
+.chant-rule{background:var(--soft);border-radius:12px;padding:12px 14px;}
+.rule-title{font-family:'Baloo 2',cursive;font-size:14px;font-weight:800;margin-bottom:8px;}
+.rule-body{display:flex;flex-direction:column;gap:6px;}
+.rule-item{display:flex;align-items:center;gap:8px;font-size:13px;}
+.ri-num{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
+.ri-arrow{font-size:18px;font-family:'Baloo 2',cursive;min-width:24px;text-align:center;font-weight:800;}
+.ri-desc{color:#555;line-height:1.4;}
+.t1-c{background:#dbeafe;color:#2563eb;}
+.t2-c{background:#dcfce7;color:#27ae60;}
+.t3-c{background:#fed7aa;color:#ea580c;}
+.t4-c{background:#fee2e2;color:#d93025;}
+.t0-c{background:#f3f4f6;color:#666;}
+
+/* QCOUNT */
+.qcount-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.qbtn{
+  background:var(--cream);border:2px solid var(--border);border-radius:50px;
+  padding:4px 14px;font-size:12px;font-family:inherit;font-weight:700;
+  cursor:pointer;transition:all .15s;color:#666;
+}
+.qbtn.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+
+/* SONG PAGE */
+.song-box{background:#fff;border-radius:20px;border:2px solid var(--border);padding:18px;margin-bottom:20px;}
+.song-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.song-name{font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;}
+.song-controls{display:flex;gap:8px;align-items:center;}
+.play-song-btn{
+  background:linear-gradient(135deg,var(--red),#ff6b6b);color:#fff;
+  border:none;border-radius:50px;padding:8px 20px;
+  font-size:14px;font-family:inherit;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+  box-shadow:0 3px 12px rgba(217,48,37,.35);transition:all .18s;
+}
+.play-song-btn:hover{transform:scale(1.04);}
+.play-song-btn.playing{background:linear-gradient(135deg,#27ae60,#6bcb77);}
+.speed-btn{
+  background:var(--cream);border:2px solid var(--border);border-radius:50px;
+  padding:6px 12px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;transition:all .15s;
+}
+.speed-btn.active{background:var(--gold);border-color:var(--gold);}
+.lyrics-grid{display:flex;flex-direction:column;gap:4px;}
+.lyric-line{
+  display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+  padding:6px 8px;border-radius:10px;transition:background .2s;
+}
+.lyric-line.active{background:#fff9e6;}
+.lyric-word{
+  display:inline-flex;flex-direction:column;align-items:center;
+  cursor:pointer;padding:3px 5px;border-radius:8px;transition:background .15s;
+}
+.lyric-word:hover{background:var(--cream);}
+.lyric-py{font-size:14px;font-weight:700;color:var(--red);font-family:'Baloo 2',cursive;}
+.lyric-zh{font-family:'Noto Sans SC',sans-serif;font-size:16px;}
+.lyric-sep{color:#ddd;font-size:18px;align-self:center;}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:8px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--red);border-radius:2px;width:0%;transition:width .3s linear;}
+
+.bottom-bar{display:flex;justify-content:center;padding:20px;border-top:3px solid var(--gold);background:#fff;margin-top:8px;}
+
+/* feedback toast */
+#toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:10px 24px;border-radius:50px;
+  font-size:14px;font-weight:700;opacity:0;pointer-events:none;
+  transition:all .3s;z-index:999;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-row">
+    <a href="index.html" class="home-btn">← หน้าหลัก</a>
+    <span class="page-title">🇨🇳 Chinese Pinyin</span>
+  </div>
+  <div class="main-tabs">
+    <button class="mtab active" onclick="switchPage('pg-con',this)">📘 พยัญชนะ</button>
+    <button class="mtab" onclick="switchPage('pg-vow',this)">📗 สระ</button>
+    <button class="mtab" onclick="switchPage('pg-tone',this)">🎵 วรรณยุกต์</button>
+    <button class="mtab" onclick="switchPage('pg-song',this)">🎶 เพลง</button>
+    <button class="mtab" onclick="switchPage('pg-game',this)">🎮 เกม</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 1: CONSONANTS
+═══════════════════════════════════ -->
+<div id="pg-con" class="page active">
+  <div class="sec-head">
+    <div class="sec-title"><span class="zh">声母</span> Shēngmǔ – พยัญชนะ <span class="badge">23 เสียง</span></div>
+    <div class="sec-sub">กดกล่องเพื่อฟังเสียงโฟนิค</div>
+  </div>
+  <div class="py-grid" id="con-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 2: VOWELS
+═══════════════════════════════════ -->
+<div id="pg-vow" class="page">
+  <div class="sec-head">
+    <div class="sec-title"><span class="zh">韵母</span> Yùnmǔ – สระ <span class="badge">36 เสียง</span></div>
+    <div class="sec-sub">กดกล่องเพื่อฟังเสียงโฟนิค</div>
+  </div>
+  <div id="vow-groups"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 3: TONES
+═══════════════════════════════════ -->
+<div id="pg-tone" class="page">
+  <div class="sec-head">
+    <div class="sec-title"><span class="zh">声调</span> Shēngdiào – วรรณยุกต์</div>
+    <div class="sec-sub">ภาษาจีนมี 4 วรรณยุกต์หลัก + 1 เสียงเบา</div>
+  </div>
+  <div class="tone-intro">
+    <div style="font-size:14px;color:#666;line-height:1.7">วรรณยุกต์จีนแต่ละเสียงมีระดับเสียงที่แตกต่างกัน เช่น คำว่า <b>mā / má / mǎ / mà</b> แปลต่างกันทั้งหมด กดที่การ์ดเพื่อฟังเสียง</div>
+    <div class="tone-row" id="tone-cards"></div>
+  </div>
+
+  <!-- TONE CHANT -->
+  <div class="tone-chant-box">
+    <div class="chant-title">📖 บทท่องจำวรรณยุกต์</div>
+    <div class="chant-sub">ใช้พยางค์เดิม <b>mā má mǎ mà</b> เปลี่ยนแค่เสียง จำง่ายด้วยภาพและความหมาย</div>
+    <div class="chant-grid" id="chant-grid"></div>
+    <div class="chant-rule">
+      <div class="rule-title">🎼 กฎจำง่าย: "สูง–ขึ้น–ตกขึ้น–ตก"</div>
+      <div class="rule-body">
+        <div class="rule-item"><span class="ri-num t1-c">1</span><span class="ri-arrow">──</span><span class="ri-desc">เสียงสูงคงที่ เหมือนร้องยาว <b>อา～～</b></span></div>
+        <div class="rule-item"><span class="ri-num t2-c">2</span><span class="ri-arrow">╱</span><span class="ri-desc">เสียงขึ้น เหมือนถามว่า <b>"อะ?"</b></span></div>
+        <div class="rule-item"><span class="ri-num t3-c">3</span><span class="ri-arrow">∨</span><span class="ri-desc">เสียงตกแล้วขึ้น เหมือนพูดเชิง <b>"อ้อ..."</b></span></div>
+        <div class="rule-item"><span class="ri-num t4-c">4</span><span class="ri-arrow">╲</span><span class="ri-desc">เสียงตกฉับพลัน เหมือนสั่ง <b>"หยุด!"</b></span></div>
+        <div class="rule-item"><span class="ri-num t0-c">0</span><span class="ri-arrow">·</span><span class="ri-desc">เสียงเบา สั้น ไม่มีวรรณยุกต์ตายตัว</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tone-example">
+    <h3>🔊 ตัวอย่างคำพร้อมวรรณยุกต์ – กดฟังเสียง</h3>
+    <div class="tone-ex-grid" id="tone-examples"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 4: GAMES
+═══════════════════════════════════ -->
+<div id="pg-game" class="page">
+  <div class="sec-head">
+    <div class="sec-title">🎮 เกมฝึกพินอิน</div>
+    <div class="sec-sub">ฟังเสียงแล้วเลือกคำตอบที่ถูกต้อง</div>
+  </div>
+
+  <!-- GAME SELECTOR TABS -->
+  <div class="stabs">
+    <button class="stab active" onclick="switchGame('g-con',this)">🔤 ฟังเลือกพยัญชนะ</button>
+    <button class="stab" onclick="switchGame('g-vow',this)">🔠 ฟังเลือกสระ</button>
+    <button class="stab" onclick="switchGame('g-combo',this)">🧩 ฟังเลือก พ+ส+ว</button>
+  </div>
+
+  <!-- GAME 1: CONSONANT -->
+  <div id="g-con" class="game-box">
+    <div class="game-box-title">🔤 ฟังเสียง → เลือกพยัญชนะ</div>
+    <div class="game-desc">กดปุ่มลำโพงฟังเสียง แล้วเลือกพยัญชนะที่ถูกต้อง (ไม่มีคำใบ้ภาษาไทย)</div>
+    <div class="qcount-row">
+      <span style="font-size:12px;color:#999;font-weight:700">จำนวนข้อ:</span>
+      <button class="qbtn" onclick="setG1Q(5,this)">5</button>
+      <button class="qbtn active" onclick="setG1Q(10,this)">10</button>
+      <button class="qbtn" onclick="setG1Q(23,this)">All</button>
+    </div>
+    <div class="score-row">
+      <div class="score-badge" id="g1-score">คะแนน 0/0</div>
+      <button class="restart-btn" onclick="initG1()">🔄 เริ่มใหม่</button>
+    </div>
+    <div class="listen-box">
+      <button class="listen-btn" id="g1-play" onclick="g1Play()">🔊</button>
+      <div class="listen-label">กดฟังเสียง</div>
+    </div>
+    <div class="choices" id="g1-choices"></div>
+    <div class="win-msg" id="g1-win"><div class="wemoji">🎉</div><p id="g1-win-msg">เก่งมาก ครบแล้ว!</p></div>
+  </div>
+
+  <!-- GAME 2: VOWEL -->
+  <div id="g-vow" class="game-box" style="display:none">
+    <div class="game-box-title">🔠 ฟังเสียง → เลือกสระ</div>
+    <div class="game-desc">กดปุ่มลำโพงฟังเสียง แล้วเลือกสระที่ถูกต้อง (ไม่มีคำใบ้ภาษาไทย)</div>
+    <div class="stabs" id="g2-group-tabs" style="margin-bottom:10px;"></div>
+    <div class="qcount-row">
+      <span style="font-size:12px;color:#999;font-weight:700">จำนวนข้อ:</span>
+      <button class="qbtn" onclick="setG2Q(5,this)">5</button>
+      <button class="qbtn active" onclick="setG2Q(10,this)">10</button>
+      <button class="qbtn" onclick="setG2Q(999,this)">All</button>
+    </div>
+    <div class="score-row">
+      <div class="score-badge" id="g2-score">คะแนน 0/0</div>
+      <button class="restart-btn" onclick="initG2()">🔄 เริ่มใหม่</button>
+    </div>
+    <div class="listen-box">
+      <button class="listen-btn" id="g2-play" onclick="g2Play()">🔊</button>
+      <div class="listen-label">กดฟังเสียง</div>
+    </div>
+    <div class="choices" id="g2-choices"></div>
+    <div class="win-msg" id="g2-win"><div class="wemoji">🏆</div><p id="g2-win-msg">ยอดเยี่ยม ครบแล้ว!</p></div>
+  </div>
+
+  <!-- GAME 3: COMBO -->
+  <div id="g-combo" class="game-box" style="display:none">
+    <div class="game-box-title">🧩 ฟังเสียง → เลือก พยัญชนะ + สระ + วรรณยุกต์</div>
+    <div class="game-desc">ฟังคำจีน แล้วเลือกพยัญชนะต้น, สระ และวรรณยุกต์ให้ครบ</div>
+    <div class="score-row">
+      <div class="score-badge" id="g3-score">คะแนน 0/0</div>
+      <button class="restart-btn" onclick="initG3()">🔄 เริ่มใหม่</button>
+    </div>
+    <div class="listen-box">
+      <button class="listen-btn" id="g3-play" onclick="g3Play()">🔊</button>
+      <div class="listen-label">กดฟังเสียง</div>
+    </div>
+    <div class="combo-area" id="g3-area"></div>
+    <div class="win-msg" id="g3-win"><div class="wemoji">🌟</div><p>เก่งมากๆ ทำได้ครบแล้ว!</p></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE SONG
+═══════════════════════════════════ -->
+<div id="pg-song" class="page">
+  <div class="sec-head">
+    <div class="sec-title">🎶 เพลงพินอิน</div>
+    <div class="sec-sub">กดเพลงเพื่อฟังทีละคำ หรือเล่นอัตโนมัติ กดที่คำเพื่อฟังเสียงเดี่ยว</div>
+  </div>
+  <div id="song-list"></div>
+</div>
+
+<div class="bottom-bar">
+  <a href="index.html" class="home-btn">← กลับหน้าหลัก</a>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════
+   DATA
+═══════════════════════════════════ */
+
+// Phonics sounds for consonants (what you say in isolation)
+// tts = Chinese character whose sound matches the phonics
+const CONSONANTS = [
+  {py:'b',  phonics:'ปัว',  th:'ปอ',  tts:'波'},
+  {py:'p',  phonics:'พัว',  th:'พอ',  tts:'坡'},
+  {py:'m',  phonics:'มัว',  th:'มอ',  tts:'摸'},
+  {py:'f',  phonics:'ฟัว',  th:'ฟอ',  tts:'佛'},
+  {py:'d',  phonics:'เดอ',  th:'เดอ', tts:'得'},
+  {py:'t',  phonics:'เทอ',  th:'เทอ', tts:'特'},
+  {py:'n',  phonics:'เนอ',  th:'เนอ', tts:'讷'},
+  {py:'l',  phonics:'เลอ',  th:'เลอ', tts:'勒'},
+  {py:'g',  phonics:'เกอ',  th:'เกอ', tts:'哥'},
+  {py:'k',  phonics:'เคอ',  th:'เคอ', tts:'科'},
+  {py:'h',  phonics:'เฮอ',  th:'เฮอ', tts:'喝'},
+  {py:'j',  phonics:'จี',   th:'จี',  tts:'基'},
+  {py:'q',  phonics:'ชี',   th:'ชี',  tts:'期'},
+  {py:'x',  phonics:'ซี',   th:'ซี',  tts:'西'},
+  {py:'zh', phonics:'จรือ', th:'จรือ',tts:'知'},
+  {py:'ch', phonics:'ชรือ', th:'ชรือ',tts:'吃'},
+  {py:'sh', phonics:'ซรือ', th:'ซรือ',tts:'诗'},
+  {py:'r',  phonics:'ยรือ', th:'ยรือ',tts:'日'},
+  {py:'z',  phonics:'จือ',  th:'จือ', tts:'资'},
+  {py:'c',  phonics:'ชือ',  th:'ชือ', tts:'次'},
+  {py:'s',  phonics:'ซือ',  th:'ซือ', tts:'丝'},
+  {py:'y',  phonics:'อี',   th:'อี',  tts:'一'},
+  {py:'w',  phonics:'อู',   th:'อู',  tts:'五'},
+];
+
+const VOWEL_GROUPS = [
+  {label:'a', color:'#e53935', items:[
+    {py:'a',   th:'อา',    tts:'啊'},
+    {py:'ai',  th:'ไอ',    tts:'爱'},
+    {py:'ao',  th:'อาว',   tts:'凹'},
+    {py:'an',  th:'อาน',   tts:'安'},
+    {py:'ang', th:'อาง',   tts:'昂'},
+  ]},
+  {label:'o', color:'#e65100', items:[
+    {py:'o',   th:'โอ',    tts:'哦'},
+    {py:'ou',  th:'โอว',   tts:'欧'},
+    {py:'ong', th:'โอง',   tts:'翁'},
+  ]},
+  {label:'e', color:'#2e7d32', items:[
+    {py:'e',   th:'เออ',   tts:'鹅'},
+    {py:'er',  th:'เออร์', tts:'耳'},
+    {py:'ei',  th:'เอย',   tts:'诶'},
+    {py:'en',  th:'เอิน',  tts:'恩'},
+    {py:'eng', th:'เอิง',  tts:'嗯'},
+  ]},
+  {label:'i', color:'#1565c0', items:[
+    {py:'i',    th:'อี',    tts:'一'},
+    {py:'ia',   th:'เอีย',  tts:'呀'},
+    {py:'iao',  th:'เอียว', tts:'腰'},
+    {py:'ie',   th:'เอียะ', tts:'叶'},
+    {py:'iu',   th:'อิ้ว',  tts:'有'},
+    {py:'ian',  th:'เอียน', tts:'烟'},
+    {py:'in',   th:'อิน',   tts:'音'},
+    {py:'iang', th:'เอียง', tts:'样'},
+    {py:'ing',  th:'อิง',   tts:'英'},
+    {py:'iong', th:'ออง',   tts:'用'},
+  ]},
+  {label:'u', color:'#6a1b9a', items:[
+    {py:'u',    th:'อู',    tts:'五'},
+    {py:'ua',   th:'อวา',   tts:'蛙'},
+    {py:'uo',   th:'อั้ว',  tts:'我'},
+    {py:'uai',  th:'ไอว',   tts:'外'},
+    {py:'ui',   th:'อุย',   tts:'位'},
+    {py:'uan',  th:'อวาน',  tts:'完'},
+    {py:'un',   th:'อุน',   tts:'温'},
+    {py:'uang', th:'อวาง',  tts:'望'},
+    {py:'ueng', th:'เอิง',  tts:'翁'},
+  ]},
+  {label:'ü', color:'#00695c', items:[
+    {py:'ü',    th:'อวี',   tts:'鱼'},
+    {py:'üe',   th:'เยว',   tts:'月'},
+    {py:'üan',  th:'เยวียน',tts:'远'},
+    {py:'ün',   th:'ยวิน',  tts:'云'},
+  ]},
+];
+
+const TONES = [
+  {num:1, mark:'ā', name:'เสียงที่ 1', desc:'เสียงสูงระดับ', th:'สูงเรียบ ─', ttsChar:'妈', ex:[
+    {zh:'妈',py:'māo',th:'แม่'},{zh:'飞',py:'fēi',th:'บิน'},{zh:'书',py:'shū',th:'หนังสือ'}
+  ]},
+  {num:2, mark:'á', name:'เสียงที่ 2', desc:'เสียงขึ้น', th:'ขึ้น ╱', ttsChar:'麻', ex:[
+    {zh:'麻',py:'má',th:'ป่าน'},{zh:'来',py:'lái',th:'มา'},{zh:'人',py:'rén',th:'คน'}
+  ]},
+  {num:3, mark:'ǎ', name:'เสียงที่ 3', desc:'เสียงต่ำแล้วขึ้น', th:'ตก-ขึ้น ∨', ttsChar:'马', ex:[
+    {zh:'马',py:'mǎ',th:'ม้า'},{zh:'你',py:'nǐ',th:'เธอ'},{zh:'好',py:'hǎo',th:'ดี'}
+  ]},
+  {num:4, mark:'à', name:'เสียงที่ 4', desc:'เสียงตก', th:'ตก ╲', ttsChar:'骂', ex:[
+    {zh:'骂',py:'mà',th:'ด่า'},{zh:'是',py:'shì',th:'ใช่'},{zh:'大',py:'dà',th:'ใหญ่'}
+  ]},
+  {num:0, mark:'a', name:'เสียงเบา', desc:'เสียงสั้นเบา', th:'เบา ·', ttsChar:'吗', ex:[
+    {zh:'吗',py:'ma',th:'(คำถาม)'},{zh:'呢',py:'ne',th:'(คำถาม)'},{zh:'的',py:'de',th:'ของ'}
+  ]},
+];
+
+// Words for combo game — 60 คำ
+const COMBO_WORDS = [
+  // tone 1
+  {con:'m', vow:'ao',  tone:1, zh:'猫', th:'แมว',   tts:'猫'},
+  {con:'b', vow:'a',   tone:1, zh:'八', th:'แปด',   tts:'八'},
+  {con:'h', vow:'e',   tone:1, zh:'喝', th:'ดื่ม',  tts:'喝'},
+  {con:'sh',vow:'u',   tone:1, zh:'书', th:'หนังสือ',tts:'书'},
+  {con:'f', vow:'ei',  tone:1, zh:'飞', th:'บิน',   tts:'飞'},
+  {con:'t', vow:'a',   tone:1, zh:'他', th:'เขา',   tts:'他'},
+  {con:'g', vow:'e',   tone:1, zh:'歌', th:'เพลง',  tts:'歌'},
+  {con:'j', vow:'ia',  tone:1, zh:'家', th:'บ้าน',  tts:'家'},
+  {con:'b', vow:'o',   tone:1, zh:'玻', th:'แก้ว',  tts:'玻'},
+  {con:'sh',vow:'e',   tone:1, zh:'蛇', th:'งู',    tts:'蛇'},
+  {con:'d', vow:'uo',  tone:1, zh:'多', th:'มาก',   tts:'多'},
+  {con:'zh',vow:'i',   tone:1, zh:'知', th:'รู้',   tts:'知'},
+  // tone 2
+  {con:'p', vow:'o',   tone:2, zh:'婆', th:'แม่สามี',tts:'婆'},
+  {con:'l', vow:'ai',  tone:2, zh:'来', th:'มา',    tts:'来'},
+  {con:'r', vow:'en',  tone:2, zh:'人', th:'คน',    tts:'人'},
+  {con:'n', vow:'an',  tone:2, zh:'南', th:'ใต้',   tts:'南'},
+  {con:'m', vow:'ei',  tone:2, zh:'没', th:'ไม่มี', tts:'没'},
+  {con:'h', vow:'ai',  tone:2, zh:'还', th:'ยังอยู่',tts:'还'},
+  {con:'n', vow:'iu',  tone:2, zh:'牛', th:'วัว',   tts:'牛'},
+  {con:'b', vow:'ai',  tone:2, zh:'白', th:'ขาว',   tts:'白'},
+  {con:'q', vow:'i',   tone:2, zh:'其', th:'ของ',   tts:'其'},
+  {con:'zh',vow:'ong', tone:2, zh:'中', th:'กลาง',  tts:'中'},
+  {con:'m', vow:'en',  tone:2, zh:'门', th:'ประตู', tts:'门'},
+  {con:'g', vow:'uo',  tone:2, zh:'国', th:'ประเทศ',tts:'国'},
+  // tone 3
+  {con:'n', vow:'i',   tone:3, zh:'你', th:'เธอ',   tts:'你'},
+  {con:'m', vow:'ai',  tone:3, zh:'买', th:'ซื้อ',  tts:'买'},
+  {con:'g', vow:'ou',  tone:3, zh:'狗', th:'สุนัข', tts:'狗'},
+  {con:'x', vow:'iao', tone:3, zh:'小', th:'เล็ก',  tts:'小'},
+  {con:'h', vow:'ao',  tone:3, zh:'好', th:'ดี',    tts:'好'},
+  {con:'w', vow:'o',   tone:3, zh:'我', th:'ฉัน',   tts:'我'},
+  {con:'s', vow:'an',  tone:3, zh:'伞', th:'ร่ม',   tts:'伞'},
+  {con:'sh',vow:'ui',  tone:3, zh:'水', th:'น้ำ',   tts:'水'},
+  {con:'l', vow:'ao',  tone:3, zh:'老', th:'แก่',   tts:'老'},
+  {con:'m', vow:'a',   tone:3, zh:'马', th:'ม้า',   tts:'马'},
+  {con:'j', vow:'iu',  tone:3, zh:'酒', th:'เหล้า', tts:'酒'},
+  {con:'w', vow:'an',  tone:3, zh:'晚', th:'เย็น',  tts:'晚'},
+  // tone 4
+  {con:'d', vow:'a',   tone:4, zh:'大', th:'ใหญ่',  tts:'大'},
+  {con:'k', vow:'an',  tone:4, zh:'看', th:'ดู',    tts:'看'},
+  {con:'sh',vow:'i',   tone:4, zh:'是', th:'ใช่',   tts:'是'},
+  {con:'d', vow:'ui',  tone:4, zh:'对', th:'ถูก',   tts:'对'},
+  {con:'x', vow:'ia',  tone:4, zh:'下', th:'ล่าง',  tts:'下'},
+  {con:'h', vow:'uan', tone:4, zh:'换', th:'เปลี่ยน',tts:'换'},
+  {con:'l', vow:'e',   tone:4, zh:'乐', th:'สนุก',  tts:'乐'},
+  {con:'k', vow:'e',   tone:4, zh:'课', th:'บทเรียน',tts:'课'},
+  {con:'f', vow:'an',  tone:4, zh:'饭', th:'ข้าว',  tts:'饭'},
+  {con:'d', vow:'ian', tone:4, zh:'电', th:'ไฟ',    tts:'电'},
+  {con:'m', vow:'a',   tone:4, zh:'骂', th:'ด่า',   tts:'骂'},
+  {con:'w', vow:'an',  tone:4, zh:'万', th:'หมื่น', tts:'万'},
+  // tone 1 more
+  {con:'t', vow:'ian', tone:1, zh:'天', th:'ฟ้า',   tts:'天'},
+  {con:'x', vow:'in',  tone:1, zh:'心', th:'ใจ',    tts:'心'},
+  {con:'sh',vow:'ang', tone:1, zh:'上', th:'บน',    tts:'上'},
+  {con:'g', vow:'ao',  tone:1, zh:'高', th:'สูง',   tts:'高'},
+  // tone 2 more
+  {con:'ch',vow:'ang', tone:2, zh:'长', th:'ยาว',   tts:'长'},
+  {con:'h', vow:'ong', tone:2, zh:'红', th:'แดง',   tts:'红'},
+  {con:'y', vow:'an',  tone:2, zh:'颜', th:'สี',    tts:'颜'},
+  // tone 3 more
+  {con:'b', vow:'i',   tone:3, zh:'比', th:'เปรียบ',tts:'比'},
+  {con:'y', vow:'uan', tone:3, zh:'远', th:'ไกล',   tts:'远'},
+  {con:'d', vow:'ong', tone:3, zh:'懂', th:'เข้าใจ',tts:'懂'},
+  // tone 4 more
+  {con:'zh',vow:'an',  tone:4, zh:'站', th:'ยืน',   tts:'站'},
+  {con:'k', vow:'uai', tone:4, zh:'快', th:'เร็ว',  tts:'快'},
+  {con:'b', vow:'an',  tone:4, zh:'半', th:'ครึ่ง', tts:'半'},
+];
+
+/* ═══════════════════════════════════
+   SPEECH  — ใช้อักษรจีนเพื่อให้ TTS
+   ออกเสียงสำเนียงจีนแมนดาริน
+═══════════════════════════════════ */
+
+// Map: pinyin sound → Chinese character that represents it cleanly
+const ZH_CHAR = {
+  // consonants (use a standard syllable with that initial)
+  'b':'玻','p':'坡','m':'摸','f':'佛','d':'得','t':'特','n':'讷','l':'勒',
+  'g':'哥','k':'科','h':'喝','j':'基','q':'欺','x':'希',
+  'zh':'知','ch':'蚩','sh':'诗','r':'日','z':'资','c':'雌','s':'思',
+  'y':'衣','w':'屋',
+  // vowels standalone
+  'a':'啊','ai':'爱','ao':'奥','an':'安','ang':'昂',
+  'o':'哦','ou':'欧','ong':'翁',
+  'e':'鹅','er':'耳','ei':'诶','en':'恩','eng':'鞥',
+  'i':'一','ia':'压','iao':'要','ie':'叶','iu':'有','ian':'严','in':'因','iang':'样','ing':'英','iong':'勇',
+  'u':'乌','ua':'挖','uo':'我','uai':'外','ui':'为','uan':'弯','un':'温','uang':'汪','ueng':'翁',
+  'ü':'鱼','üe':'月','üan':'冤','ün':'晕',
+  // tones via ma
+  'tone1':'妈','tone2':'麻','tone3':'马','tone4':'骂','tone0':'吗',
+};
+
+// words/tones
+const ZH_WORD = {
+  '猫':'māo','八':'bā','婆':'pó','你':'nǐ','大':'dà',
+  '买':'mǎi','喝':'hē','看':'kàn','来':'lái','书':'shū',
+  '狗':'gǒu','飞':'fēi','他':'tā','人':'rén','小':'xiǎo',
+};
+
+function speakZH(char, rate=0.8){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(char);
+  u.lang = 'zh-CN'; u.rate = rate; u.pitch = 1.0;
+  // Try to get a zh-CN voice explicitly
+  const voices = speechSynthesis.getVoices();
+  const zhVoice = voices.find(v=> v.lang==='zh-CN' || v.lang==='zh_CN' || v.lang.startsWith('zh'));
+  if(zhVoice) u.voice = zhVoice;
+  speechSynthesis.speak(u);
+}
+
+function speakPhonics(key){
+  const char = ZH_CHAR[key] || key;
+  speakZH(char, 0.75);
+}
+
+function speak(text, lang='zh-CN', rate=0.85){
+  speakZH(text, rate);
+}
+
+/* ═══════════════════════════════════
+   PAGE SWITCHING
+═══════════════════════════════════ */
+function switchPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function switchGame(id, btn){
+  document.querySelectorAll('#pg-game .game-box').forEach(b=>b.style.display='none');
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).style.display='block';
+  btn.classList.add('active');
+}
+
+/* ═══════════════════════════════════
+   BUILD CONSONANT PAGE
+═══════════════════════════════════ */
+function buildConsonants(){
+  const g = document.getElementById('con-grid');
+  CONSONANTS.forEach(c=>{
+    const d = document.createElement('div');
+    d.className='pcard con';
+    d.innerHTML=`<div class="py">${c.py}</div><div class="th">${c.phonics}</div>`;
+    d.onclick=()=>{
+      speakPhonics(c.tts);
+      d.classList.add('flash');
+      setTimeout(()=>d.classList.remove('flash'),500);
+    };
+    g.appendChild(d);
+  });
+}
+
+/* ═══════════════════════════════════
+   BUILD VOWEL PAGE
+═══════════════════════════════════ */
+function buildVowels(){
+  const wrap = document.getElementById('vow-groups');
+  VOWEL_GROUPS.forEach(gr=>{
+    const head = document.createElement('div');
+    head.className='vg-head';
+    head.innerHTML=`<div class="vg-label" style="color:${gr.color}">${gr.label}</div><div class="vg-line" style="background:linear-gradient(90deg,${gr.color},transparent)"></div>`;
+    wrap.appendChild(head);
+    const grid = document.createElement('div');
+    grid.className='py-grid';
+    gr.items.forEach(v=>{
+      const d = document.createElement('div');
+      d.className='pcard vow';
+      d.style.setProperty('--vc', gr.color);
+      d.innerHTML=`<div class="py" style="color:${gr.color}">${v.py}</div><div class="th">${v.th}</div>`;
+      d.onclick=()=>{
+        speakPhonics(v.tts);
+        d.classList.add('flash');
+        setTimeout(()=>d.classList.remove('flash'),500);
+      };
+      grid.appendChild(d);
+    });
+    wrap.appendChild(grid);
+  });
+}
+
+/* ═══════════════════════════════════
+   BUILD TONE PAGE
+═══════════════════════════════════ */
+function buildTones(){
+  const colors=['#2563eb','#27ae60','#ea580c','#d93025','#666'];
+  const row = document.getElementById('tone-cards');
+  TONES.forEach((t,i)=>{
+    const d = document.createElement('div');
+    d.className=`tone-card t${t.num}`;
+    d.innerHTML=`
+      <div class="tone-num">${t.num===0?'0':t.num}</div>
+      <div class="tone-mark" style="color:${colors[i]}">${t.mark}</div>
+      <div class="tone-desc">${t.desc}</div>
+      <div class="tone-th" style="color:${colors[i]}">${t.th}</div>
+    `;
+    d.onclick=()=>{ speakZH(t.ttsChar,0.75); d.classList.add('flash'); setTimeout(()=>d.classList.remove('flash'),500); };
+    row.appendChild(d);
+  });
+
+  const exGrid = document.getElementById('tone-examples');
+  TONES.forEach((t,i)=>{
+    t.ex.forEach(ex=>{
+      const d = document.createElement('div');
+      d.className='tex-card';
+      d.innerHTML=`<div class="tex-zh">${ex.zh}</div><div class="tex-py" style="color:${colors[i]}">${ex.py}</div><div class="tex-th">${ex.th}</div>`;
+      d.onclick=()=>{ speakZH(ex.zh,0.8); d.classList.add('flash'); setTimeout(()=>d.classList.remove('flash'),500); };
+      exGrid.appendChild(d);
+    });
+  });
+}
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1400);
+}
+
+/* ═══════════════════════════════════
+   GAME 1: LISTEN → PICK CONSONANT
+═══════════════════════════════════ */
+let g1Current=null, g1Correct=0, g1Asked=0, g1Answered=false, g1Total=10;
+
+function setG1Q(n,btn){
+  document.querySelectorAll('#g-con .qbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  g1Total=n; initG1();
+}
+
+function initG1(){
+  g1Correct=0; g1Asked=0; g1Answered=false;
+  document.getElementById('g1-score').textContent='คะแนน 0/0';
+  document.getElementById('g1-win').classList.remove('show');
+  g1Next();
+}
+
+function g1Next(){
+  if(g1Asked>=g1Total){
+    document.getElementById('g1-win-msg').textContent=`ตอบถูก ${g1Correct}/${g1Total} ข้อ 🎉`;
+    document.getElementById('g1-win').classList.add('show'); return;
+  }
+  g1Answered=false;
+  const pool=shuffle(CONSONANTS);
+  g1Current=pool[0];
+  const choices=shuffle(pool.slice(0,6));
+  const box=document.getElementById('g1-choices');
+  box.innerHTML='';
+  choices.forEach(c=>{
+    const d=document.createElement('div');
+    d.className='choice';
+    d.innerHTML=`<span style="font-size:22px;font-family:'Baloo 2',cursive;font-weight:800">${c.py}</span>`;
+    d.onclick=()=>g1Answer(d,c);
+    box.appendChild(d);
+  });
+}
+
+function g1Play(){
+  if(!g1Current) return;
+  speakZH(g1Current.tts,0.75);
+  const btn=document.getElementById('g1-play');
+  btn.classList.add('pulse'); setTimeout(()=>btn.classList.remove('pulse'),600);
+}
+
+function g1Answer(el,c){
+  if(g1Answered) return;
+  g1Answered=true; g1Asked++;
+  if(c.py===g1Current.py){
+    el.classList.add('correct'); g1Correct++;
+    toast('✅ ถูกต้อง!');
+  } else {
+    el.classList.add('wrong');
+    toast(`❌ ผิด! คำตอบคือ "${g1Current.py}"`);
+    document.querySelectorAll('#g1-choices .choice').forEach(b=>{
+      if(b.querySelector('span')?.textContent.trim()===g1Current.py) b.classList.add('correct');
+    });
+  }
+  document.getElementById('g1-score').textContent=`คะแนน ${g1Correct}/${g1Asked}`;
+  setTimeout(()=>g1Next(),1200);
+}
+
+/* ═══════════════════════════════════
+   GAME 2: LISTEN → PICK VOWEL
+═══════════════════════════════════ */
+let g2Group='all', g2Current=null, g2Correct=0, g2Asked=0, g2Pool=[], g2Answered=false, g2Total=10;
+
+function setG2Q(n,btn){
+  document.querySelectorAll('#g-vow .qbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  g2Total=n; initG2();
+}
+
+function buildG2Tabs(){
+  const bar=document.getElementById('g2-group-tabs');
+  const labels=['all',...VOWEL_GROUPS.map(g=>g.label)];
+  const names=['ทุกหมวด',...VOWEL_GROUPS.map(g=>`หมวด ${g.label}`)];
+  labels.forEach((l,i)=>{
+    const b=document.createElement('button');
+    b.className='stab'+(l==='all'?' active':'');
+    b.textContent=names[i];
+    b.onclick=()=>{
+      document.querySelectorAll('#g2-group-tabs .stab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); g2Group=l; initG2();
+    };
+    bar.appendChild(b);
+  });
+}
+
+function getG2Pool(){
+  if(g2Group==='all') return VOWEL_GROUPS.flatMap(g=>g.items);
+  return VOWEL_GROUPS.find(g=>g.label===g2Group)?.items||[];
+}
+
+function initG2(){
+  g2Correct=0; g2Asked=0; g2Answered=false;
+  document.getElementById('g2-score').textContent='คะแนน 0/0';
+  document.getElementById('g2-win').classList.remove('show');
+  g2Pool=shuffle(getG2Pool());
+  g2Next();
+}
+
+function g2Next(){
+  const limit=Math.min(g2Total, g2Pool.length);
+  if(g2Asked>=limit){
+    document.getElementById('g2-win-msg').textContent=`ตอบถูก ${g2Correct}/${g2Asked} ข้อ 🏆`;
+    document.getElementById('g2-win').classList.add('show'); return;
+  }
+  g2Answered=false;
+  const fullPool=getG2Pool();
+  g2Current=g2Pool[g2Asked];
+  let choices=shuffle(fullPool).filter(x=>x.py!==g2Current.py).slice(0,5);
+  choices.push(g2Current); choices=shuffle(choices);
+  const box=document.getElementById('g2-choices');
+  box.innerHTML='';
+  choices.forEach(v=>{
+    const d=document.createElement('div');
+    d.className='choice';
+    // NO Thai — pinyin only
+    d.innerHTML=`<span style="font-size:18px;font-family:'Baloo 2',cursive;font-weight:800">${v.py}</span>`;
+    d.onclick=()=>g2Answer(d,v);
+    box.appendChild(d);
+  });
+}
+
+function g2Play(){
+  if(!g2Current) return;
+  speakZH(g2Current.tts,0.8);
+  const btn=document.getElementById('g2-play');
+  btn.classList.add('pulse'); setTimeout(()=>btn.classList.remove('pulse'),600);
+}
+
+function g2Answer(el,v){
+  if(g2Answered) return;
+  g2Answered=true; g2Asked++;
+  if(v.py===g2Current.py){
+    el.classList.add('correct'); g2Correct++;
+    toast('✅ ถูกต้อง!');
+  } else {
+    el.classList.add('wrong');
+    toast(`❌ คำตอบคือ "${g2Current.py}"`);
+    document.querySelectorAll('#g2-choices .choice').forEach(b=>{
+      if(b.querySelector('span')?.textContent.trim()===g2Current.py) b.classList.add('correct');
+    });
+  }
+  document.getElementById('g2-score').textContent=`คะแนน ${g2Correct}/${g2Asked}`;
+  setTimeout(()=>g2Next(),1200);
+}
+
+/* ═══════════════════════════════════
+   GAME 3: LISTEN → PICK CON+VOW+TONE
+═══════════════════════════════════ */
+let g3Current=null, g3Correct=0, g3Asked=0, g3Pool=[], g3Phase=0, g3Answered=false;
+const G3_TOTAL=10;
+
+function initG3(){
+  g3Correct=0; g3Asked=0; g3Answered=false;
+  document.getElementById('g3-score').textContent='คะแนน 0/0';
+  document.getElementById('g3-win').classList.remove('show');
+  g3Pool=shuffle(COMBO_WORDS);
+  g3Next();
+}
+
+function g3Next(){
+  if(g3Asked>=G3_TOTAL){ document.getElementById('g3-win').classList.add('show'); return; }
+  g3Answered=false; g3Phase=0;
+  g3Current=g3Pool[g3Asked % g3Pool.length];
+  renderCombo();
+}
+
+function g3Play(){
+  if(!g3Current) return;
+  speakZH(g3Current.tts,0.8);
+  const btn=document.getElementById('g3-play');
+  btn.classList.add('pulse');
+  setTimeout(()=>btn.classList.remove('pulse'),600);
+}
+
+function renderCombo(){
+  const area=document.getElementById('g3-area');
+  area.innerHTML='';
+
+  // show zh+th hint
+  const hint=document.createElement('div');
+  hint.style.cssText='text-align:center;margin-bottom:12px;';
+  hint.innerHTML=`<span style="font-family:Noto Sans SC,sans-serif;font-size:32px">${g3Current.zh}</span> <span style="color:#aaa;font-size:14px">${g3Current.th}</span>`;
+  area.appendChild(hint);
+
+  // Answer display
+  const ansRow=document.createElement('div');
+  ansRow.className='combo-answer';
+  ansRow.id='g3-ans';
+  ansRow.innerHTML=`
+    <span class="combo-slot" id="cs-con" style="color:#ccc">${g3Phase>0?g3Current.con:'?'}</span>
+    <span style="color:#ccc">+</span>
+    <span class="combo-slot" id="cs-vow" style="color:#ccc">${g3Phase>1?g3Current.vow:'?'}</span>
+    <span style="color:#ccc">+</span>
+    <span class="combo-slot" id="cs-tone" style="color:#ccc">${g3Phase>2?'เสียงที่ '+g3Current.tone:'?'}</span>
+  `;
+  area.appendChild(ansRow);
+
+  // choices based on phase
+  const label=document.createElement('div');
+  label.className='combo-row-label';
+  let choicesData=[];
+
+  if(g3Phase===0){
+    label.textContent='ขั้นที่ 1: เลือกพยัญชนะต้น';
+    const wrong=shuffle(CONSONANTS.filter(c=>c.py!==g3Current.con)).slice(0,5);
+    const correct=CONSONANTS.find(c=>c.py===g3Current.con);
+    choicesData=shuffle([...wrong,correct]);
+  } else if(g3Phase===1){
+    label.textContent='ขั้นที่ 2: เลือกสระ';
+    const allV=VOWEL_GROUPS.flatMap(g=>g.items);
+    const correct=allV.find(v=>v.py===g3Current.vow);
+    const wrong=shuffle(allV.filter(v=>v.py!==g3Current.vow)).slice(0,5);
+    choicesData=shuffle([...wrong,correct]);
+  } else if(g3Phase===2){
+    label.textContent='ขั้นที่ 3: เลือกวรรณยุกต์';
+    choicesData=TONES;
+  }
+
+  area.appendChild(label);
+  const grid=document.createElement('div');
+  grid.className='choices';
+  grid.style.marginTop='8px';
+
+  choicesData.forEach(item=>{
+    const d=document.createElement('div');
+    d.className='choice';
+    if(g3Phase===0){
+      d.innerHTML=`${item.py}<span class="csub">${item.phonics}</span>`;
+      d.onclick=()=>g3Answer(d,item.py===g3Current.con);
+    } else if(g3Phase===1){
+      d.innerHTML=`${item.py}<span class="csub">${item.th}</span>`;
+      d.onclick=()=>g3Answer(d,item.py===g3Current.vow);
+    } else {
+      d.innerHTML=`เสียงที่ ${item.num===0?'0':item.num}<span class="csub">${item.th}</span>`;
+      d.onclick=()=>g3Answer(d,item.num===g3Current.tone);
+    }
+    grid.appendChild(d);
+  });
+  area.appendChild(grid);
+}
+
+function g3Answer(el, correct){
+  if(g3Answered&&g3Phase===2) return;
+  const choicesEls=el.parentElement.querySelectorAll('.choice');
+  choicesEls.forEach(b=>b.style.pointerEvents='none');
+
+  if(correct){
+    el.classList.add('correct');
+    g3Phase++;
+    if(g3Phase===1){ const s=document.getElementById('cs-con'); if(s){s.textContent=g3Current.con;s.classList.add('filled');} }
+    if(g3Phase===2){ const s=document.getElementById('cs-vow'); if(s){s.textContent=g3Current.vow;s.classList.add('filled');} }
+    if(g3Phase===3){
+      const s=document.getElementById('cs-tone'); if(s){s.textContent='เสียงที่ '+g3Current.tone;s.classList.add('filled');}
+      g3Correct++; g3Asked++;
+      document.getElementById('g3-score').textContent=`คะแนน ${g3Correct}/${g3Asked}`;
+      toast('🌟 ครบทั้ง 3 ขั้น!');
+      setTimeout(()=>g3Next(),1400);
+      return;
+    }
+    toast('✅ ถูก! ไปขั้นต่อไป');
+    setTimeout(()=>renderCombo(),900);
+  } else {
+    el.classList.add('wrong');
+    g3Asked++;
+    document.getElementById('g3-score').textContent=`คะแนน ${g3Correct}/${g3Asked}`;
+    toast('❌ ลองอีกครั้ง!');
+    setTimeout(()=>{
+      choicesEls.forEach(b=>{b.style.pointerEvents='';b.classList.remove('wrong');});
+    },700);
+  }
+}
+
+/* ═══════════════════════════════════
+   UTILS
+═══════════════════════════════════ */
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+
+/* ═══════════════════════════════════
+   SONG DATA
+   each word: {zh, py, th}
+   sep: true = line separator
+═══════════════════════════════════ */
+const SONGS = [
+  {
+    id:'s1',
+    name:'เพลงพยัญชนะ 声母歌',
+    desc:'ท่องพยัญชนะ b p m f … จนครบ 23 ตัว',
+    bpm: 120,
+    lines:[
+      [{zh:'波',py:'bō',th:'b'},{zh:'坡',py:'pō',th:'p'},{zh:'摸',py:'mō',th:'m'},{zh:'佛',py:'fó',th:'f'}],
+      [{zh:'得',py:'dé',th:'d'},{zh:'特',py:'té',th:'t'},{zh:'讷',py:'nè',th:'n'},{zh:'勒',py:'lè',th:'l'}],
+      [{zh:'哥',py:'gē',th:'g'},{zh:'科',py:'kē',th:'k'},{zh:'喝',py:'hē',th:'h'}],
+      [{zh:'基',py:'jī',th:'j'},{zh:'期',py:'qī',th:'q'},{zh:'西',py:'xī',th:'x'}],
+      [{zh:'知',py:'zhī',th:'zh'},{zh:'蚩',py:'chī',th:'ch'},{zh:'诗',py:'shī',th:'sh'},{zh:'日',py:'rì',th:'r'}],
+      [{zh:'资',py:'zī',th:'z'},{zh:'此',py:'cǐ',th:'c'},{zh:'思',py:'sī',th:'s'}],
+      [{zh:'一',py:'yī',th:'y'},{zh:'五',py:'wǔ',th:'w'}],
+    ]
+  },
+  {
+    id:'s2',
+    name:'เพลงสระ 韵母歌',
+    desc:'ท่องสระ a o e i u ü พร้อมรูปแบบทั้งหมด',
+    bpm: 110,
+    lines:[
+      [{zh:'啊',py:'ā',th:'a'},{zh:'哦',py:'ō',th:'o'},{zh:'鹅',py:'é',th:'e'},{zh:'一',py:'yī',th:'i'},{zh:'五',py:'wǔ',th:'u'},{zh:'鱼',py:'yú',th:'ü'}],
+      [{zh:'啊',py:'ā',th:'a'},{zh:'爱',py:'ài',th:'ai'},{zh:'凹',py:'āo',th:'ao'},{zh:'安',py:'ān',th:'an'},{zh:'昂',py:'áng',th:'ang'}],
+      [{zh:'哦',py:'ō',th:'o'},{zh:'欧',py:'ōu',th:'ou'},{zh:'翁',py:'wēng',th:'ong'}],
+      [{zh:'鹅',py:'é',th:'e'},{zh:'耳',py:'ěr',th:'er'},{zh:'诶',py:'éi',th:'ei'},{zh:'恩',py:'ēn',th:'en'},{zh:'嗯',py:'ng',th:'eng'}],
+      [{zh:'一',py:'yī',th:'i'},{zh:'呀',py:'yā',th:'ia'},{zh:'腰',py:'yāo',th:'iao'},{zh:'叶',py:'yè',th:'ie'},{zh:'有',py:'yǒu',th:'iu'}],
+      [{zh:'烟',py:'yān',th:'ian'},{zh:'音',py:'yīn',th:'in'},{zh:'样',py:'yàng',th:'iang'},{zh:'英',py:'yīng',th:'ing'},{zh:'用',py:'yòng',th:'iong'}],
+      [{zh:'五',py:'wǔ',th:'u'},{zh:'蛙',py:'wā',th:'ua'},{zh:'我',py:'wǒ',th:'uo'},{zh:'外',py:'wài',th:'uai'},{zh:'位',py:'wèi',th:'ui'}],
+      [{zh:'完',py:'wán',th:'uan'},{zh:'温',py:'wēn',th:'un'},{zh:'望',py:'wàng',th:'uang'},{zh:'翁',py:'wēng',th:'ueng'}],
+      [{zh:'鱼',py:'yú',th:'ü'},{zh:'月',py:'yuè',th:'üe'},{zh:'远',py:'yuǎn',th:'üan'},{zh:'云',py:'yún',th:'ün'}],
+    ]
+  },
+  {
+    id:'s3',
+    name:'เพลงวรรณยุกต์ 声调歌',
+    desc:'ฝึกเสียง 4 วรรณยุกต์ + เสียงเบา ผ่านคำ mā má mǎ mà ma',
+    bpm: 100,
+    lines:[
+      [{zh:'妈',py:'māo',th:'เสียง 1'},{zh:'',py:'—',th:''},{zh:'麻',py:'má',th:'เสียง 2'},{zh:'',py:'—',th:''},{zh:'马',py:'mǎ',th:'เสียง 3'},{zh:'',py:'—',th:''},{zh:'骂',py:'mà',th:'เสียง 4'},{zh:'吗',py:'ma',th:'เสียงเบา'}],
+      [{zh:'飞',py:'fēi',th:'เสียง 1'},{zh:'来',py:'lái',th:'เสียง 2'},{zh:'好',py:'hǎo',th:'เสียง 3'},{zh:'是',py:'shì',th:'เสียง 4'},{zh:'的',py:'de',th:'เสียงเบา'}],
+      [{zh:'书',py:'shū',th:'เสียง 1'},{zh:'人',py:'rén',th:'เสียง 2'},{zh:'你',py:'nǐ',th:'เสียง 3'},{zh:'大',py:'dà',th:'เสียง 4'},{zh:'呢',py:'ne',th:'เสียงเบา'}],
+    ]
+  },
+];
+
+/* ═══════════════════════════════════
+   SONG ENGINE
+═══════════════════════════════════ */
+let songTimers=[], songPlaying=false, songSpeed=1.0;
+
+function buildSongs(){
+  const wrap=document.getElementById('song-list');
+  wrap.innerHTML='';
+  SONGS.forEach(song=>{
+    const box=document.createElement('div');
+    box.className='song-box';
+    box.id='sbox-'+song.id;
+
+    // title row
+    const tr=document.createElement('div');
+    tr.className='song-title-row';
+    tr.innerHTML=`<div class="song-name">${song.name}<br><span style="font-size:12px;color:#999;font-family:Noto Sans Thai,sans-serif;font-weight:400">${song.desc}</span></div>`;
+    const ctrl=document.createElement('div');
+    ctrl.className='song-controls';
+    // speed buttons
+    const speeds=[{label:'ช้า',v:0.6},{label:'ปกติ',v:1.0},{label:'เร็ว',v:1.5}];
+    speeds.forEach(s=>{
+      const sb=document.createElement('button');
+      sb.className='speed-btn'+(s.v===1.0?' active':'');
+      sb.textContent=s.label;
+      sb.dataset.speed=s.v;
+      sb.dataset.sid=song.id;
+      sb.onclick=()=>{
+        box.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('active'));
+        sb.classList.add('active');
+        if(songPlaying) stopSong(song.id);
+      };
+      ctrl.appendChild(sb);
+    });
+    const playBtn=document.createElement('button');
+    playBtn.className='play-song-btn';
+    playBtn.id='playbtn-'+song.id;
+    playBtn.innerHTML='▶ เล่น';
+    playBtn.onclick=()=>toggleSong(song.id, song);
+    ctrl.appendChild(playBtn);
+    tr.appendChild(ctrl);
+    box.appendChild(tr);
+
+    // progress
+    const prog=document.createElement('div');
+    prog.className='progress-bar';
+    prog.innerHTML=`<div class="progress-fill" id="prog-${song.id}"></div>`;
+    box.appendChild(prog);
+
+    // lyrics
+    const lg=document.createElement('div');
+    lg.className='lyrics-grid';
+    lg.id='lyrics-'+song.id;
+    let wordIndex=0;
+    song.lines.forEach((line,li)=>{
+      const lineDiv=document.createElement('div');
+      lineDiv.className='lyric-line';
+      lineDiv.id=`line-${song.id}-${li}`;
+      line.forEach((w,wi)=>{
+        if(!w.zh){ return; }
+        const wdiv=document.createElement('div');
+        wdiv.className='lyric-word';
+        wdiv.id=`word-${song.id}-${li}-${wi}`;
+        wdiv.dataset.widx=wordIndex++;
+        wdiv.innerHTML=`<span class="lyric-py">${w.py}</span><span class="lyric-zh">${w.zh}</span>`;
+        if(w.th) wdiv.title=w.th;
+        wdiv.onclick=()=>{ speakZH(w.zh,0.8); wdiv.style.background='#fffde7'; setTimeout(()=>wdiv.style.background='',400); };
+        lineDiv.appendChild(wdiv);
+        if(wi<line.length-1){
+          const sep=document.createElement('span');
+          sep.className='lyric-sep';
+          sep.textContent='·';
+          lineDiv.appendChild(sep);
+        }
+      });
+      lg.appendChild(lineDiv);
+    });
+    box.appendChild(lg);
+    wrap.appendChild(box);
+  });
+}
+
+function toggleSong(id, song){
+  if(songPlaying===id){ stopSong(id); return; }
+  if(songPlaying) stopSong(songPlaying);
+  playSong(id, song);
+}
+
+function stopSong(id){
+  songTimers.forEach(t=>clearTimeout(t));
+  songTimers=[];
+  songPlaying=false;
+  speechSynthesis.cancel();
+  const btn=document.getElementById('playbtn-'+id);
+  if(btn){ btn.innerHTML='▶ เล่น'; btn.classList.remove('playing'); }
+  const prog=document.getElementById('prog-'+id);
+  if(prog) prog.style.width='0%';
+  // remove highlights
+  document.querySelectorAll(`#sbox-${id} .lyric-word`).forEach(w=>{ w.style.background=''; w.style.color=''; });
+  document.querySelectorAll(`#sbox-${id} .lyric-line`).forEach(l=>l.classList.remove('active'));
+}
+
+function playSong(id, song){
+  songPlaying=id;
+  const btn=document.getElementById('playbtn-'+id);
+  btn.innerHTML='⏹ หยุด'; btn.classList.add('playing');
+
+  // get speed from active speed-btn
+  const box=document.getElementById('sbox-'+id);
+  const activeSpeed=box.querySelector('.speed-btn.active');
+  const speed=activeSpeed ? parseFloat(activeSpeed.dataset.speed) : 1.0;
+
+  // flatten all words
+  const allWords=[];
+  song.lines.forEach((line,li)=>{
+    line.forEach((w,wi)=>{
+      if(w.zh) allWords.push({w,li,wi});
+    });
+  });
+
+  const msPerWord = (60/song.bpm)*1000*(1/speed)*1.1;
+  const totalWords=allWords.length;
+  let t=0;
+
+  allWords.forEach(({w,li,wi},idx)=>{
+    const timer=setTimeout(()=>{
+      if(songPlaying!==id) return;
+      // highlight line
+      document.querySelectorAll(`#sbox-${id} .lyric-line`).forEach(l=>l.classList.remove('active'));
+      const lineEl=document.getElementById(`line-${id}-${li}`);
+      if(lineEl) lineEl.classList.add('active');
+      // highlight word
+      document.querySelectorAll(`#sbox-${id} .lyric-word`).forEach(w=>{ w.style.background=''; });
+      const wEl=document.getElementById(`word-${id}-${li}-${wi}`);
+      if(wEl){ wEl.style.background='#fff9e6'; wEl.style.fontWeight='900'; setTimeout(()=>{ if(wEl) wEl.style.background=''; },msPerWord*0.9); }
+      // speak
+      speakZH(w.zh, speed*0.85);
+      // progress
+      const prog=document.getElementById('prog-'+id);
+      if(prog) prog.style.width=((idx+1)/totalWords*100)+'%';
+    }, t);
+    songTimers.push(timer);
+    t += msPerWord;
+  });
+
+  // end
+  const endTimer=setTimeout(()=>stopSong(id), t+500);
+  songTimers.push(endTimer);
+}
+
+/* ═══════════════════════════════════
+   BUILD TONE CHANT
+═══════════════════════════════════ */
+const CHANT_SETS = [
+  {
+    label:'mā·má·mǎ·mà',
+    cards:[
+      {emoji:'👩', zh:'妈', py:'māo', meaning:'แม่',      t:1},
+      {emoji:'🌿', zh:'麻', py:'má',  meaning:'ป่าน',     t:2},
+      {emoji:'🐴', zh:'马', py:'mǎ',  meaning:'ม้า',      t:3},
+      {emoji:'😠', zh:'骂', py:'mà',  meaning:'ด่า',      t:4},
+      {emoji:'❓', zh:'吗', py:'ma',  meaning:'คำถาม',    t:0},
+    ]
+  },
+  {
+    label:'bā·bá·bǎ·bà',
+    cards:[
+      {emoji:'✋', zh:'八', py:'bā',  meaning:'แปด',      t:1},
+      {emoji:'🌱', zh:'拔', py:'bá',  meaning:'ถอน',      t:2},
+      {emoji:'🎯', zh:'把', py:'bǎ',  meaning:'จับ',      t:3},
+      {emoji:'👨', zh:'爸', py:'bà',  meaning:'พ่อ',      t:4},
+    ]
+  },
+  {
+    label:'yī·yí·yǐ·yì',
+    cards:[
+      {emoji:'☝️', zh:'一', py:'yī',  meaning:'หนึ่ง',   t:1},
+      {emoji:'🤔', zh:'疑', py:'yí',  meaning:'สงสัย',   t:2},
+      {emoji:'🪑', zh:'椅', py:'yǐ',  meaning:'เก้าอี้', t:3},
+      {emoji:'🌳', zh:'义', py:'yì',  meaning:'ความหมาย', t:4},
+    ]
+  },
+];
+
+const _tBg  = ['#dbeafe','#dcfce7','#fed7aa','#fee2e2','#f3f4f6'];
+const _tFg  = ['#2563eb','#27ae60','#ea580c','#d93025','#888'];
+const _tBd  = ['#2563eb','#27ae60','#ea580c','#d93025','#bbb'];
+function _ti(t){ return [1,2,3,4,0].indexOf(t); }
+
+function buildChant(){
+  const grid=document.getElementById('chant-grid');
+  if(!grid) return;
+  grid.innerHTML='';
+
+  CHANT_SETS.forEach(set=>{
+    const row=document.createElement('div');
+    row.className='chant-set';
+
+    const lbl=document.createElement('div');
+    lbl.className='chant-set-label';
+    lbl.textContent=set.label;
+    row.appendChild(lbl);
+
+    set.cards.forEach(card=>{
+      const ci=_ti(card.t);
+      const d=document.createElement('div');
+      d.className='chant-card';
+      d.style.borderColor=_tBd[ci];
+      d.innerHTML=`
+        <div class="chant-emoji">${card.emoji}</div>
+        <div class="chant-zh" style="color:${_tFg[ci]}">${card.zh}</div>
+        <div class="chant-py" style="color:${_tFg[ci]}">${card.py}</div>
+        <div class="chant-meaning">${card.meaning}</div>
+        <span class="chant-tone" style="background:${_tBg[ci]};color:${_tFg[ci]}">เสียง ${card.t}</span>
+      `;
+      d.onclick=()=>{ speakZH(card.zh,0.8); d.classList.add('flash'); setTimeout(()=>d.classList.remove('flash'),500); };
+      row.appendChild(d);
+    });
+
+    grid.appendChild(row);
+  });
+}
+
+/* ═══════════════════════════════════
+   INIT ALL
+═══════════════════════════════════ */
+buildConsonants();
+buildVowels();
+buildTones();
+buildChant();
+buildSongs();
+buildG2Tabs();
+initG1();
+initG2();
+initG3();
+</script>
+</body>
+</html>
