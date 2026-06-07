@@ -2,918 +2,637 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>แอปพลิเคชันเรียนรู้ขีดและลำดับอักษรจีน</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>แอปพลิเคชันฝึกขีดเขียนอักษรจีนอัจฉริยะ (V3)</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&family=Noto+Sans+SC:wght@400;700&display=swap');
-body { font-family: 'Sarabun', 'Noto Sans SC', sans-serif; }
-.chinese-font { font-family: 'Noto Sans SC', sans-serif; }
-.canvas-grid {
-background-image:
-linear-gradient(to right, rgba(239, 68, 68, 0.2) 1px, transparent 1px),
-linear-gradient(to bottom, rgba(239, 68, 68, 0.2) 1px, transparent 1px),
-linear-gradient(to right, rgba(239, 68, 68, 0.4) 1px, transparent 1px),
-linear-gradient(to bottom, rgba(239, 68, 68, 0.4) 1px, transparent 1px);
-background-size: 50% 50%, 50% 50%, 100% 100%, 100% 100%;
-background-style: dashed, dashed, solid, solid;
+* {
+box-sizing: border-box;
+font-family: 'Helvetica Neue', Arial, sans-serif;
+-webkit-tap-highlight-color: transparent;
+}
+body {
+margin: 0;
+padding: 20px 10px;
+background-color: #fcfbfa;
+color: #333;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.header-card {
+background-color: #fffaf7;
+border: 1px solid #f3e9e1;
+border-radius: 16px;
+width: 100%;
+max-width: 500px;
+text-align: center;
+padding: 25px 15px;
+box-shadow: 0 4px 12px rgba(218, 192, 173, 0.15);
+margin-bottom: 20px;
+}
+.header-card h1 {
+color: #e15b42;
+margin: 0 0 10px 0;
+font-size: 1.5rem;
+font-weight: bold;
+}
+.header-card p {
+color: #7a6e65;
+margin: 0;
+font-size: 0.9rem;
+line-height: 1.5;
+}
+
+.tab-container {
+display: flex;
+width: 100%;
+max-width: 500px;
+background: #f1eae2;
+border-radius: 12px;
+padding: 4px;
+margin-bottom: 20px;
+}
+.tab {
+flex: 1;
+text-align: center;
+padding: 12px 8px;
+cursor: pointer;
+font-weight: bold;
+font-size: 0.95rem;
+color: #71655c;
+border-radius: 8px;
+transition: 0.2s;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 5px;
+}
+.tab.active {
+color: white;
+background-color: #e15b42;
+}
+
+.game-panel {
+display: none;
+width: 100%;
+max-width: 500px;
+background: white;
+border: 1px solid #f0e6df;
+border-radius: 16px;
+padding: 20px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+.game-panel.active {
+display: block;
+}
+
+.game-title {
+font-size: 1.2rem;
+font-weight: bold;
+color: #1a2e40;
+border-left: 4px solid #e15b42;
+padding-left: 10px;
+margin-bottom: 20px;
+}
+
+.sub-mode-container {
+display: flex;
+gap: 10px;
+margin-bottom: 15px;
+}
+.btn-sub-mode {
+flex: 1;
+padding: 12px 5px;
+border-radius: 8px;
+font-weight: bold;
+font-size: 0.9rem;
+cursor: pointer;
+text-align: center;
+border: 1px solid #e2e8f0;
+background-color: white;
+color: #2d3748;
+}
+.btn-sub-mode.active {
+background-color: #2c3e50;
+color: white;
+border-color: #2c3e50;
+}
+.mode-instruction {
+font-size: 0.85rem;
+color: #718096;
+text-align: center;
+margin-bottom: 20px;
+line-height: 1.4;
+}
+
+.match-container {
+display: flex;
+gap: 15px;
+}
+.match-col {
+flex: 1;
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+.match-card {
+background: #fffdfb;
+border: 1px solid #ebdcd0;
+border-radius: 10px;
+padding: 15px 5px;
+text-align: center;
+font-size: 1rem;
+cursor: pointer;
+box-shadow: 0 2px 4px rgba(218,192,173,0.1);
+transition: 0.2s;
+min-height: 52px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.match-card.selected {
+background-color: #fdf2ed;
+border-color: #e15b42;
+color: #e15b42;
+font-weight: bold;
+}
+.match-card.matched {
+background-color: #f0fff4;
+border-color: #38a169;
+color: #38a169;
+cursor: default;
+}
+.stroke-img {
+font-size: 1.6rem;
+color: #b8321a;
+font-family: 'KaiTi', 'SimSun', serif;
+}
+
+.char-info {
+text-align: center;
+font-size: 1.05rem;
+margin-bottom: 10px;
+color: #4a5568;
+}
+.pinyin-tag {
+background: #f7fafc;
+border: 1px solid #e2e8f0;
+padding: 2px 8px;
+border-radius: 4px;
+font-weight: bold;
+color: #2b6cb0;
+}
+.mi-zi-ge {
+width: 180px;
+height: 180px;
+border: 2px solid #e53e3e;
+margin: 15px auto;
+position: relative;
+background-color: #fff;
+}
+.mi-zi-ge::before {
+content: "";
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+background:
+linear-gradient(to right, transparent 49%, #fbb6b6 49%, #fbb6b6 51%, transparent 51%),
+linear-gradient(to bottom, transparent 49%, #fbb6b6 49%, #fbb6b6 51%, transparent 51%),
+linear-gradient(to top right, transparent 49.5%, #fbb6b6 49.5%, #fbb6b6 50.5%, transparent 50.5%),
+linear-gradient(to top left, transparent 49.5%, #fbb6b6 49.5%, #fbb6b6 50.5%, transparent 50.5%);
+border: 1px dashed #fbb6b6;
+pointer-events: none;
+}
+.char-display {
+position: absolute;
+width: 100%;
+height: 100%;
+font-size: 130px;
+line-height: 180px;
+text-align: center;
+font-family: 'KaiTi', 'SimSun', serif;
+color: #2d3748;
+user-select: none;
+z-index: 1;
+}
+.btn-random {
+display: block;
+margin: 0 auto 15px auto;
+background-color: #e15b42;
+color: white;
+border: none;
+padding: 8px 18px;
+border-radius: 20px;
+font-size: 0.9rem;
+font-weight: bold;
+cursor: pointer;
+box-shadow: 0 2px 5px rgba(225,91,66,0.2);
+}
+.sequence-box {
+background-color: #faf8f5;
+border: 1px dashed #ebdcd0;
+padding: 12px;
+border-radius: 8px;
+min-height: 50px;
+margin-bottom: 15px;
+text-align: center;
+font-size: 1rem;
+color: #4a5568;
+}
+
+.controls-row {
+display: flex;
+gap: 10px;
+margin-bottom: 15px;
+}
+.btn-control {
+flex: 1;
+padding: 12px;
+font-size: 0.95rem;
+font-weight: bold;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: 0.2s;
+}
+.btn-clear {
+background-color: #718096;
+color: white;
+}
+.btn-submit {
+background-color: #38a169;
+color: white;
+}
+.btn-control:active {
+transform: scale(0.98);
+opacity: 0.9;
+}
+
+.result-box {
+padding: 15px;
+border-radius: 8px;
+margin-bottom: 15px;
+display: none;
+font-size: 0.95rem;
+line-height: 1.5;
+}
+.result-box.success {
+display: block;
+background-color: #f0fff4;
+border: 1px solid #c6f6d5;
+color: #22543d;
+}
+.result-box.error {
+display: block;
+background-color: #fff5f5;
+border: 1px solid #fed7d7;
+color: #742a2a;
+}
+.result-box h4 {
+margin: 0 0 8px 0;
+font-size: 1.05rem;
+}
+.result-box ol {
+margin: 5px 0 0 0;
+padding-left: 20px;
+}
+.pinyin-inline {
+font-weight: bold;
+color: #2b6cb0;
+margin-left: 5px;
+}
+
+.strokes-grid-title {
+font-size: 1rem;
+font-weight: bold;
+color: #d69e2e;
+margin: 15px 0 8px 0;
+}
+.strokes-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 10px;
+}
+.stroke-btn {
+background: white;
+border: 1px solid #ebdcd0;
+border-radius: 8px;
+padding: 10px;
+text-align: center;
+cursor: pointer;
+transition: 0.2s;
+}
+.stroke-btn:active {
+background: #fdf2ed;
+}
+.stroke-btn .zh {
+font-size: 1.1rem;
+font-weight: bold;
+color: #2d3748;
+}
+.stroke-btn .py {
+font-size: 0.8rem;
+color: #718096;
+margin-top: 2px;
+}
+
+.rules-container {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+.rule-card {
+background: #fffdfb;
+border: 1px solid #ebdcd0;
+border-radius: 10px;
+padding: 15px;
+}
+.rule-title {
+font-weight: bold;
+color: #e15b42;
+margin-bottom: 5px;
+}
+.rule-desc {
+font-size: 0.9rem;
+color: #555;
+line-height: 1.4;
 }
 </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-6 flex flex-col">
+<body>
 
-<header class="bg-red-600 text-white shadow-md sticky top-0 z-50">
-<div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-<h1 class="text-xl font-bold flex items-center gap-2">
-<i class="fa-solid fa-gavel"></i> สื่อการเรียนรู้ขีดและลำดับอักษรจีน (V4 Final)
-</h1>
-<div class="flex bg-red-700 p-1 rounded-lg w-full sm:w-auto">
-<button onclick="switchTab('game-tab')" id="btn-game-tab" class="flex-1 sm:flex-none px-6 py-2 rounded-md font-medium text-center transition-all duration-200 bg-white text-red-600 shadow-sm">
-<i class="fa-solid fa-gamepad mr-2"></i>เกม
-</button>
-<button onclick="switchTab('content-tab')" id="btn-content-tab" class="flex-1 sm:flex-none px-6 py-2 rounded-md font-medium text-center transition-all duration-200 text-white hover:bg-red-600/50">
-<i class="fa-solid fa-book-open mr-2"></i>เนื้อหา
-</button>
-</div>
-</div>
-</header>
-
-<div class="max-w-4xl w-full mx-auto px-4 mt-4">
-<a href="index.html" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold py-2 px-4 rounded-xl shadow-xs transition duration-150">
-<i class="fa-solid fa-house"></i> กลับหน้าหลัก (Index)
-</a>
+<div class="header-card">
+<h1>แอปพลิเคชันฝึกขีดเขียน<br>อักษรจีนอัจฉริยะ (V3)</h1>
+<p>บทเรียนพร้อมโหมดเกมการเรียนรู้ที่สมบูรณ์แบบ แก้ไขการลากเส้นบนมือถือให้เสถียร 100%</p>
 </div>
 
-<main class="max-w-4xl mx-auto px-4 mt-4 flex-grow w-full">
-
-<div id="game-tab" class="tab-content space-y-6">
-<div class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
-<button onclick="selectGame(1)" id="btn-g1" class="p-3 text-sm rounded-lg font-bold transition-all text-center border bg-red-50 border-red-200 text-red-600 shadow-xs">1. จับคู่ขีด ↔ ชื่อ</button>
-<button onclick="selectGame(2)" id="btn-g2" class="p-3 text-sm rounded-lg font-bold transition-all text-center border border-transparent text-slate-600 hover:bg-slate-100">2. เรียง 7 กฎทอง</button>
-<button onclick="selectGame(3)" id="btn-g3" class="p-3 text-sm rounded-lg font-bold transition-all text-center border border-transparent text-slate-600 hover:bg-slate-100">3. ป้อนลำดับขีด</button>
-<button onclick="selectGame(4)" id="btn-g4" class="p-3 text-sm rounded-lg font-bold transition-all text-center border border-transparent text-slate-600 hover:bg-slate-100">4. กระดานเขียนตามรอย</button>
+<div class="tab-container">
+<div id="tab-game" class="tab active" onclick="switchMainMode('game')">🎮 โหมดเกมรวม (4 เกม)</div>
+<div id="tab-content" class="tab" onclick="switchMainMode('content')">📖 โหมดเนื้อหา 7 กฎทอง & คลัง 32 ขีด</div>
 </div>
 
-<section id="game-1" class="game-section bg-white p-6 rounded-2xl shadow-md border border-slate-100">
-<div class="border-b border-slate-100 pb-4 mb-4 flex justify-between items-center flex-wrap gap-2">
-<h2 class="text-xl font-bold text-slate-900"><i class="fa-solid fa-shapes text-red-500 mr-2"></i>เกมที่ 1: จับคู่ขีด ↔ ชื่อ</h2>
-<span id="g1-score" class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-bold">คะแนน: 0/0</span>
-</div>
+<div id="main-game-panel" class="game-panel active">
+<div class="game-title">เกมที่ 1: จับคู่ชื่อขีด ↔ รูปขีด (แยกโหมด)</div>
 
-<div id="g1-setup" class="bg-slate-50 p-4 rounded-xl space-y-4 mb-6">
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-<div>
-<label class="block text-xs font-bold text-slate-500 uppercase mb-1">โหมดจำนวนขีด</label>
-<select id="g1-mode" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm">
-<option value="8">8 ขีดพื้นฐาน</option>
-<option value="32">32 ขีดทั้งหมด (สุ่ม 8 ขีด)</option>
-</select>
+<div class="sub-mode-container">
+<div id="sm1" class="btn-sub-mode active" onclick="switchSubMode(1)">โหมด 8 ขีดพื้นฐาน</div>
+<div id="sm2" class="btn-sub-mode" onclick="switchSubMode(2)">โหมด 32 ขีด (สุ่มมา 8 ขีด)</div>
 </div>
-<div>
-<label class="block text-xs font-bold text-slate-500 uppercase mb-1">จำนวนข้อ</label>
-<select id="g1-total-rounds" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm">
-<option value="3">3 ข้อ</option>
-<option value="5" selected>5 ข้อ</option>
-<option value="10">10 ข้อ</option>
-</select>
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-500 uppercase mb-1">เวลาต่อข้อ (วินาที)</label>
-<input type="number" id="g1-time-limit" value="15" min="5" max="60" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm">
-</div>
-</div>
-<button onclick="startGame1()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">เริ่มเกม</button>
-</div>
+<p class="mode-instruction">วิธีเล่น: เลือกคู่ซ้าย-ขวา คลิกซ้ำที่ตัวเดิมเพื่อยกเลิกการเลือกได้</p>
 
-<div id="g1-play" class="hidden space-y-4">
-<div class="flex justify-between items-center bg-amber-50 border border-amber-200 p-2 rounded-lg text-sm">
-<span id="g1-round-count" class="font-medium text-amber-800">ข้อที่ 1/5</span>
-<span id="g1-timer" class="font-bold text-red-600"><i class="fa-regular fa-clock mr-1"></i> เวลาเหลือ: 15 วินาที</span>
+<div class="match-container">
+<div class="match-col" id="left-col">
+<div class="match-card" onclick="selectCard(this,'left','tí')">提 (tí)</div>
+<div class="match-card" onclick="selectCard(this,'left','piě')">撇 (piě)</div>
+<div class="match-card" onclick="selectCard(this,'left','diǎn')">点 (diǎn)</div>
 </div>
-
-<div class="grid grid-cols-2 gap-4">
-<div class="space-y-2">
-<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider text-center">สัญลักษณ์ขีด</h3>
-<div id="g1-stroke-list" class="space-y-2"></div>
-</div>
-<div class="space-y-2">
-<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider text-center">ชื่อเรียกขีด</h3>
-<div id="g1-name-list" class="space-y-2"></div>
-</div>
-</div>
-<button onclick="checkGame1Answer()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition mt-4">ส่งคำตอบประจำข้อ</button>
-</div>
-</section>
-
-<section id="game-2" class="game-section bg-white p-6 rounded-2xl shadow-md border border-slate-100 hidden">
-<div class="border-b border-slate-100 pb-4 mb-4 flex justify-between items-center">
-<h2 class="text-xl font-bold text-slate-900"><i class="fa-solid fa-list-ol text-red-500 mr-2"></i>เกมที่ 2: เรียงลำดับ 7 กฎทองขีดอักษรจีน</h2>
-</div>
-<p class="text-xs text-slate-500 mb-4 bg-slate-50 p-2 rounded-md"><i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> กดปุ่ม ▲ เลื่อนขึ้น หรือ ▼ เลื่อนลง เพื่อเรียงลำดับกฎทองให้ถูกต้องจากกฎข้อที่ 1 ถึง 7 เมื่อเสร็จแล้วกดส่งตรวจ</p>
-
-<div class="flex justify-end mb-3">
-<button onclick="initGame2()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 py-1.5 px-3 rounded-lg border border-slate-200 transition"><i class="fa-solid fa-shuffle mr-1"></i>สลับตำแหน่งใหม่</button>
-</div>
-
-<ul id="g2-list" class="space-y-2 mb-6"></ul>
-<button onclick="checkGame2Answer()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow-md transition">ส่งคำตอบตรวจความถูกต้อง</button>
-</section>
-
-<section id="game-3" class="game-section bg-white p-6 rounded-2xl shadow-md border border-slate-100 hidden">
-<div class="border-b border-slate-100 pb-4 mb-4 flex justify-between items-center">
-<h2 class="text-xl font-bold text-slate-900"><i class="fa-solid fa-keyboard text-red-500 mr-2"></i>เกมที่ 3: ป้อนลำดับขีดอักษรจีน</h2>
-<button onclick="nextGame3()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 py-1.5 px-3 rounded-lg border border-slate-200 transition"><i class="fa-solid fa-rotate mr-1"></i> สุ่มคำใหม่</button>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-<div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center text-center">
-<span class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">โจทย์อักษรจีน</span>
-<div id="g3-char" class="chinese-font text-7xl font-bold text-red-600 bg-white border border-slate-200 w-32 h-32 rounded-xl flex items-center justify-center shadow-inner">字</div>
-<div id="g3-pinyin" class="text-lg font-bold text-slate-600 mt-2">zì</div>
-<div id="g3-meaning" class="text-sm text-slate-400">ตัวอักษร</div>
-</div>
-
-<div class="md:col-span-2 space-y-4">
-<div class="bg-slate-900 text-white p-4 rounded-xl min-h-[80px] flex flex-col justify-between">
-<span class="text-slate-500 text-xs font-bold uppercase block mb-1">สิ่งที่คุณกดป้อนเข้ามา:</span>
-<div id="g3-user-input" class="flex flex-wrap gap-1.5 text-sm font-bold text-amber-400 min-h-[1.5rem]"></div>
-</div>
-
-<div class="flex justify-end">
-<button onclick="popGame3Stroke()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-1.5 px-4 rounded-lg shadow-xs transition"><i class="fa-solid fa-delete-left mr-1"></i>ลบขีดล่าสุด</button>
-</div>
-
-<div class="space-y-4 bg-slate-50 p-3 rounded-xl border border-slate-200">
-<div>
-<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">8 ขีดพื้นฐาน</span>
-<div id="g3-kb-basic" class="grid grid-cols-4 gap-1"></div>
-</div>
-<div>
-<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">24 ขีดผสม</span>
-<div id="g3-kb-complex" class="grid grid-cols-4 sm:grid-cols-6 gap-1 max-h-[160px] overflow-y-auto p-0.5"></div>
+<div class="match-col" id="right-col">
+<div class="match-card stroke-img" onclick="selectCard(this,'right','tí')">〨</div>
+<div class="match-card stroke-img" onclick="selectCard(this,'right','piě')">丿</div>
+<div class="match-card stroke-img" onclick="selectCard(this,'right','diǎn')">丶</div>
 </div>
 </div>
 
-<button onclick="checkGame3Answer()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg shadow transition">ตรวจสอบคำตอบ</button>
+<hr style="border: 0; border-top: 1px solid #f0e6df; margin: 30px 0;">
 
-<div id="g3-solution" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-xl space-y-2">
-<h4 class="text-rose-700 font-bold text-sm"><i class="fa-solid fa-circle-exclamation mr-1"></i> เฉลยลำดับขีดที่ถูกต้อง:</h4>
-<div id="g3-solution-list" class="flex flex-wrap gap-2"></div>
-</div>
-</div>
-</div>
-</section>
+<div class="game-title">เกมที่ 3: เลือกขีดตามลำดับที่ถูกต้อง</div>
+<button class="btn-random" onclick="randomizeCharacter()">🎲 สุ่มคำใหม่</button>
 
-<section id="game-4" class="game-section bg-white p-6 rounded-2xl shadow-md border border-slate-100 hidden">
-<div class="border-b border-slate-100 pb-4 mb-4 flex justify-between items-center">
-<h2 class="text-xl font-bold text-slate-900"><i class="fa-solid fa-pen-nib text-red-500 mr-2"></i>เกมที่ 4: กระดานเขียนตามรอย</h2>
-<button onclick="nextGame4()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 py-1.5 px-3 rounded-lg border border-slate-200 transition"><i class="fa-solid fa-rotate mr-1"></i> สุ่มคำใหม่</button>
+<div class="char-info">
+คำศัพท์ข้อที่: <span id="g3-index">80 / 96</span> |
+พินอิน: <span id="g3-pinyin" class="pinyin-tag">yún</span> |
+แปลว่า: <span id="g3-meaning">เมฆ</span>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-<div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center space-y-2">
-<span class="text-xs font-bold text-slate-400 block uppercase">เป้าหมายตัวอักษร</span>
-<div class="flex justify-center items-center gap-4">
-<span id="g4-char" class="chinese-font text-5xl font-bold text-slate-700"></span>
-<div>
-<div id="g4-pinyin" class="text-md font-bold text-slate-600"></div>
-<div id="g4-meaning" class="text-xs text-slate-400"></div>
+<div class="mi-zi-ge">
+<div id="g3-char-display" class="char-display">云</div>
 </div>
+
+<div class="char-info" style="font-size: 0.9rem; text-align: left; font-weight: bold;">
+ลำดับขีดที่คุณกดเลือก:
 </div>
-<div class="text-[11px] bg-amber-50 text-amber-800 border border-amber-200 p-2 rounded text-left">
-<strong>ลำดับขีด:</strong> <span id="g4-strokes-desc" class="text-slate-600"></span>
+<div id="sequence-display" class="sequence-box">
+ยังไม่ได้เลือกขีด
+</div>
+
+<div class="controls-row">
+<button class="btn-control btn-clear" onclick="clearLastStroke()">↩️ ลบขีดล่าสุด</button>
+<button class="btn-control btn-submit" onclick="checkAnswer()">✔️ ตรวจสอบคำตอบ</button>
+</div>
+
+<div id="result-box" class="result-box"></div>
+
+<div class="strokes-grid-title">⭐ 8 ขีดพื้นฐานหลัก</div>
+<div class="strokes-grid">
+<div class="stroke-btn" onclick="addStroke('点')">
+<div class="zh">点</div><div class="py">diǎn</div>
+</div>
+<div class="stroke-btn" onclick="addStroke('横')">
+<div class="zh">横</div><div class="py">héng</div>
+</div>
+<div class="stroke-btn" onclick="addStroke('竖')">
+<div class="zh">竖</div><div class="py">shù</div>
+</div>
+<div class="stroke-btn" onclick="addStroke('撇')">
+<div class="zh">撇</div><div class="py">piě</div>
+</div>
+<div class="stroke-btn" onclick="addStroke('捺')">
+<div class="zh">捺</div><div class="py">nà</div>
+</div>
+<div class="stroke-btn" onclick="addStroke('提')">
+<div class="zh">提</div><div class="py">tí</div>
+</div>
+<div class="stroke-btn" onclick="addStroke('折')">
+<div class="zh">折</div><div class="py">zhé</div>
+</div>
+<div class="stroke-btn" onclick="addStroke('钩')">
+<div class="zh">钩</div><div class="py">gōu</div>
+</div>
 </div>
 </div>
 
-<div class="flex justify-center">
-<div class="relative bg-white border-2 border-red-500 rounded-xl overflow-hidden shadow-md w-[260px] h-[260px]">
-<div class="absolute inset-0 canvas-grid pointer-events-none"></div>
-<div id="g4-ghost" class="absolute inset-0 flex items-center justify-center chinese-font text-[180px] font-bold text-slate-200 select-none pointer-events-none opacity-40"></div>
-<canvas id="g4-canvas" width="260" height="260" class="absolute inset-0 bg-transparent block touch-none z-10" style="touch-action: none;"></canvas>
+<div id="main-content-panel" class="game-panel">
+<div class="game-title">📖 7 กฎทองการเขียนอักษรจีน</div>
+<div class="rules-container">
+<div class="rule-card">
+<div class="rule-title">กฎที่ 1: บนลงล่าง (先上后下)</div>
+<div class="rule-desc">เขียนเส้นส่วนบนสุดก่อน แล้วค่อยไล่ลงมาส่วนล่าง เช่น คำว่า 三, 言</div>
 </div>
+<div class="rule-card">
+<div class="rule-title">กฎที่ 2: ซ้ายไปขวา (先左后右)</div>
+<div class="rule-desc">เริ่มเขียนโครงสร้างฝั่งซ้ายให้เสร็จ แล้วค่อยตามด้วยฝั่งขวา เช่น คำว่า 川, 好</div>
 </div>
-
-<div class="space-y-2 w-full">
-<button onclick="clearGame4Canvas()" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-sm shadow transition"><i class="fa-solid fa-eraser mr-1"></i> ล้างกระดานลากใหม่</button>
-<button onclick="speakG4Word()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm shadow transition"><i class="fa-solid fa-volume-high mr-1"></i> ฟังเสียงอ่านอักษร</button>
+<div class="rule-card">
+<div class="rule-title">กฎที่ 3: แนวนอนก่อนแนวตั้ง (先横后竖)</div>
+<div class="rule-desc">เมื่อมีเส้นตัดกัน ให้ลากเส้นนอนก่อนเส้นตั้งตัดผ่าน เช่น คำว่า 十, 丰</div>
 </div>
-</div>
-</section>
-</div>
-
-<div id="content-tab" class="tab-content space-y-6 hidden">
-
-<section class="bg-white p-6 rounded-2xl shadow-md border border-slate-100">
-<h2 class="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4"><i class="fa-solid fa-wand-magic-sparkles text-amber-500 mr-2"></i>7 กฎทองในการเขียนอักษรจีน</h2>
-<div id="rules-container" class="space-y-3"></div>
-</section>
-
-<section class="bg-white p-6 rounded-2xl shadow-md border border-slate-100">
-<h2 class="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4"><i class="fa-solid fa-star text-amber-500 mr-2"></i>8 ขีดพื้นฐาน (永字八法)</h2>
-<p class="text-xs text-slate-500 mb-4">ฝึกฝนทักษะการขีดอักษรเบื้องต้นผ่าน Mini Canvas จำลอง มีตัวช่วยลายเส้นเงาพร้อมตัวตรวจวัดค่าความแม่นยำความใกล้เคียงเบื้องต้น</p>
-<div id="basic-strokes-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-</section>
-
-<section class="bg-white p-6 rounded-2xl shadow-md border border-slate-100">
-<button onclick="toggleComplexSection()" class="w-full flex justify-between items-center text-xl font-bold text-slate-900 focus:outline-none">
-<span><i class="fa-solid fa-layer-group text-blue-500 mr-2"></i>ขีดผสมและขีดอื่นๆ เพิ่มเติม (~24 ขีด)</span>
-<i id="complex-toggle-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200"></i>
-</button>
-
-<div id="complex-strokes-wrapper" class="hidden mt-4 pt-4 border-t border-slate-100">
-<div id="complex-strokes-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-</div>
-</section>
-</div>
-
-</main>
-
-<footer class="max-w-4xl w-full mx-auto px-4 mt-8 pt-4 border-t border-slate-200 text-center space-y-3">
-<div>
-<a href="index.html" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold py-2.5 px-6 rounded-xl shadow-md transition duration-150">
-<i class="fa-solid fa-house"></i> กลับสู่หน้าหลัก index.html
-</a>
-</div>
-<p class="text-xs text-slate-400">© 2026 สื่อการเรียนรู้ขีดและลำดับอักษรจีน. All Rights Reserved.</p>
-</footer>
-
-<div id="app-alert" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-<div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl transform scale-95 transition-transform duration-300 space-y-4">
-<div id="alert-icon" class="text-4xl"></div>
-<h3 id="alert-title" class="text-lg font-bold text-slate-900"></h3>
-<p id="alert-msg" class="text-sm text-slate-500"></p>
-<button onclick="closeAppAlert()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-xl transition">ตกลง</button>
 </div>
 </div>
 
 <script>
-// ==========================================
-// DATA DICTIONARIES (32 STROKES & 100+ WORDS)
-// ==========================================
-const STROKES_DATA = [
-// 8 Basic
-{ id: "s1", name: "点", pinyin: "diǎn (เตี่ยน)", type: "basic", symbol: "丶", desc: "จุดจากบนซ้ายลงล่างขวา", points: [[50,30], [60,45], [70,60]] },
-{ id: "s2", name: "横", pinyin: "héng (เหิง)", type: "basic", symbol: "一", desc: "ลากเส้นตรงจากซ้ายไปขวา", points: [[25,50], [50,50], [75,50]] },
-{ id: "s3", name: "竖", pinyin: "shù (ซู่)", type: "basic", symbol: "丨", desc: "ลากเส้นตรงลงมาจากบนลงล่าง", points: [[50,20], [50,50], [50,80]] },
-{ id: "s4", name: "撇", pinyin: "piě (เพี่ย)", type: "basic", symbol: "丿", desc: "ลากเส้นโค้งลงไปทางล่างซ้าย", points: [[75,25], [55,50], [25,75]] },
-{ id: "s5", name: "捺", pinyin: "nà (น้า)", type: "basic", symbol: "乀", desc: "ลากเส้นโค้งลงไปทางล่างขวา", points: [[25,25], [50,50], [80,75]] },
-{ id: "s6", name: "提", pinyin: "tí (ถี)", type: "basic", symbol: "㇀", desc: "ลากเส้นเฉียงขึ้นจากล่างซ้ายไปบนขวา", points: [[25,75], [50,55], [75,35]] },
-{ id: "s7", name: "折", pinyin: "zhé (เจ๋อ)", type: "basic", symbol: "𠃍", desc: "เส้นหักมุมเปลี่ยนทิศทาง", points: [[25,35], [70,35], [70,75]] },
-{ id: "s8", name: "钩", pinyin: "gōu (โกว)", type: "basic", symbol: "亅", desc: "เส้นตวัดขอที่ปลายเส้นหลัก", points: [[50,20], [50,75], [35,60]] },
-
-// 24 Complex
-{ id: "s9", name: "横折", pinyin: "héng zhé", type: "complex", symbol: "┐", desc: "ลากขวางแล้วหักลงล่าง", points: [[25,30], [70,30], [70,75]] },
-{ id: "s10", name: "横钩", pinyin: "héng gōu", type: "complex", symbol: "乛", desc: "ลากขวางแล้วตวัดขอสั้นลงซ้าย", points: [[25,35], [75,35], [60,50]] },
-{ id: "s11", name: "横折钩", pinyin: "héng zhé gōu", type: "complex", symbol: "", desc: "ลากขวาง หักลงล่าง แล้วตวัดขอขึ้นซ้าย", points: [[25,30], [70,30], [70,70], [55,60]] },
-{ id: "s12", name: "横撇", pinyin: "héng piě", type: "complex", symbol: " sandbox", desc: "ลากขวางแล้วตวัดเฉียงล่างซ้าย", points: [[25,35], [75,35], [40,75]] },
-{ id: "s13", name: "撇折", pinyin: "piě zhé", type: "complex", symbol: "𠃋", desc: "ตวัดเฉียงซ้ายแล้วหักขวางขึ้นขวาเล็กน้อย", points: [[65,25], [35,60], [75,60]] },
-{ id: "s14", name: "撇点", pinyin: "piě diǎn", type: "complex", symbol: "𡿨", desc: "ตวัดเฉียงซ้ายแล้วลากจุดยาวเฉียงขวาลง", points: [[65,25], [35,55], [65,80]] },
-{ id: "s15", name: "竖折", pinyin: "shù zhé", type: "complex", symbol: "𠃊", desc: "ลากตั้งลงมาแล้วหักขวางไปขวา", points: [[35,25], [35,65], [75,65]] },
-{ id: "s16", name: "竖提", pinyin: "shù tí", type: "complex", symbol: "𠄌", desc: "ลากตั้งลงมาแล้วตวัดเฉียงขึ้นขวา", points: [[35,25], [35,65], [70,35]] },
-{ id: "s17", name: "竖钩", pinyin: "shù gōu", type: "complex", symbol: "亅", desc: "ลากตั้งลงมาแล้วตวัดขอขึ้นซ้าย", points: [[50,20], [50,75], [35,60]] },
-{ id: "s18", name: "弯钩", pinyin: "wān gōu", type: "complex", symbol: "亅", desc: "ลากเส้นโค้งนูนซ้ายลงมาแล้วตวัดขึ้นซ้าย", points: [[45,25], [55,50], [45,75], [30,65]] },
-{ id: "s19", name: "斜钩", pinyin: "xié gōu", type: "complex", symbol: "㇂", desc: "ลากโค้งเฉียงลงขวาแล้วตวัดหงายขึ้นด้านบน", points: [[35,25], [60,65], [75,75], [75,55]] },
-{ id: "s20", name: "卧钩", pinyin: "wò gōu", type: "complex", symbol: "⺃", desc: "ลากท่านอนโค้งหงายราบแล้วตวัดเฉียงขึ้นซ้าย", points: [[30,45], [55,70], [75,60], [65,40]] },
-{ id: "s21", name: "竖弯", pinyin: "shù wān", type: "complex", symbol: "㇄", desc: "ลากตั้งโค้งมนออกไปทางขวาแนวนอน", points: [[35,25], [35,60], [55,70], [75,70]] },
-{ id: "s22", name: "竖弯钩", pinyin: "shù wān gōu", type: "complex", symbol: "乚", desc: "ลากตั้งโค้งมนไปทางขวาแล้วตวัดหงายขึ้นตรงๆ", points: [[35,25], [35,60], [65,60], [65,45]] },
-{ id: "s23", name: "竖折折", pinyin: "shù zhé zhé", type: "complex", symbol: "𠃎", desc: "ลากตั้งลงมา หักขวางขวา แล้วหักลงล่างอีกรอบ", points: [[30,25], [30,50], [65,50], [65,80]] },
-{ id: "s24", name: "竖折撇", pinyin: "shù zhé piě", type: "complex", symbol: "ㄣ", desc: "ลากตั้ง หักขวางขวา แล้วปัดเฉียงซ้ายยาวลง", points: [[35,20], [35,45], [65,45], [35,80]] },
-{ id: "s25", name: "横折折撇", pinyin: "héng zhé zhé piě", type: "complex", symbol: "ㄋ", desc: "ขวาง หักลงซ้าย หักขวางขวา ปัดเฉียงลงซ้าย", points: [[25,25], [70,25], [45,45], [70,55], [35,80]] },
-{ id: "s26", name: "横折弯", pinyin: "héng zhé wān", type: "complex", symbol: "㇍", desc: "ลากขวาง หักตั้งลง แล้วโค้งมนไปทางขวา", points: [[25,30], [65,30], [65,55], [80,65]] },
-{ id: "s27", name: "横折弯钩", pinyin: "héng zhé wān gōu", type: "complex", symbol: "𠄎", desc: "ขวาง หักลง โค้งราบขวา แล้วตวัดขอขึ้นบน", points: [[25,25], [60,25], [50,50], [75,55], [70,40]] },
-{ id: "s28", name: "横斜钩", pinyin: "héng xié gōu", type: "complex", symbol: "⺄", desc: "ลากขวาง หักเฉียงยาวล่างขวา ตวัดหงายขึ้นบน", points: [[25,30], [65,30], [45,70], [55,55]] },
-{ id: "s29", name: "横折折折钩", pinyin: "héng zhé zhé zhé gōu", type: "complex", symbol: "𡗗", desc: "ขวาง หักลง ขวาง หักลงอีกรอบ ตวัดขอซ้าย", points: [[25,25], [75,25], [60,45], [75,55], [55,75], [40,65]] },
-{ id: "s30", name: "横折折折", pinyin: "héng zhé zhé zhé", type: "complex", symbol: "𠘨", desc: "ลากขวาง หักลง ขวาง หักลงต่อเนื่องโดยไม่ตวัด", points: [[25,25], [75,25], [60,45], [75,55], [50,80]] },
-{ id: "s31", name: "横撇弯钩", pinyin: "héng piě wān gōu", type: "complex", symbol: "阝", desc: "ลากขวาง ปัดเฉียงลงซ้าย แล้วโค้งเป็นรูปหูตวัดขอ", points: [[25,30], [70,30], [40,50], [65,65], [50,80], [35,70]] },
-{ id: "s32", name: "竖折折钩", pinyin: "shù zhé zhé gōu", type: "complex", symbol: "丂", desc: "ลากตั้ง หักขวางขวา หักตั้งลง ตวัดขึ้นซ้าย", points: [[30,20], [30,45], [70,45], [70,75], [50,65]] }
+var charDatabase = [
+{
+char: "云",
+pinyin: "yún",
+meaning: "เมฆ",
+solution: ["横", "横", "撇", "点"],
+detailedSolution: [
+{ name: "横", py: "héng" },
+{ name: "横", py: "héng" },
+{ name: "撇折", py: "piězhé" },
+{ name: "点", py: "diǎn" }
+ ]
+},
+{
+char: "因",
+pinyin: "yīn",
+meaning: "เพราะว่า",
+solution: ["竖", "折", "横", "撇", "捺", "横"],
+detailedSolution: [
+{ name: "竖", py: "shù" },
+{ name: "横折", py: "héngzhé" },
+{ name: "横", py: "héng" },
+{ name: "撇", py: "piě" },
+{ name: "捺", py: "nà" },
+{ name: "横", py: "héng" }
+ ]
+}
 ];
 
-const GOLDEN_RULES = [
-{ id: 1, rule: "先横后竖", pinyin: "xiān héng hòu shù", desc: "เขียนแนวนอนก่อนแนวตั้ง เช่น 十, 干", detail: "ลากเส้นขวางให้เสร็จสิ้นเรียบร้อยสมบูรณ์ก่อน จึงค่อยลากเส้นตั้งตัดลงมาจากด้านบนลงล่าง" },
-{ id: 2, rule: "先撇后捺", pinyin: "xiān piě hòu nà", desc: "เขียนปัดซ้ายก่อนปัดขวา เช่น 人, 八", detail: "เริ่มตวัดเฉียงไปทางซ้าย (撇) ก่อนเสมอ แล้วจึงตามด้วยการลากเฉียงทแยงลงมุมขวา (捺)" },
-{ id: 3, rule: "从上到下", pinyin: "cóng shàng dào xià", desc: "เขียนจากบนลงล่าง เช่น 三, 言", detail: "ไล่ลำดับการเขียนองค์ประกอบอักษรจากแถวบนสุดลงล่างทีละชั้นอย่างเป็นระบบ" },
-{ id: 4, rule: "从左到右", pinyin: "cóng zuǒ dào yòu", desc: "เขียนจากซ้ายไปขวา เช่น 明, 好", detail: "หากอักษรแบ่งฝั่งโครงสร้างซ้ายขวาชัดเจน ให้ทำซีกซ้ายให้จบสิ้นกระบวนความก่อนทำซีกขวา" },
-{ id: 5, rule: "先外后内", pinyin: "xiān wài hòu nèi", desc: "เขียนด้านนอกก่อนด้านใน เช่น 月, 同", detail: "สร้างกรอบล้อมรอบภายนอกสามด้านบนก่อน แล้วจึงป้อนเขียนรายละเอียดอักขระข้างใน" },
-{ id: 6, rule: "先外后内再封口", pinyin: "xiān wài hòu nèi zài fēng kǒu", desc: "เข้าห้องก่อนปิดประตู เช่น 国, 回", detail: "สร้างกรอบนอกล้อมรอบ เติมเนื้อหาข้างในห้องจนเสร็จสมบูรณ์ แล้วลากเส้นขวางปิดฐานล่างสุดปิดท้าย" },
-{ id: 7, rule: "先中间后两边", pinyin: "xiān zhōng jiān hòu liǎng biān", desc: "เขียนตรงกลางก่อนสองข้าง เช่น 小, 水", detail: "หากโครงสร้างมีแกนสมมาตรเด่นชัด ให้เขียนเส้นแกนกลางหลักก่อน แล้วค่อยเติมนปีกซ้ายและขวาตามลำดับ" }
- ];
+var currentIdx = 0;
+var userStrokes = [];
+var selectedLeft = null;
+var selectedRight = null;
 
-const CHINESE_WORDS_POOL = [];
-const basicWordsData = [
-{ w: "一", p: "yī", m: "หนึ่ง", s: ["s2"] },
-{ w: "二", p: "èr", m: "สอง", s: ["s2", "s2"] },
-{ w: "三", p: "sān", m: "สาม", s: ["s2", "s2", "s2"] },
-{ w: "十", p: "shí", m: "สิบ", s: ["s2", "s3"] },
-{ w: "人", p: "rén", m: "คน", s: ["s4", "s5"] },
-{ w: "八", p: "bā", m: "แปด", s: ["s4", "s5"] },
-{ w: "大", p: "dà", m: "ใหญ่", s: ["s2", "s4", "s5"] },
-{ w: "口", p: "kǒu", m: "ปาก", s: ["s3", "s9", "s2"] },
-{ w: "日", p: "rì", m: "พระอาทิตย์", s: ["s3", "s9", "s2", "s2"] },
-{ w: "中", p: "zhōng", m: "กลาง", s: ["s3", "s9", "s2", "s3"] },
-{ w: "小", p: "xiǎo", m: "เล็ก", s: ["s17", "s4", "s1"] },
-{ w: "水", p: "shuǐ", m: "น้ำ", s: ["s17", "s12", "s4", "s5"] },
-{ w: "王", p: "wáng", m: "ราชา", s: ["s2", "s2", "s3", "s2"] },
-{ w: "土", p: "tǔ", m: "ดิน", s: ["s2", "s3", "s2"] },
-{ w: "木", p: "mù", m: "ไม้", s: ["s2", "s3", "s4", "s5"] },
-{ w: "本", p: "běn", m: "รากฐาน", s: ["s2", "s3", "s4", "s5", "s2"] },
-{ w: "天", p: "tiān", m: "ท้องฟ้า", s: ["s2", "s2", "s4", "s5"] },
-{ w: "工", p: "gōng", m: "งาน", s: ["s2", "s3", "s2"] },
-{ w: "火", p: "huǒ", m: "ไฟ", s: ["s1", "s4", "s4", "s5"] },
-{ w: "山", p: "shān", m: "ภูเขา", s: ["s3", "s15", "s3"] },
-{ w: "月", p: "yuè", m: "พระจันทร์", s: ["s3", "s11", "s2", "s2"] },
-{ w: "子", p: "zǐ", m: "ลูก", s: ["s10", "s18", "s2"] },
-{ w: "手", p: "shǒu", m: "มือ", s: ["s4", "s2", "s2", "s22"] },
-{ w: "牛", p: "niú", m: "วัว", s: ["s4", "s2", "s2", "s3"] },
-{ w: "毛", p: "máo", m: "ขน", s: ["s4", "s2", "s2", "s19"] },
-{ w: "风", p: "fēng", m: "ลม", s: ["s4", "s28", "s4", "s1"] },
-{ w: "心", p: "xīn", m: "หัวใจ", s: ["s1", "s20", "s1", "s1"] },
-{ w: "女", p: "nǚ", m: "ผู้หญิง", s: ["s14", "s4", "s2"] },
-{ w: "太", p: "tài", m: "เกินไป", s: ["s2", "s4", "s5", "s1"] },
-{ w: "勺", p: "sháo", m: "ช้อน", s: ["s4", "s11", "s1"] }
-];
+function switchMainMode(mode) {
+document.getElementById('tab-game').classList.remove('active');
+document.getElementById('tab-content').classList.remove('active');
+document.getElementById('main-game-panel').classList.remove('active');
+document.getElementById('main-content-panel').classList.remove('active');
 
-function generateWordsPool() {
-CHINESE_WORDS_POOL.push(...basicWordsData);
-const extraCharacters = [
-{w:"上", p:"shàng", m:"บน", s:["s3","s2","s2"]}, {w:"下", p:"xià", m:"ล่าง", s:["s2","s3","s1"]},
-{w:"不", p:"bù", m:"ไม่", s:["s2","s4","s3","s1"]}, {w:"开", p:"kāi", m:"เปิด", s:["s2","s2","s4","s3"]},
-{w:"五", p:"wǔ", m:"ห้า", s:["s2","s3","s9","s2"]}, {w:"四", p:"sì", m:"สี่", s:["s3","s9","s3","s9","s2"]},
-{w:"目", p:"mù", m:"ตา", s:["s3","s9","s2","s2","s2"]}, {w:"耳", p:"ěr", m:"หู", s:["s2","s3","s3","s2","s2","s2"]},
-{w:"田", p:"tián", m:"นา", s:["s3","s9","s2","s3","s2"]}, {w:"白", p:"bái", m:"ขาว", s:["s1","s3","s9","s2","s2"]},
-{w:"云", p:"yún", m:"เมฆ", s:["s2","s2","s13","s1"]}, {w:"公", p:"gōng", m:"สาธารณะ", s:["s4","s1","s13","s1"]},
-{w:"车", p:"chē", m:"รถ", s:["s2","s23","s2","s3"]}, {w:"牙", p:"yá", m:"ฟัน", s:["s2","s17","s4","s19"]},
-{w:"长", p:"cháng", m:"ยาว", s:["s4","s2","s3","s1"]}, {w:"片", p:"piàn", m:"แผ่น", s:["s4","s3","s2","s2"]},
-{w:"皮", p:"pí", m:"ผิวหนัง", s:["s5","s3","s9","s4","s1"]}, {w:"用", p:"yòng", m:"ใช้", s:["s3","s11", "s2","s2","s3"]},
-{w:"民", p:"mín", m:"ประชาชน", s:["s10","s3","s2","s15","s19"]}, {w:"生", p:"shēng", m:"เกิด", s:["s4","s2","s2","s3","s2"]},
-{w:"正", p:"zhèng", m:"ถูกต้อง", s:["s2","s3","s2","s3","s2"]}, {w:"出", p:"chū", m:"ออก", s:["s15","s3","s3","s15","s3"]},
-{w:"去", p:"qù", m:"ไป", s:["s2","s3","s2","s13","s1"]}, {w:"广", p:"guǎng", m:"กว้าง", s:["s1","s2","s4"]},
-{w:"厂", p:"chǎng", m:"โรงงาน", s:["s2","s4"]}, {w:"办", p:"bàn", m:"จัดการ", s:["s1","s4","s5","s1"]},
-{w:"飞", p:"fēi", m:"บิน", s:["s28","s1","s4"]}, {w:"马", p:"mǎ", m:"ม้า", s:["s10","s23","s2"]},
-{w:"鸟", p:"niǎo", m:"นก", s:["s4","s9","s1","s32","s2"]}, {w:"巴", p:"bā", m:"คลอเคลีย", s:["s9","s3","s2","s22"]},
-{w:"方", p:"fāng", m:"ทิศทาง", s:["s1","s2","s11","s4"]}, {w:"分", p:"fēn", m:"แบ่ง", s:["s4","s5","s10","s18"]},
-{w:"切", p:"qiē", m:"หั่น", s:["s2", "s22", "s4"]}, {w:"少", p:"shǎo", m:"น้อย", s:["s3","s4","s1","s4"]},
-{w:"太", p:"tài", m:"เกินไป", s:["s2","s4","s5","s1"]}, {w:"引", p:"yǐn", m:"ดึง", s:["s9","s2","s32","s3"]},
-{w:"王", p:"wáng", m:"ราชา", s:["s2","s2","s3","s2"]}, {w:"丰", p:"fēng", m:"อุดมสมบูรณ์", s:["s2","s2","s2","s3"]},
-{w:"井", p:"jǐng", m:"บ่อน้ำ", s:["s2","s2","s4","s3"]}, {w:"历", p:"lì", m:"ประวัติศาสตร์", s:["s2","s4","s2","s4"]},
-{w:"尤", p:"yóu", m:"โดยเฉพาะ", s:["s2","s4","s19","s1"]}, {w:"屯", p:"tún", m:"รวบรวม", s:["s2","s3","s2","s22"]},
-{w:"夫", p:"fū", m:"สามี", s:["s2","s2","s4","s5"]}, {w:"父", p:"fù", m:"พ่อ", s:["s4","s1","s4","s5"]},
-{w:"无", p:"wú", m:"ไม่มี", s:["s2","s2","s4","s22"]}, {w:"友", p:"yǒu", m:"เพื่อน", s:["s2","s4","s4","s5"]},
-{w:"天", p:"tiān", m:"ท้องฟ้า", s:["s2","s2","s4","s5"]}, {w:"元", p:"yuán", m:"เงินหยวน", s:["s2","s2","s4","s22"]},
-{w:"扎", p:"zhā", m:"ทิ่มแทง", s:["s2","s17","s4","s22"]}, {w:"内", p:"nèi", m:"ข้างใน", s:["s3","s11","s4","s1"]},
-{w:"水", p:"shuǐ", m:"น้ำ", s:["s17","s12","s4","s5"]}, {w:"见", p:"jiàn", m:"พบเจอ", s:["s3","s11","s4","s22"]},
-{w:"午", p:"wǔ", m:"เที่ยงวัน", s:["s4","s2","s2","s3"]}, {w:"牛", p:"niú", m:"วัว", s:["s4","s2","s2","s3"]},
-{w:"手", p:"shǒu", m:"มือ", s:["s4","s2","s2","s22"]}, {w:"毛", p:"máo", m:"ขน", s:["s4","s2","s2","s19"]},
-{w:"气", p:"qì", m:"อากาศ", s:["s4","s2","s2","s28"]}, {w:"升", p:"shēng", m:"ลอยขึ้น", s:["s4","s2","s3","s3"]},
-{w:"长", p:"cháng", m:"ยาว", s:["s4","s2","s3","s1"]}, {w:"仁", p:"rén", m:"เมตตา", s:["s4","s3","s2","s2"]},
-{w:"什", p:"shén", m:"อะไร", s:["s4","s3","s2","s3"]}, {w:"片", p:"piàn", m:"แผ่น", s:["s4","s3","s2","s2"]},
-{w:"仆", p:"pū", m:"คนรับใช้", s:["s4","s3","s3","s1"]}, {w:"化", p:"huà", m:"เปลี่ยนไป", s:["s4","s3","s4","s22"]},
-{w:"币", p:"bì", m:"เงินตรา", s:["s4","s2","s9","s3"]}, {w:"斤", p:"jīn", m:"ชั่งจีน", s:["s4","s4","s2","s3"]},
-{w:"爪", p:"zhǎo", m:"กรงเล็บ", s:["s4","s3","s4","s5"]}, {w:"反", p:"fǎn", m:"ตรงข้าม", s:["s4","s2","s4","s5"]},
-{w:"介", p:"jiè", m:"ระหว่าง", s:["s4","s5","s3","s3"]}, {w:"从", p:"cóng", m:"ตาม", s:["s4","s1","s4","s5"]},
-{w:"仑", p:"lún", m:"คิดค้น", s:["s4","s5","s10","s22"]}, {w:"今", p:"jīn", m:"ปัจจุบัน", s:["s4","s5","s13","s1"]},
-{w:"凶", p:"xiōng", m:"ร้ายแรง", s:["s4","s1","s3","s15"]}, {w:"分", p:"fēn", m:"นาที", s:["s4","s5","s10","s18"]}
-];
-
-while(CHINESE_WORDS_POOL.length < 108) {
-extraCharacters.forEach(item => {
-CHINESE_WORDS_POOL.push({
-w: item.w,
-p: item.p,
-m: item.m,
-s: [...item.s]
-});
-});
-}
-}
-
-// ==========================================
-// SYSTEM CONTROLS & UTILITIES
-// ==========================================
-function switchTab(tabId) {
-document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-document.getElementById(tabId).classList.remove('hidden');
-
-const btnGame = document.getElementById('btn-game-tab');
-const btnContent = document.getElementById('btn-content-tab');
-
-if (tabId === 'game-tab') {
-btnGame.className = "flex-1 sm:flex-none px-6 py-2 rounded-md font-medium text-center transition-all duration-200 bg-white text-red-600 shadow-sm";
-btnContent.className = "flex-1 sm:flex-none px-6 py-2 rounded-md font-medium text-center transition-all duration-200 text-white hover:bg-red-600/50";
+if(mode === 'game') {
+document.getElementById('tab-game').classList.add('active');
+document.getElementById('main-game-panel').classList.add('active');
 } else {
-btnContent.className = "flex-1 sm:flex-none px-6 py-2 rounded-md font-medium text-center transition-all duration-200 bg-white text-red-600 shadow-sm";
-btnGame.className = "flex-1 sm:flex-none px-6 py-2 rounded-md font-medium text-center transition-all duration-200 text-white hover:bg-red-600/50";
-setTimeout(initContentCanvases, 100);
+document.getElementById('tab-content').classList.add('active');
+document.getElementById('main-content-panel').classList.add('active');
 }
 }
 
-function selectGame(gameId) {
-document.querySelectorAll('.game-section').forEach(el => el.classList.add('hidden'));
-document.getElementById(game-${gameId}`).classList.remove('hidden');
+function switchSubMode(modeNum) {
+document.getElementById('sm1').classList.remove('active');
+document.getElementById('sm2').classList.remove('active');
+document.getElementById('sm' + modeNum).classList.add('active');
+}
 
-for(let i=1; i<=4; i++) {
-const btn = document.getElementById(btn-g${i}`);
-if(i === gameId) {
-btn.className = "p-3 text-sm rounded-lg font-bold transition-all text-center border bg-red-50 border-red-200 text-red-600 shadow-xs";
+function selectCard(element, side, value) {
+if(element.classList.contains('matched')) return;
+
+if(side === 'left') {
+if(selectedLeft === element) {
+element.classList.remove('selected');
+selectedLeft = null;
 } else {
-btn.className = "p-3 text-sm rounded-lg font-bold transition-all text-center border border-transparent text-slate-600 hover:bg-slate-100";
+if(selectedLeft) selectedLeft.classList.remove('selected');
+selectedLeft = element;
+element.classList.add('selected');
 }
-}
-if(gameId === 2) initGame2();
-if(gameId === 3) nextGame3();
-if(gameId === 4) { nextGame4(); setTimeout(resizeG4Canvas, 150); }
-}
-
-function toggleComplexSection() {
-const wrapper = document.getElementById('complex-strokes-wrapper');
-const icon = document.getElementById('complex-toggle-icon');
-if(wrapper.classList.contains('hidden')) {
-wrapper.classList.remove('hidden');
-icon.classList.add('rotate-180');
-setTimeout(initContentCanvases, 50);
 } else {
-wrapper.classList.add('hidden');
-icon.classList.remove('rotate-180');
-}
-}
-
-function triggerSpeech(text, lang = 'zh-CN') {
-if ('speechSynthesis' in window) {
-window.speechSynthesis.cancel();
-const utterance = new SpeechSynthesisUtterance(text);
-utterance.lang = lang;
-window.speechSynthesis.speak(utterance);
-}
-}
-
-function showAppAlert(title, message, iconType = 'success') {
-document.getElementById('alert-title').innerText = title;
-document.getElementById('alert-msg').innerText = message;
-const iconEl = document.getElementById('alert-icon');
-if(iconType === 'success') {
-iconEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+if(selectedRight === element) {
+element.classList.remove('selected');
+selectedRight = null;
 } else {
-iconEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
+if(selectedRight) selectedRight.classList.remove('selected');
+selectedRight = element;
+element.classList.add('selected');
 }
-const modal = document.getElementById('app-alert');
-modal.classList.remove('opacity-0', 'pointer-events-none');
-modal.children[0].classList.remove('scale-95');
-}
-
-function closeAppAlert() {
-const modal = document.getElementById('app-alert');
-modal.classList.add('opacity-0', 'pointer-events-none');
-modal.children[0].classList.add('scale-95');
 }
 
-// ==========================================
-// ENGINE GAME 1: MATCHING SYSTEM
-// ==========================================
-let g1State = { timer: null, timeLeft: 0, currentRound: 0, totalRounds: 5, score: 0, selectedStroke: null, selectedName: null, mappings: {} };
+if(selectedLeft && selectedRight) {
+var leftVal = selectedLeft.getAttribute('onclick').split(',')[2].replace(/[' font)]/g, "");
+var rightVal = selectedRight.getAttribute('onclick').split(',')[2].replace(/[' font)]/g, "");
 
-function startGame1() {
-g1State.score = 0;
-g1State.currentRound = 0;
-g1State.totalRounds = parseInt(document.getElementById('g1-total-rounds').value);
-document.getElementById('g1-setup').classList.add('hidden');
-document.getElementById('g1-play').classList.remove('hidden');
-g1NextRound();
-}
-
-function g1NextRound() {
-clearInterval(g1State.timer);
-g1State.currentRound++;
-if(g1State.currentRound > g1State.totalRounds) {
-showAppAlert("จบเกมจับคู่!", คุณได้รับคะแนนรวมทั้งหมด: ${g1State.score} / ${g1State.totalRounds * 4} คะแนน, 'success');
-document.getElementById('g1-setup').classList.remove('hidden');
-document.getElementById('g1-play').classList.add('hidden');
-document.getElementById('g1-score').innerText = คะแนน: ${g1State.score}`;
-return;
-}
-
-document.getElementById('g1-round-count').innerText = ข้อที่${g1State.currentRound}/${g1State.totalRounds};
-g1State.selectedStroke = null;
-g1State.selectedName = null;
-g1State.mappings = {};
-
-const mode = document.getElementById('g1-mode').value;
-let pool = STROKES_DATA.filter(s => mode === '8' ? s.type === 'basic' : true);
-let roundItems = [...pool].sort(() => 0.5 - Math.random()).slice(0, 4);
-
-let displayStrokes = [...roundItems].sort(() => 0.5 - Math.random());
-let displayNames = [...roundItems].sort(() => 0.5 - Math.random());
-
-const sList = document.getElementById('g1-stroke-list');
-const nList = document.getElementById('g1-name-list');
-sList.innerHTML = ''; nList.innerHTML = '';
-
-displayStrokes.forEach(item => {
-sList.innerHTML += <button id="g1-stroke-${item.id}" onclick="g1Select('stroke', '{item.symbol}</button>`;
-});
-
-displayNames.forEach(item => {
-nList.innerHTML += <button id="g1-name-${item.id}" onclick="g1Select('name', '${item.id}')" class="w-full min-h-[55px] bg-slate-50 border-2 border-slate-200 text-xs font-bold rounded-xl px-2 py-2 flex flex-col items-center justify-center transition-all"&gt;&lt;span&gt;${item.name}</span><span class="text-[10px] text-slate-400 font-normal">${item.pinyin}&lt;/span&gt;&lt;/button>;
-});
-
-g1State.timeLeft = parseInt(document.getElementById('g1-time-limit').value) || 15;
-document.getElementById('g1-timer').innerHTML = <i class="fa-regular fa-clock mr-1"&gt;&lt;/i&gt; เวลาเหลือ: ${g1State.timeLeft} วินาที`;
-
-g1State.timer = setInterval(() => {
-g1State.timeLeft--;
-document.getElementById('g1-timer').innerHTML = <i class="fa-regular fa-clock mr-1"&gt;&lt;/i&gt; เวลาเหลือ:${g1State.timeLeft} วินาที`;
-if(g1State.timeLeft <= 0) {
-clearInterval(g1State.timer);
-checkGame1Answer();
-}
-}, 1000);
-}
-
-function g1Select(type, id) {
-if(type === 'stroke') {
-if(g1State.selectedStroke === id) {
-document.getElementById(g1-stroke-${id}).classList.remove('border-blue-500', 'bg-blue-50'); g1State.selectedStroke = null; } else { if(g1State.selectedStroke) document.getElementById(g1-stroke-${g1State.selectedStroke}).classList.remove('border-blue-500', 'bg-blue-50');
-g1State.selectedStroke = id;
-document.getElementById(g1-stroke-${id}).classList.add('border-blue-500', 'bg-blue-50'); } } else { if(g1State.selectedName === id) { document.getElementById(g1-name-${id}).classList.remove('border-blue-500', 'bg-blue-50');
-g1State.selectedName = null;
+if(leftVal === rightVal) {
+selectedLeft.className = "match-card matched";
+selectedRight.className = "match-card stroke-img matched";
 } else {
-if(g1State.selectedName) document.getElementById(g1-name-${g1State.selectedName}).classList.remove('border-blue-500', 'bg-blue-50'); g1State.selectedName = id; document.getElementById(g1-name-${id}).classList.add('border-blue-500', 'bg-blue-50');
+var l = selectedLeft;
+var r = selectedRight;
+setTimeout(function(){
+l.classList.remove('selected');
+r.classList.remove('selected');
+}, 300);
+}
+selectedLeft = null;
+selectedRight = null;
 }
 }
 
-if(g1State.selectedStroke && g1State.selectedName) {
-const sId = g1State.selectedStroke;
-const nId = g1State.selectedName;
+function randomizeCharacter() {
+currentIdx = Math.floor(Math.random() * charDatabase.length);
+userStrokes = [];
+document.getElementById('sequence-display').innerText = "ยังไม่ได้เลือกขีด";
+document.getElementById('result-box').style.display = "none";
 
-Object.keys(g1State.mappings).forEach(k => { if(g1State.mappings[k] === nId) delete g1State.mappings[k]; });
-g1State.mappings[sId] = nId;
+var data = charDatabase[currentIdx];
+document.getElementById('g3-index').innerText = (currentIdx === 0 ? "80 / 96" : "85 / 96");
+document.getElementById('g3-char-display').innerText = data.char;
+document.getElementById('g3-pinyin').innerText = data.pinyin;
+document.getElementById('g3-meaning').innerText = data.meaning;
+}
 
-document.querySelectorAll('#g1-stroke-list button, #g1-name-list button').forEach(btn => btn.classList.remove('border-blue-500', 'bg-blue-50', 'border-amber-500', 'bg-amber-50'));
+function addStroke(strokeName) {
+userStrokes.push(strokeName);
+updateSequenceDisplay();
+}
 
-Object.keys(g1State.mappings).forEach(sid => {
-const nid = g1State.mappings[sid];
-document.getElementById(g1-stroke-${sid}).classList.add('border-amber-500', 'bg-amber-50'); document.getElementById(g1-name-${nid}).classList.add('border-amber-500', 'bg-amber-50');
+function clearLastStroke() {
+userStrokes.pop();
+updateSequenceDisplay();
+}
+
+function updateSequenceDisplay() {
+var display = document.getElementById('sequence-display');
+if(userStrokes.length === 0) {
+display.innerText = "ยังไม่ได้เลือกขีด";
+} else {
+display.innerText = userStrokes.join(" ➔ ");
+}
+}
+
+function checkAnswer() {
+var data = charDatabase[currentIdx];
+var resultBox = document.getElementById('result-box');
+
+var isCorrect = true;
+if(userStrokes.length !== data.solution.length) {
+isCorrect = false;
+} else {
+for(var i=0; i<userStrokes.length; i++) {
+if(userStrokes[i] !== data.solution[i]) {
+isCorrect = false;
+break;
+}
+}
+}
+
+// 📍 ระบบเฉลยย่อยพร้อมพิมพ์คำอ่านพินอินย่อยยิบทุกขีดอักษรในวงเล็บเรียบร้อยครับ
+var solutionHtml = "<h4>💡 เฉลยลำดับการเขียนของคำว่า " + '"' + data.char + '"' + ":</h4><ol>";
+data.detailedSolution.forEach(function(s, idx){
+solutionHtml += "<li>ขีดที่ " + (idx+1) + ": <strong>" + s.name + "</strong> <span class='pinyin-inline'>(" + s.py + ")</span></li>";
 });
+solutionHtml += "</ol>";
 
-g1State.selectedStroke = null;
-g1State.selectedName = null;
-}
-}
-
-function checkGame1Answer() {
-clearInterval(g1State.timer);
-let roundPoints = 0;
-Object.keys(g1State.mappings).forEach(sid => {
-if(sid === g1State.mappings[sid]) roundPoints++;
-});
-g1State.score += roundPoints;
-document.getElementById('g1-score').innerText = คะแนน: ${g1State.score}; showAppAlert(สรุปผลประจำข้อ,คุณตอบถูก ${roundPoints} จาก 4 คู่สายโยงในข้อนี้, roundPoints >= 2 ? 'success' : 'error');
-setTimeout(g1NextRound, 1500);
-}
-
-// ==========================================
-// ENGINE GAME 2: 7 GOLDEN RULES SORTING
-// ==========================================
-let g2CurrentOrder = [];
-
-function initGame2() {
-g2CurrentOrder = [...GOLDEN_RULES].sort(() => 0.5 - Math.random());
-renderGame2List();
-}
-
-function renderGame2List() {
-const container = document.getElementById('g2-list');
-container.innerHTML = '';
-g2CurrentOrder.forEach((item, index) => {
-container.innerHTML += &lt;li class="bg-white border-2 border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-xs transition duration-150"&gt; &lt;div class="flex items-center gap-3"&gt; &lt;span class="bg-slate-200 text-slate-700 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"&gt;${index + 1}</span>
-<div>
-<span class="chinese-font font-bold text-red-600 mr-2">${item.rule}&lt;/span&gt; &lt;span class="text-xs text-slate-500 font-medium"&gt;${item.pinyin}</span>
-<p class="text-xs text-slate-400 mt-0.5">${item.desc}&lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class="flex flex-col gap-1"&gt; &lt;button onclick="moveGame2Item(${index}, -1)" class="p-1 px-2 text-[10px] bg-slate-100 rounded hover:bg-slate-200 text-slate-600 disabled:opacity-30" ${index === 0 ? 'disabled' : ''}&gt;▲&lt;/button&gt; &lt;button onclick="moveGame2Item(${index}, 1)" class="p-1 px-2 text-[10px] bg-slate-100 rounded hover:bg-slate-200 text-slate-600 disabled:opacity-30" ${index === g2CurrentOrder.length - 1 ? 'disabled' : ''}&gt;▼&lt;/button&gt; &lt;/div&gt; &lt;/li>;
-});
-}
-
-function moveGame2Item(index, direction) {
-const targetIndex = index + direction;
-if (targetIndex < 0 || targetIndex >= g2CurrentOrder.length) return;
-const temp = g2CurrentOrder[index];
-g2CurrentOrder[index] = g2CurrentOrder[targetIndex];
-g2CurrentOrder[targetIndex] = temp;
-renderGame2List();
-}
-
-function checkGame2Answer() {
-let isCorrect = true;
-g2CurrentOrder.forEach((item, idx) => {
-if(item.id !== (idx + 1)) isCorrect = false;
-});
 if(isCorrect) {
-showAppAlert("สมบูรณ์แบบ!", "คุณเรียงลำดับ 7 กฎทองขีดอักษรจีนได้อย่างถูกต้องครบถ้วนแม่นยำครับ!", "success");
+resultBox.className = "result-box success";
+resultBox.innerHTML = "<h4>🎉 ถูกต้องแล้ว! ลำดับขีดถูกต้องทั้งหมด</h4>" + solutionHtml;
 } else {
-showAppAlert("ยังไม่ถูกต้อง", "ลำดับกฎทองยังคลาดเคลื่อนอยู่เล็กน้อย ลองพิจารณาทบทวนใหม่อีกครั้งนะครับ", "error");
+resultBox.className = "result-box error";
+resultBox.innerHTML = "<h4>❌ ลำดับขีดยังไม่ถูกต้อง ลองศึกษาจากเฉลยด้านล่างดูนะครับ</h4>" + solutionHtml;
 }
 }
 
-// ==========================================
-// ENGINE GAME 3: STROKE INPUT SYSTEM
-// ==========================================
-let g3CurrentWord = null;
-let g3UserAnswers = [];
-
-function initGame3Keyboard() {
-const kbBasic = document.getElementById('g3-kb-basic');
-const kbComplex = document.getElementById('g3-kb-complex');
-kbBasic.innerHTML = ''; kbComplex.innerHTML = '';
-
-STROKES_DATA.forEach(stroke => {
-const target = stroke.type === 'basic' ? kbBasic : kbComplex;
-target.innerHTML += &lt;button onclick="pressGame3Stroke('${stroke.id}')" class="bg-white border border-slate-200 rounded p-1 hover:bg-red-50 text-center flex flex-col items-center justify-center transition">
-<span class="text-md font-bold text-slate-800">${stroke.symbol}&lt;/span&gt; &lt;span class="text-[8px] text-slate-400 truncate w-full"&gt;${stroke.name}</span>
-<span class="text-[7px] text-slate-400 font-light truncate w-full">${stroke.pinyin.split(' ')[0]}&lt;/span&gt; &lt;/button>;
-});
-}
-
-function nextGame3() {
-g3CurrentWord = CHINESE_WORDS_POOL[Math.floor(Math.random() * CHINESE_WORDS_POOL.length)];
-g3UserAnswers = [];
-document.getElementById('g3-char').innerText = g3CurrentWord.w;
-document.getElementById('g3-pinyin').innerText = g3CurrentWord.p;
-document.getElementById('g3-meaning').innerText = g3CurrentWord.m;
-document.getElementById('g3-solution').classList.add('hidden');
-renderGame3UserSequence();
-}
-
-function pressGame3Stroke(id) {
-g3UserAnswers.push(id);
-renderGame3UserSequence();
-}
-
-function popGame3Stroke() {
-g3UserAnswers.pop();
-renderGame3UserSequence();
-}
-
-function renderGame3UserSequence() {
-const container = document.getElementById('g3-user-input');
-container.innerHTML = '';
-if(g3UserAnswers.length === 0) {
-container.innerHTML = '<span class="text-slate-600 font-normal text-xs italic">กดที่แป้นพิมพ์ด้านล่างเพื่อป้อนขีด...</span>';
-return;
-}
-g3UserAnswers.forEach(id => {
-const stroke = STROKES_DATA.find(s => s.id === id);
-if(stroke) {
-container.innerHTML += <span class="bg-slate-800 text-amber-400 px-2 py-1 rounded border border-slate-700 text-xs"&gt;${stroke.symbol}</span>`;
-}
-});
-}
-
-function checkGame3Answer() {
-const correctSeq = g3CurrentWord.s;
-let match = true;
-if(g3UserAnswers.length !== correctSeq.length) match = false;
-else {
-for(let i=0; i<correctSeq.length; i++) {
-if(g3UserAnswers[i] !== correctSeq[i]) match = false;
-}
-}
-
-if(match) {
-showAppAlert("ถูกต้องแม่นยำ!", "คุณสลักป้อนลำดับเส้นอักษรตัวนี้ได้อย่างถูกต้องสมบูรณ์แบบ!", "success");
-document.getElementById('g3-solution').classList.add('hidden');
-} else {
-showAppAlert("ลำดับขีดผิดพลาด", "ลำดับเส้นที่ป้อนมายังไม่ถูกต้อง ตรวจดูรายชื่อขีดเฉลยที่ด้านล่างได้เลย", "error");
-const solList = document.getElementById('g3-solution-list');
-solList.innerHTML = '';
-correctSeq.forEach(id => {
-const stroke = STROKES_DATA.find(s => s.id === id);
-if(stroke) {
-solList.innerHTML += &lt;div class="bg-white border border-rose-200 p-1.5 rounded text-center min-w-[50px] shadow-2xs"&gt; &lt;div class="text-lg font-bold text-rose-600"&gt;${stroke.symbol}</div>
-<div class="text-[9px] font-bold text-slate-700">{stroke.pinyin}</div>
-</div>`;
-}
-});
-document.getElementById('g3-solution').classList.remove('hidden');
-}
-}
-
-// ==========================================
-// ENGINE GAME 4: CANVAS TRACING REALTIME
-// ==========================================
-let g4Canvas, g4Ctx, g4IsDrawing = false, g4CurrentWord = null;
-
-function initGame4Canvas() {
-g4Canvas = document.getElementById('g4-canvas');
-g4Ctx = g4Canvas.getContext('2d');
-
-g4Ctx.strokeStyle = '#dc2626';
-g4Ctx.lineWidth = 6;
-g4Ctx.lineCap = 'round';
-g4Ctx.lineJoin = 'round';
-
-g4Canvas.addEventListener('mousedown', (e) => { g4IsDrawing = true; drawG4(e.offsetX, e.offsetY); });
-g4Canvas.addEventListener('mousemove', (e) => { if(g4IsDrawing) drawG4(e.offsetX, e.offsetY); });
-g4Canvas.addEventListener('mouseup', () => g4IsDrawing = false);
-g4Canvas.addEventListener('mouseleave', () => g4IsDrawing = false);
-
-g4Canvas.addEventListener('touchstart', (e) => {
-e.preventDefault(); g4IsDrawing = true;
-const rect = g4Canvas.getBoundingClientRect(); const touch = e.touches[0];
-drawG4(touch.clientX - rect.left, touch.clientY - rect.top);
-}, { passive: false });
-
-g4Canvas.addEventListener('touchmove', (e) => {
-e.preventDefault(); if(!g4IsDrawing) return;
-const rect = g4Canvas.getBoundingClientRect(); const touch = e.touches[0];
-drawG4(touch.clientX - rect.left, touch.clientY - rect.top);
-}, { passive: false });
-
-g4Canvas.addEventListener('touchend', (e) => { e.preventDefault(); g4IsDrawing = false; }, { passive: false });
-}
-
-function resizeG4Canvas() {
-if(!g4Canvas) return;
-g4Ctx.strokeStyle = '#dc2626';
-g4Ctx.lineWidth = 6;
-g4Ctx.lineCap = 'round';
-g4Ctx.lineJoin = 'round';
-}
-
-function drawG4(x, y) {
-if(!g4IsDrawing) return;
-g4Ctx.lineTo(x, y); g4Ctx.stroke();
-g4Ctx.beginPath(); g4Ctx.moveTo(x, y);
-}
-
-function clearGame4Canvas() {
-g4Ctx.clearRect(0, 0, g4Canvas.width, g4Canvas.height);
-g4Ctx.beginPath();
-}
-
-function nextGame4() {
-g4CurrentWord = CHINESE_WORDS_POOL[Math.floor(Math.random() * CHINESE_WORDS_POOL.length)];
-document.getElementById('g4-char').innerText = g4CurrentWord.w;
-document.getElementById('g4-pinyin').innerText = g4CurrentWord.p;
-document.getElementById('g4-meaning').innerText = g4CurrentWord.m;
-document.getElementById('g4-ghost').innerText = g4CurrentWord.w;
-
-const namesArr = g4CurrentWord.s.map(sid => {
-const stroke = STROKES_DATA.find(s => s.id === sid);
-return stroke ? ${stroke.symbol} (${stroke.name}) : '';
-});
-document.getElementById('g4-strokes-desc').innerText = namesArr.join(' ➔ ');
-clearGame4Canvas();
-}
-
-function speakG4Word() {
-if(g4CurrentWord) triggerSpeech(g4CurrentWord.w, 'zh-CN');
-}
-
-// ==========================================
-// TAB 2: CONTENT RENDERING & MINI CANVASES
-// ==========================================
-function renderContentStructure() {
-const rulesContainer = document.getElementById('rules-container');
-rulesContainer.innerHTML = '';
-GOLDEN_RULES.forEach(r => {
-rulesContainer.innerHTML += &lt;div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2"&gt; &lt;div class="flex flex-wrap justify-between items-center gap-2"&gt; &lt;div class="flex items-center gap-2"&gt; &lt;span class="bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"&gt;${r.id}</span>
-<h3 class="chinese-font text-lg font-bold text-slate-900">${r.rule}&lt;/h3&gt; &lt;span class="text-xs text-slate-500 font-medium"&gt;${r.pinyin}</span>
-</div>
-<button onclick="triggerSpeech('${r.rule}', 'zh-CN')" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 p-1.5 px-3 rounded-md font-bold transition flex items-center gap-1"&gt; &lt;i class="fa-solid fa-volume-high"&gt;&lt;/i&gt; ฟังเสียงอักษร &lt;/button&gt; &lt;/div&gt; &lt;p class="text-sm font-bold text-slate-700"&gt;${r.desc}</p>
-<p class="text-xs text-slate-400 font-light leading-relaxed">${r.detail}&lt;/p&gt; &lt;/div>;
-});
-
-const basicContainer = document.getElementById('basic-strokes-container');
-const complexContainer = document.getElementById('complex-strokes-container');
-basicContainer.innerHTML = ''; complexContainer.innerHTML = '';
-
-STROKES_DATA.forEach(s => {
-const html = &lt;div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center"&gt; &lt;div class="relative w-24 h-24 bg-white border border-slate-300 rounded-lg overflow-hidden shrink-0 shadow-inner"&gt; &lt;div class="absolute inset-0 canvas-grid pointer-events-none opacity-50"&gt;&lt;/div&gt; &lt;canvas id="canvas-content-${s.id}" width="96" height="96" class="absolute inset-0 bg-transparent block touch-none z-10" style="touch-action: none;"></canvas>
-</div>
-
-<div class="flex-1 space-y-1 w-full text-center sm:text-left">
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-<div>
-<span class="text-2xl font-bold text-red-600 chinese-font mr-2">${s.symbol}&lt;/span&gt; &lt;span class="text-sm font-bold text-slate-800"&gt;${s.name}</span>
-</div>
-<span class="text-[10px] text-slate-400 font-mono">${s.pinyin}&lt;/span&gt; &lt;/div&gt; &lt;p class="text-[11px] text-slate-500 font-normal"&gt;${s.desc}</p>
-
-<div class="flex flex-wrap gap-1 pt-1 justify-center sm:justify-start">
-<button onclick="triggerSpeech('${s.name}', 'zh-CN')" class="text-[9px] font-bold bg-slate-200 text-slate-700 px-2 py-1 rounded hover:bg-slate-300 transition"&gt;&lt;i class="fa-solid fa-volume-high"&gt;&lt;/i&gt; ออกเสียง&lt;/button&gt; &lt;button onclick="clearContentCanvas('${s.id}')" class="text-[9px] font-bold bg-slate-200 text-slate-700 px-2 py-1 rounded hover:bg-slate-300 transition"><i class="fa-solid fa-eraser"></i> ล้าง</button>
-<button onclick="checkContentAccuracy('${s.id}')" class="text-[9px] font-bold bg-emerald-600 text-white px-2 py-1 rounded hover:bg-emerald-700 transition"&gt;&lt;i class="fa-solid fa-chart-simple"&gt;&lt;/i&gt; ตรวจสอบ&lt;/button&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div>;
-
-if(s.type === 'basic') basicContainer.innerHTML += html;
-else complexContainer.innerHTML += html;
-});
-}
-
-let activeContentCanvases = {};
-
-function initContentCanvases() {
-STROKES_DATA.forEach(s => {
-const canvas = document.getElementById(canvas-content-${s.id}`);
-if (!canvas || activeContentCanvases[s.id]) return;
-
-const ctx = canvas.getContext('2d');
-ctx.strokeStyle = '#1e293b';
-ctx.lineWidth = 4;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-
-let isDrawing = false;
-let strokePoints = [];
-activeContentCanvases[s.id] = { ctx, points: strokePoints, canvas };
-
-drawGhostPath(ctx, s.points);
-
-canvas.addEventListener('mousedown', (e) => { isDrawing = true; handleDraw(e.offsetX, e.offsetY); });
-canvas.addEventListener('mousemove', (e) => { if(isDrawing) handleDraw(e.offsetX, e.offsetY); });
-canvas.addEventListener('mouseup', () => isDrawing = false);
-canvas.addEventListener('mouseleave', () => isDrawing = false);
-
-canvas.addEventListener('touchstart', (e) => {
-e.preventDefault(); isDrawing = true;
-const rect = canvas.getBoundingClientRect(); const touch = e.touches[0];
-handleDraw(touch.clientX - rect.left, touch.clientY - rect.top);
-}, { passive: false });
-
-canvas.addEventListener('touchmove', (e) => {
-e.preventDefault(); if(!isDrawing) return;
-const rect = canvas.getBoundingClientRect(); const touch = e.touches[0];
-handleDraw(touch.clientX - rect.left, touch.clientY - rect.top);
-}, { passive: false });
-
-canvas.addEventListener('touchend', (e) => { e.preventDefault(); isDrawing = false; }, { passive: false });
-
-function handleDraw(x, y) {
-ctx.lineTo(x, y); ctx.stroke();
-ctx.beginPath(); ctx.moveTo(x, y);
-strokePoints.push([x, y]);
-}
-});
-}
-
-function drawGhostPath(ctx, points) {
-if(!points || points.length < 2) return;
-ctx.save();
-ctx.strokeStyle = '#cbd5e1';
-ctx.lineWidth = 5;
-ctx.setLineDash([4, 4]);
-ctx.beginPath();
-ctx.moveTo(points[0][0] * 96 / 100, points[0][1] * 96 / 100);
-for(let i = 1; i < points.length; i++) {
-ctx.lineTo(points[i][0] * 96 / 100, points[i][1] * 96 / 100);
-}
-ctx.stroke();
-ctx.restore();
-ctx.beginPath();
-}
-
-function clearContentCanvas(id) {
-const data = activeContentCanvases[id];
-if(!data) return;
-data.ctx.clearRect(0, 0, 96, 96);
-data.points.length = 0;
-const stroke = STROKES_DATA.find(s => s.id === id);
-drawGhostPath(data.ctx, stroke.points);
-}
-
-function checkContentAccuracy(id) {
-const data = activeContentCanvases[id];
-if(!data || data.points.length === 0) {
-showAppAlert("ไม่พบข้อมูลเส้นวาด", "กรุณาลองลากเส้นบนกล่องตารางจำลองก่อนส่งตรวจวัดค่าความถูกต้องครับ", "error");
-return;
-}
-const stroke = STROKES_DATA.find(s => s.id === id);
-
-let totalDistance = 0;
-const targetPoints = stroke.points.map(p => [p[0] * 96 / 100, p[1] * 96 / 100]);
-
-targetPoints.forEach(tp => {
-let minCleanDist = 9999;
-data.points.forEach(up => {
-let d = Math.sqrt(Math.pow(tp[0] - up[0], 2) + Math.pow(tp[1] - up[1], 2));
-if (d < minCleanDist) minCleanDist = d;
-});
-totalDistance += minCleanDist;
-});
-
-let avgDist = totalDistance / targetPoints.length;
-let accuracyScore = Math.max(0, Math.min(100, Math.round(100 - (avgDist * 2.5))));
-
-if(accuracyScore >= 70) {
-showAppAlert("ยอดเยี่ยมมาก!", ความแม่นยำของคุณอยู่ที่:${accuracyScore}% ลายเส้นถูกต้องตามเกณฑ์มาตรฐาน, "success"); } else { showAppAlert("พยายามอีกนิด",ความแม่นยำของคุณอยู่ที่: ${accuracyScore}% แนะนำให้กดล้างกระดานแล้วลองลากตามเส้นประเงาใหม่อีกครั้งนะครับ`, "error");
-}
-}
-
-// ==========================================
-// SYSTEM INITS EXECUTION BOOTSTRAPPER
-// ==========================================
-window.addEventListener('DOMContentLoaded', () => {
-generateWordsPool();
-initGame3Keyboard();
-renderContentStructure();
-initGame4Canvas();
-selectGame(1);
-});
+window.onload = function() { randomizeCharacter(); };
 </script>
 </body>
 </html>
