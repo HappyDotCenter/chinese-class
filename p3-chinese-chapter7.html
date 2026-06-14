@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ภาษาจีน ป.3 บทที่ 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#d72638;--red2:#ff4757;--gold:#f5a623;--ink:#1a0a00;--paper:#fdf6e3;--paper2:#fff8ee;--muted:#7a6652;--green:#1db954;--blue:#2979ff;--r:18px;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--paper);color:var(--ink);font-family:'Kanit',sans-serif;min-height:100vh;padding-bottom:60px;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(215,38,56,.06) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(245,166,35,.07) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.container{max-width:480px;margin:0 auto;padding:14px;position:relative;z-index:1;}
+.screen{display:none;}.screen.active{display:block;}
+
+.app-header{background:var(--red);border-radius:var(--r);padding:18px 18px 14px;margin-bottom:18px;text-align:center;box-shadow:0 6px 24px rgba(215,38,56,.35);position:relative;overflow:hidden;}
+.app-header::before{content:'红';position:absolute;right:-8px;top:-8px;font-family:'Noto Serif SC',serif;font-size:76px;color:rgba(255,255,255,.07);line-height:1;}
+.app-header::after{content:'色';position:absolute;left:-4px;bottom:-14px;font-family:'Noto Serif SC',serif;font-size:76px;color:rgba(255,255,255,.07);line-height:1;}
+.app-header h1{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:2px;margin-bottom:2px;}
+.app-header .sub{font-size:12px;color:rgba(255,255,255,.8);font-weight:500;}
+.ch-badge{display:inline-block;background:var(--gold);color:var(--ink);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:7px;}
+
+.sec-lbl{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--red);margin:20px 0 9px;padding-left:2px;}
+.sec-lbl::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,rgba(215,38,56,.3),transparent);border-radius:2px;}
+.card{background:#fff;border-radius:var(--r);padding:15px;box-shadow:0 2px 12px rgba(26,10,0,.08),0 0 0 1px rgba(215,38,56,.07);margin-bottom:13px;}
+
+.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:5px;}
+.game-card{background:#fff;border-radius:var(--r);padding:16px 10px;text-align:center;cursor:pointer;box-shadow:0 4px 0 rgba(26,10,0,.12);transition:all .14s;border:2px solid transparent;}
+.game-card:active{transform:translateY(4px);box-shadow:0 0 0 rgba(26,10,0,.12);}
+.gc1{border-color:#ffd6d9;background:linear-gradient(135deg,#fff5f5,#fff);}
+.gc2{border-color:#d6ffe6;background:linear-gradient(135deg,#f0fff4,#fff);}
+.gc3{border-color:#d6eaff;background:linear-gradient(135deg,#f0f6ff,#fff);}
+.gc4{border-color:#fff2cc;background:linear-gradient(135deg,#fffdf0,#fff);}
+.g-icon{font-size:28px;margin-bottom:6px;}
+.g-title{font-size:13px;font-weight:700;line-height:1.4;color:var(--ink);}
+.g-count{font-size:11px;color:var(--muted);margin-top:2px;}
+
+.v-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px dashed rgba(215,38,56,.15);}
+.v-item:last-child{border-bottom:none;padding-bottom:0;}
+.v-zh{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:700;color:var(--red);min-width:56px;text-align:center;line-height:1;}
+.v-info{flex:1;}.v-py{font-size:12px;color:var(--blue);font-weight:600;}.v-th{font-size:14px;font-weight:600;color:var(--ink);}
+.spk-btn{width:34px;height:34px;border-radius:50%;border:none;background:rgba(215,38,56,.1);color:var(--red);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.spk-btn:active{background:rgba(215,38,56,.25);}
+
+.s-item{padding:9px 0;border-bottom:1px dashed rgba(215,38,56,.15);}
+.s-item:last-child{border-bottom:none;}
+.s-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.s-zh{font-family:'Noto Serif SC',serif;font-size:17px;font-weight:700;color:var(--ink);line-height:1.4;}
+.s-py{font-size:12px;color:var(--blue);margin-top:2px;}.s-th{font-size:13px;color:var(--muted);margin-top:1px;}
+
+/* STROKE TYPE GRID */
+.stroke-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.st-card{background:var(--paper);border:2px solid rgba(215,38,56,.2);border-radius:14px;padding:13px 10px;text-align:center;cursor:pointer;transition:all .13s;}
+.st-card:active{transform:scale(.95);background:rgba(215,38,56,.06);border-color:var(--red);}
+.st-sym{font-family:'Noto Serif SC',serif;font-size:32px;color:var(--red);line-height:1;margin-bottom:5px;}
+.st-name{font-size:13px;font-weight:700;color:var(--ink);}.st-py2{font-size:11px;color:var(--blue);font-weight:600;margin-top:1px;}.st-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ===== STROKE PRACTICE — SVG based ===== */
+.pc{margin-bottom:0;}
+.pc-title{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.pt-zh{font-family:'Noto Serif SC',serif;font-size:22px;color:var(--red);}
+.pt-py{font-size:13px;color:var(--blue);}
+.pt-th{font-size:13px;color:var(--muted);}
+.stroke-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;}
+.stroke-row::-webkit-scrollbar{display:none;}
+.s-step{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;}
+.s-step-lbl{font-size:10px;font-weight:700;color:var(--muted);}
+.s-step-name{font-size:9px;color:var(--red);font-weight:700;min-height:12px;text-align:center;max-width:64px;}
+.scell{width:64px;height:64px;border:1.5px solid rgba(215,38,56,.22);border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-shrink:0;}
+.scell svg.guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.scell svg.stroke-svg{position:relative;z-index:1;width:100%;height:100%;}
+
+/* ===== PINYIN — 4 cols ===== */
+.py-group{margin-bottom:14px;}
+.py-group:last-child{margin-bottom:0;}
+.py-group-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.py-big-box{color:#fff;font-family:'Noto Serif SC',serif;font-size:22px;font-weight:900;width:64px;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;letter-spacing:1px;}
+.py-big-box:active{transform:translateY(3px);}
+.py-big-info{flex:1;}.py-big-name{font-size:15px;font-weight:800;color:var(--ink);}.py-big-sub{font-size:11px;color:var(--muted);}.py-big-ex{font-size:17px;font-weight:700;}
+
+/* 4-column pinyin combo grid */
+.py-combo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.py-combo-card{background:var(--paper);border:1.5px solid rgba(215,38,56,.18);border-radius:10px;padding:8px 4px;cursor:pointer;transition:all .12s;text-align:center;}
+.py-combo-card:active{transform:scale(.95);border-color:var(--red);background:rgba(215,38,56,.05);}
+.pcc-top{font-size:9px;color:var(--muted);font-weight:600;margin-bottom:2px;white-space:nowrap;}
+.pcc-py{font-size:13px;font-weight:900;color:var(--blue);line-height:1;}
+.pcc-zh{font-family:'Noto Serif SC',serif;font-size:20px;color:var(--red);font-weight:700;line-height:1.15;margin-top:1px;}
+.pcc-th{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.2;}
+
+/* SETTINGS */
+.set-hdr{display:flex;align-items:center;gap:12px;background:var(--red);border-radius:var(--r);padding:15px 18px;margin-bottom:18px;box-shadow:0 4px 16px rgba(215,38,56,.3);}
+.set-hdr h2{font-size:17px;font-weight:800;color:#fff;margin:0;}
+.set-card{background:#fff;border-radius:var(--r);padding:15px;margin-bottom:13px;box-shadow:0 2px 12px rgba(26,10,0,.07);}
+.set-card-t{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:11px;text-transform:uppercase;letter-spacing:.5px;}
+.opts-row{display:flex;flex-wrap:wrap;gap:7px;}
+.opt-chip{padding:7px 15px;border-radius:30px;border:2px solid #e8e0d6;background:var(--paper);font-size:14px;font-weight:700;cursor:pointer;color:var(--muted);font-family:'Kanit',sans-serif;}
+.opt-chip.sel{background:var(--red);border-color:var(--red);color:#fff;}
+.btn-start{width:100%;padding:15px;background:var(--red);color:#fff;border:none;border-radius:var(--r);font-family:'Kanit',sans-serif;font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 5px 0 #9b1a25;margin-bottom:9px;letter-spacing:1px;}
+.btn-start:active{transform:translateY(5px);box-shadow:0 0 0 #9b1a25;}
+.btn-back{width:100%;padding:13px;background:transparent;color:var(--muted);border:2px solid #e0d8cc;border-radius:var(--r);font-family:'Kanit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+.btn-back:active{background:#f0e8e0;}
+
+/* GAME */
+.g-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.btn-quit{background:rgba(215,38,56,.1);border:none;padding:7px 13px;border-radius:30px;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;color:var(--red);cursor:pointer;}
+.btn-quit:active{background:rgba(215,38,56,.2);}
+.prog-pill{background:#fff;border:2px solid rgba(215,38,56,.2);padding:5px 13px;border-radius:30px;font-size:14px;font-weight:800;color:var(--ink);}
+.timer-wrap{position:relative;width:48px;height:48px;}
+.timer-svg{transform:rotate(-90deg);width:48px;height:48px;}
+.t-bg{fill:none;stroke:#eee;stroke-width:4;}
+.t-bar{fill:none;stroke:var(--green);stroke-width:4;stroke-dasharray:120;stroke-dashoffset:0;transition:stroke-dashoffset .9s linear,stroke .3s;stroke-linecap:round;}
+.timer-wrap.warn .t-bar{stroke:var(--red);animation:pulse .5s infinite alternate;}
+@keyframes pulse{from{transform:scale(1) rotate(-90deg);}to{transform:scale(1.08) rotate(-90deg);}}
+.t-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--ink);}
+.q-box{background:#fff;border-radius:20px;padding:26px 18px;text-align:center;box-shadow:0 4px 20px rgba(26,10,0,.08),0 0 0 2px rgba(215,38,56,.08);margin-bottom:18px;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+.q-main{font-family:'Noto Serif SC',serif;font-size:40px;font-weight:900;color:var(--ink);line-height:1.1;}
+.q-main.num{font-family:'Kanit',sans-serif;font-size:46px;}
+.q-main.thai{font-family:'Kanit',sans-serif;font-size:28px;}
+.q-main.audio{font-size:34px;cursor:pointer;}
+.q-hint{font-size:14px;color:var(--muted);margin-top:7px;font-weight:500;}
+.choices{display:flex;flex-direction:column;gap:9px;}
+.choice{background:#fff;border:2px solid #e8e0d5;border-radius:13px;padding:13px 15px;font-size:16px;font-weight:600;cursor:pointer;text-align:left;font-family:'Kanit',sans-serif;display:flex;align-items:center;gap:9px;}
+.choice .cn{width:25px;height:25px;border-radius:50%;background:var(--paper);border:1.5px solid #d0c8be;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--muted);flex-shrink:0;}
+.choice:active{border-color:var(--red);}
+.choice.correct{border-color:var(--green);background:rgba(29,185,84,.08);}
+.choice.correct .cn{background:var(--green);border-color:var(--green);color:#fff;}
+.choice.wrong{border-color:var(--red2);background:rgba(255,71,87,.07);}
+.choice.wrong .cn{background:var(--red2);border-color:var(--red2);color:#fff;}
+
+/* WRITE GAME */
+.sg-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.sg-canvas-wrap{position:relative;border-radius:16px;overflow:hidden;border:2px dashed rgba(215,38,56,.4);background:#fff;width:220px;height:220px;}
+.sg-guide-char{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC',serif;font-size:140px;color:rgba(215,38,56,.07);pointer-events:none;user-select:none;line-height:1;}
+.sg-grid-lines{position:absolute;inset:0;background:linear-gradient(rgba(215,38,56,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(215,38,56,.06) 1px,transparent 1px);background-size:110px 110px;pointer-events:none;}
+.sg-cross{position:absolute;inset:0;pointer-events:none;}
+.sg-cross::before,.sg-cross::after{content:'';position:absolute;background:rgba(215,38,56,.07);}
+.sg-cross::before{left:50%;top:0;width:1px;height:100%;}
+.sg-cross::after{top:50%;left:0;height:1px;width:100%;}
+.sg-btns{display:flex;gap:10px;width:220px;}
+.sg-btn{flex:1;padding:11px;border-radius:12px;border:none;font-family:'Kanit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+.sg-clear{background:#f0ebe3;color:var(--muted);}
+.sg-check{background:var(--red);color:#fff;box-shadow:0 4px 0 #9b1a25;}
+.sg-check:active{transform:translateY(4px);box-shadow:0 0 0 #9b1a25;}
+.sg-feedback{font-size:18px;font-weight:800;min-height:26px;text-align:center;}
+.sg-stroke-labels{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:300px;}
+.sg-sl{background:var(--paper);border:1.5px solid rgba(215,38,56,.2);border-radius:8px;padding:3px 8px;font-size:11px;font-weight:700;color:var(--muted);}
+.sg-sl.done{background:rgba(29,185,84,.12);border-color:var(--green);color:#065f46;}
+
+/* SCORE */
+.score-box{background:#fff;border-radius:22px;padding:28px 18px;box-shadow:0 4px 24px rgba(26,10,0,.1);text-align:center;}
+.sc-stars{font-size:38px;letter-spacing:4px;margin-bottom:14px;}
+.sc-ratio{font-size:50px;font-weight:900;color:var(--red);line-height:1;}
+.sc-pct{font-size:17px;color:var(--muted);font-weight:600;margin-bottom:18px;}
+.dots-row{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.rdot{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;}
+.rdot.correct{background:var(--green);}.rdot.wrong{background:var(--red2);}.rdot.timeout{background:var(--gold);}
+.stat-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed rgba(215,38,56,.15);font-size:14px;font-weight:600;}
+.stat-row:last-of-type{border-bottom:none;margin-bottom:18px;}
+.stat-row span:last-child{color:var(--red);font-weight:800;}
+
+/* nav bar */
+.nav-bar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:var(--r);padding:12px 16px;box-shadow:0 2px 12px rgba(26,10,0,.08);margin-bottom:18px;}
+.nav-bar-btm{margin-bottom:0;margin-top:4px;}
+.nav-back{display:flex;align-items:center;gap:6px;background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:30px;font-family:'Kanit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 0 #9b1a25;text-decoration:none;}
+.nav-back:active{transform:translateY(3px);box-shadow:0 0 0 #9b1a25;}
+.nav-title{font-size:14px;font-weight:800;color:var(--ink);}
+
+/* MATCH GAME */
+.ms-btn{color:#fff;border:none;padding:14px 22px;border-radius:14px;font-family:'Kanit',sans-serif;font-size:16px;font-weight:800;cursor:pointer;min-width:90px;line-height:1.5;}
+.ms-btn:active{transform:translateY(4px);box-shadow:none!important;}
+.mc{padding:13px 14px;border-radius:12px;border:2px solid #e0d8cc;background:#fff;cursor:pointer;font-family:'Kanit',sans-serif;font-size:14px;font-weight:700;transition:all .15s;user-select:none;-webkit-user-select:none;display:block;width:100%;text-align:center;}
+.mc.selected{border-color:#f5a623;background:rgba(245,166,35,.12);box-shadow:0 0 0 3px rgba(245,166,35,.3);}
+.mc.matched{border-color:#1db954;background:rgba(29,185,84,.1);color:#065f46;cursor:default;opacity:.7;}
+.mc.wrong{border-color:#ff4757;background:rgba(255,71,87,.1);animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+.mc-zh{font-family:'Noto Serif SC',serif;font-size:28px;color:#d72638;display:block;line-height:1.1;}
+.mc-py{font-size:15px;font-weight:800;color:#2979ff;display:block;}
+.mc-th{font-size:12px;color:#7a6652;display:block;}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(26,10,0,.55);z-index:1000;align-items:center;justify-content:center;padding:18px;}
+.modal-ov.open{display:flex;}
+.modal-box{background:var(--paper2);border-radius:22px;padding:26px 22px;width:100%;max-width:340px;text-align:center;position:relative;box-shadow:0 20px 60px rgba(26,10,0,.3);border:2px solid rgba(215,38,56,.15);}
+.modal-close{position:absolute;top:13px;right:16px;font-size:21px;cursor:pointer;color:var(--muted);}
+.modal-zh{font-family:'Noto Serif SC',serif;font-size:68px;font-weight:900;color:var(--red);line-height:1.1;margin-bottom:7px;}
+.modal-py{font-size:20px;color:var(--blue);font-weight:700;margin-bottom:4px;}
+.modal-th{font-size:15px;color:var(--muted);margin-bottom:16px;}
+.btn-m-spk{display:inline-flex;align-items:center;gap:7px;background:var(--red);color:#fff;border:none;padding:11px 22px;border-radius:28px;font-family:'Kanit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 0 #9b1a25;}
+.btn-m-spk:active{transform:translateY(4px);box-shadow:none;}
+
+/* Quiz section */
+.quiz-section{background:var(--paper);border-radius:14px;padding:14px;margin-top:10px;}
+.quiz-q{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:10px;}
+.quiz-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.quiz-opt{padding:9px 18px;border-radius:30px;border:2px solid rgba(215,38,56,.25);background:#fff;font-family:'Kanit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;color:var(--ink);transition:all .15s;}
+.quiz-opt:active{transform:scale(.96);}
+.quiz-opt.correct-ans{border-color:var(--green);background:rgba(29,185,84,.1);color:#065f46;}
+.quiz-opt.wrong-ans{border-color:var(--red2);background:rgba(255,71,87,.07);color:var(--red);}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="app-header">
+    <h1>🇨🇳 ภาษาจีน ป.3</h1>
+    <div class="sub">บทที่ 7 · 我喜欢红色 ฉันชอบสีแดง</div>
+    <div class="ch-badge">★ บทที่ 7 / Chapter 7 ★</div>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-back">🏠 หน้าหลัก</a>
+    <div class="nav-title">📘 บทที่ 7</div>
+    <div style="width:80px;"></div>
+  </div>
+
+  <div class="sec-lbl">🎮 เกมท้าทาย</div>
+  <div class="game-grid">
+    <div class="game-card gc1" onclick="openSettings('g1_vocab')"><div class="g-icon">🎨</div><div class="g-title">ทายคำศัพท์สี</div><div class="g-count">喜欢 颜色 红色 粉红色</div></div>
+    <div class="game-card gc2" onclick="openSettings('g2_pinyin')"><div class="g-icon">🔊</div><div class="g-title">ฟัง→เลือก Pinyin</div><div class="g-count">ing / ong</div></div>
+    <div class="game-card gc3" onclick="openSettings('g3_write')"><div class="g-icon">✍️</div><div class="g-title">ฝึกเขียนอักษรจีน</div><div class="g-count">喜 欢 颜 色 红 呢 也 粉</div></div>
+    <div class="game-card gc4" onclick="openSettings('g1_sentence')"><div class="g-icon">💬</div><div class="g-title">ทายประโยค</div><div class="g-count">你喜欢什么颜色？</div></div>
+    <div class="game-card" style="border:2px solid #e8d6ff;background:linear-gradient(135deg,#f8f0ff,#fff);" onclick="navigate('screen-match')"><div class="g-icon">🀄</div><div class="g-title">จับคู่ Pinyin</div><div class="g-count">ing / ong</div></div>
+    <div class="game-card" style="border:2px solid #ffe0b2;background:linear-gradient(135deg,#fff8f0,#fff);" onclick="navigate('screen-match2')"><div class="g-icon">📖</div><div class="g-title">จับคู่คำศัพท์</div><div class="g-count">สี + ประโยค</div></div>
+    <div class="game-card" style="border:2px solid #c8f0c8;background:linear-gradient(135deg,#f0fff0,#fff);grid-column:span 2;" onclick="navigate('screen-quiz')"><div class="g-icon">📝</div><div class="g-title">แบบฝึกหัด 三、看图选择正确答案</div><div class="g-count">สังเกตภาพและวงกลมล้อมรอบคำตอบที่ถูกต้อง</div></div>
+  </div>
+
+  <!-- บทสนทนา -->
+  <div class="sec-lbl">📖 บทเรียน — 一、学一学</div>
+  <div class="card">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:11px;">🔊 กดปุ่มฟังประโยค</p>
+    <div class="s-item">
+      <div class="s-row">
+        <div>
+          <div class="s-zh">你喜欢什么颜色？</div>
+          <div class="s-py">Nǐ xǐ huan shén me yán sè?</div>
+          <div class="s-th">คุณชอบสีอะไร?</div>
+        </div>
+        <button class="spk-btn" onclick="speakZh('你喜欢什么颜色？')">🔊</button>
+      </div>
+    </div>
+    <div class="s-item">
+      <div class="s-row">
+        <div>
+          <div class="s-zh">我喜欢红色。你呢？</div>
+          <div class="s-py">Wǒ xǐ huan hóng sè. Nǐ ne?</div>
+          <div class="s-th">ฉันชอบสีแดง แล้วคุณล่ะ?</div>
+        </div>
+        <button class="spk-btn" onclick="speakZh('我喜欢红色。你呢？')">🔊</button>
+      </div>
+    </div>
+    <div class="s-item">
+      <div class="s-row">
+        <div>
+          <div class="s-zh">我也喜欢红色。</div>
+          <div class="s-py">Wǒ yě xǐ huan hóng sè.</div>
+          <div class="s-th">ฉันก็ชอบสีแดงเช่นกัน</div>
+        </div>
+        <button class="spk-btn" onclick="speakZh('我也喜欢红色。')">🔊</button>
+      </div>
+    </div>
+    <div class="s-item">
+      <div class="s-row">
+        <div>
+          <div class="s-zh">他也喜欢红色吗？</div>
+          <div class="s-py">Tā yě xǐ huan hóng sè ma?</div>
+          <div class="s-th">เขาก็ชอบสีแดงด้วยไหม?</div>
+        </div>
+        <button class="spk-btn" onclick="speakZh('他也喜欢红色吗？')">🔊</button>
+      </div>
+    </div>
+    <div class="s-item">
+      <div class="s-row">
+        <div>
+          <div class="s-zh">不，他不喜欢红色，他喜欢粉红色。</div>
+          <div class="s-py">Bù, tā bù xǐ huan hóng sè, tā xǐ huan fěn hóng sè.</div>
+          <div class="s-th">ไม่ เขาไม่ชอบสีแดง เขาชอบสีชมพู</div>
+        </div>
+        <button class="spk-btn" onclick="speakZh('不，他不喜欢红色，他喜欢粉红色。')">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- คำศัพท์ -->
+  <div class="sec-lbl">📚 二、生词 คำศัพท์ใหม่</div>
+  <div class="card">
+    <div class="v-item"><div class="v-zh">喜欢</div><div class="v-info"><div class="v-py">xǐ huan</div><div class="v-th">ชอบ ❤️</div></div><button class="spk-btn" onclick="speakZh('喜欢')">🔊</button></div>
+    <div class="v-item"><div class="v-zh">颜色</div><div class="v-info"><div class="v-py">yán sè</div><div class="v-th">สี 🎨</div></div><button class="spk-btn" onclick="speakZh('颜色')">🔊</button></div>
+    <div class="v-item"><div class="v-zh">红色</div><div class="v-info"><div class="v-py">hóng sè</div><div class="v-th">สีแดง 🔴</div></div><button class="spk-btn" onclick="speakZh('红色')">🔊</button></div>
+    <div class="v-item"><div class="v-zh">呢</div><div class="v-info"><div class="v-py">ne</div><div class="v-th">ล่ะ (คำถาม) 🤔</div></div><button class="spk-btn" onclick="speakZh('呢')">🔊</button></div>
+    <div class="v-item"><div class="v-zh">也</div><div class="v-info"><div class="v-py">yě</div><div class="v-th">ก็ / เช่นกัน</div></div><button class="spk-btn" onclick="speakZh('也')">🔊</button></div>
+    <div class="v-item"><div class="v-zh">不</div><div class="v-info"><div class="v-py">bù</div><div class="v-th">ไม่ 🚫</div></div><button class="spk-btn" onclick="speakZh('不')">🔊</button></div>
+    <div class="v-item"><div class="v-zh">粉红色</div><div class="v-info"><div class="v-py">fěn hóng sè</div><div class="v-th">สีชมพู 🩷</div></div><button class="spk-btn" onclick="speakZh('粉红色')">🔊</button></div>
+  </div>
+
+  <!-- เรียนพินอิน ing / ong -->
+  <div class="sec-lbl">🔤 三、学拼音 เรียนพินอิน</div>
+  <div class="card">
+    <!-- ING -->
+    <div class="py-group">
+      <div class="py-group-header">
+        <div class="py-big-box" style="background:var(--blue);" onclick="speakZh('冰')">ing</div>
+        <div class="py-big-info">
+          <div class="py-big-name">สระผสม <span style="color:var(--blue);">ing</span></div>
+          <div class="py-big-sub">ตัวอย่าง: 冰 bīng (น้ำแข็ง)</div>
+          <div class="py-big-ex" style="color:var(--blue);" onclick="speakZh('冰')">冰 bīng 🧊</div>
+        </div>
+      </div>
+      <div class="py-combo-grid">
+        <div class="py-combo-card" onclick="speakZh('苹果')"><div class="pcc-top">p+ing</div><div class="pcc-py">ping</div><div class="pcc-zh">苹</div><div class="pcc-th">แอปเปิ้ล</div></div>
+        <div class="py-combo-card" onclick="speakZh('钉')"><div class="pcc-top">d+ing</div><div class="pcc-py">ding</div><div class="pcc-zh">钉</div><div class="pcc-th">ตะปู</div></div>
+        <div class="py-combo-card" onclick="speakZh('听')"><div class="pcc-top">t+ing</div><div class="pcc-py">ting</div><div class="pcc-zh">听</div><div class="pcc-th">ฟัง</div></div>
+        <div class="py-combo-card" onclick="speakZh('晶')"><div class="pcc-top">j+ing</div><div class="pcc-py">jing</div><div class="pcc-zh">晶</div><div class="pcc-th">แวว</div></div>
+        <div class="py-combo-card" onclick="speakZh('请')"><div class="pcc-top">q+ing</div><div class="pcc-py">qing</div><div class="pcc-zh">请</div><div class="pcc-th">กรุณา</div></div>
+        <div class="py-combo-card" onclick="speakZh('星')"><div class="pcc-top">x+ing</div><div class="pcc-py">xing</div><div class="pcc-zh">星</div><div class="pcc-th">ดาว</div></div>
+        <div class="py-combo-card" onclick="speakZh('铃')"><div class="pcc-top">l+ing</div><div class="pcc-py">ling</div><div class="pcc-zh">铃</div><div class="pcc-th">กระดิ่ง</div></div>
+        <div class="py-combo-card" onclick="speakZh('赢')"><div class="pcc-top">y+ing</div><div class="pcc-py">ying</div><div class="pcc-zh">赢</div><div class="pcc-th">ชนะ</div></div>
+      </div>
+    </div>
+
+    <!-- ฟังและอ่านตาม -->
+    <div style="margin:14px 0 10px;font-size:13px;font-weight:700;color:var(--ink);">🎧 二、听一听，读一读 ฟังและอ่านตาม</div>
+    <div style="background:var(--paper);border-radius:12px;padding:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:14px;">
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('冰')"><div style="font-size:11px;color:var(--muted);">1st</div><div style="font-size:13px;font-weight:800;color:var(--blue);">bīng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('病')"><div style="font-size:11px;color:var(--muted);">2nd</div><div style="font-size:13px;font-weight:800;color:var(--blue);">bíng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('饼')"><div style="font-size:11px;color:var(--muted);">3rd</div><div style="font-size:13px;font-weight:800;color:var(--blue);">bǐng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('并')"><div style="font-size:11px;color:var(--muted);">4th</div><div style="font-size:13px;font-weight:800;color:var(--blue);">bìng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('听')"><div style="font-size:11px;color:var(--muted);">1st</div><div style="font-size:13px;font-weight:800;color:var(--blue);">tīng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('亭')"><div style="font-size:11px;color:var(--muted);">2nd</div><div style="font-size:13px;font-weight:800;color:var(--blue);">tíng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('艇')"><div style="font-size:11px;color:var(--muted);">3rd</div><div style="font-size:13px;font-weight:800;color:var(--blue);">tǐng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('听')"><div style="font-size:11px;color:var(--muted);">4th</div><div style="font-size:13px;font-weight:800;color:var(--blue);">tìng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('英')"><div style="font-size:11px;color:var(--muted);">1st</div><div style="font-size:13px;font-weight:800;color:var(--red);">yīng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('赢')"><div style="font-size:11px;color:var(--muted);">2nd</div><div style="font-size:13px;font-weight:800;color:var(--red);">yíng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('影')"><div style="font-size:11px;color:var(--muted);">3rd</div><div style="font-size:13px;font-weight:800;color:var(--red);">yǐng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(41,121,255,.2);cursor:pointer;" onclick="speakZh('硬')"><div style="font-size:11px;color:var(--muted);">4th</div><div style="font-size:13px;font-weight:800;color:var(--red);">yìng</div></div>
+    </div>
+
+    <!-- ONG -->
+    <div class="py-group">
+      <div class="py-group-header">
+        <div class="py-big-box" style="background:var(--red);" onclick="speakZh('钟')">ong</div>
+        <div class="py-big-info">
+          <div class="py-big-name">สระผสม <span style="color:var(--red);">ong</span></div>
+          <div class="py-big-sub">ตัวอย่าง: 钟 zhōng (นาฬิกา)</div>
+          <div class="py-big-ex" style="color:var(--red);" onclick="speakZh('钟')">钟 zhōng 🕐</div>
+        </div>
+      </div>
+      <div class="py-combo-grid">
+        <div class="py-combo-card" onclick="speakZh('东')"><div class="pcc-top">d+ong</div><div class="pcc-py">dong</div><div class="pcc-zh">东</div><div class="pcc-th">ทิศตะวันออก</div></div>
+        <div class="py-combo-card" onclick="speakZh('通')"><div class="pcc-top">t+ong</div><div class="pcc-py">tong</div><div class="pcc-zh">通</div><div class="pcc-th">ผ่าน</div></div>
+        <div class="py-combo-card" onclick="speakZh('公')"><div class="pcc-top">g+ong</div><div class="pcc-py">gong</div><div class="pcc-zh">公</div><div class="pcc-th">สาธารณะ</div></div>
+        <div class="py-combo-card" onclick="speakZh('空')"><div class="pcc-top">k+ong</div><div class="pcc-py">kong</div><div class="pcc-zh">空</div><div class="pcc-th">ว่าง</div></div>
+        <div class="py-combo-card" onclick="speakZh('红')"><div class="pcc-top">h+ong</div><div class="pcc-py">hong</div><div class="pcc-zh">红</div><div class="pcc-th">แดง</div></div>
+      </div>
+    </div>
+
+    <!-- ฟังและอ่านตาม ong -->
+    <div style="background:var(--paper);border-radius:12px;padding:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;">
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('通')"><div style="font-size:11px;color:var(--muted);">1st</div><div style="font-size:13px;font-weight:800;color:var(--red);">tōng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('同')"><div style="font-size:11px;color:var(--muted);">2nd</div><div style="font-size:13px;font-weight:800;color:var(--red);">tóng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('桶')"><div style="font-size:11px;color:var(--muted);">3rd</div><div style="font-size:13px;font-weight:800;color:var(--red);">tǒng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('痛')"><div style="font-size:11px;color:var(--muted);">4th</div><div style="font-size:13px;font-weight:800;color:var(--red);">tòng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('烘')"><div style="font-size:11px;color:var(--muted);">1st</div><div style="font-size:13px;font-weight:800;color:var(--blue);">hōng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('红')"><div style="font-size:11px;color:var(--muted);">2nd</div><div style="font-size:13px;font-weight:800;color:var(--blue);">hóng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('哄')"><div style="font-size:11px;color:var(--muted);">3rd</div><div style="font-size:13px;font-weight:800;color:var(--blue);">hǒng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('哄')"><div style="font-size:11px;color:var(--muted);">4th</div><div style="font-size:13px;font-weight:800;color:var(--blue);">hòng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('空')"><div style="font-size:11px;color:var(--muted);">1st</div><div style="font-size:13px;font-weight:800;color:var(--red);">kōng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('孔')"><div style="font-size:11px;color:var(--muted);">2nd</div><div style="font-size:13px;font-weight:800;color:var(--red);">kóng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('恐')"><div style="font-size:11px;color:var(--muted);">3rd</div><div style="font-size:13px;font-weight:800;color:var(--red);">kǒng</div></div>
+      <div style="text-align:center;padding:6px 3px;background:#fff;border-radius:8px;border:1px solid rgba(215,38,56,.2);cursor:pointer;" onclick="speakZh('空')"><div style="font-size:11px;color:var(--muted);">4th</div><div style="font-size:13px;font-weight:800;color:var(--red);">kòng</div></div>
+    </div>
+  </div>
+
+  <!-- เส้นขีด 撇点 -->
+  <div class="sec-lbl">✏️ 四、学笔画 เรียนเส้นขีดพื้นฐาน</div>
+  <div class="card">
+    <div class="stroke-type-grid">
+      <div class="st-card" onclick="speakZh('撇点')">
+        <div class="st-sym" style="font-size:42px;font-family:sans-serif;color:var(--red);">乀</div>
+        <div class="st-name">撇点 Piě Diǎn</div>
+        <div class="st-py2">piě diǎn</div>
+        <div class="st-desc">เฉียงลงซ้ายแล้วจบด้วยจุด</div>
+      </div>
+      <div class="st-card" onclick="speakZh('横')">
+        <div class="st-sym">一</div>
+        <div class="st-name">横 Héng</div>
+        <div class="st-py2">héng</div>
+        <div class="st-desc">ขีดนอน ซ้าย→ขวา</div>
+      </div>
+      <div class="st-card" onclick="speakZh('竖')">
+        <div class="st-sym">丨</div>
+        <div class="st-name">竖 Shù</div>
+        <div class="st-py2">shù</div>
+        <div class="st-desc">ขีดตั้ง บน→ล่าง</div>
+      </div>
+      <div class="st-card" onclick="speakZh('撇')">
+        <div class="st-sym">丿</div>
+        <div class="st-name">撇 Piě</div>
+        <div class="st-py2">piě</div>
+        <div class="st-desc">เฉียงลงซ้าย</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;background:rgba(215,38,56,.05);border-radius:10px;padding:10px 12px;font-size:12px;color:#7a6652;line-height:1.6;">
+      <strong style="color:#d72638;">撇点 (piě diǎn)</strong> — เส้นนี้ใช้ใน <span style="font-family:'Noto Serif SC',serif;font-size:16px;color:#d72638;">女 好</span> · เฉียงลงซ้ายแล้วจบด้วยจุดลงล่างขวา
+    </div>
+    <!-- ตัวอย่างอักษรที่มี 撇点 -->
+    <div style="margin-top:14px;">
+      <p style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;">🖊️ ตัวอย่างอักษรที่มี 撇点</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--paper);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:2px solid rgba(215,38,56,.2);" onclick="speakZh('女')">
+          <div style="font-family:'Noto Serif SC',serif;font-size:52px;color:var(--red);line-height:1;">女</div>
+          <div style="font-size:13px;font-weight:700;color:var(--blue);margin-top:4px;">nǚ</div>
+          <div style="font-size:12px;color:var(--muted);">ผู้หญิง 👧</div>
+        </div>
+        <div style="background:var(--paper);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:2px solid rgba(215,38,56,.2);" onclick="speakZh('好')">
+          <div style="font-family:'Noto Serif SC',serif;font-size:52px;color:var(--red);line-height:1;">好</div>
+          <div style="font-size:13px;font-weight:700;color:var(--blue);margin-top:4px;">hǎo</div>
+          <div style="font-size:12px;color:var(--muted);">ดี 👍</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ฝึกเขียนตามลำดับขีด -->
+  <div class="sec-lbl">✍️ 五、按笔顺写汉字 ฝึกเขียนตามลำดับขีด</div>
+  <div class="card" id="practice-area"></div>
+
+  <!-- ฝึกเขียนตามตาราง (รูปถ่ายจากหนังสือ) -->
+  <div class="sec-lbl">🖊️ ฝึกเขียนตามตารางคัดลายมือ</div>
+  <div class="card" style="padding:10px;">
+    <p style="font-size:12px;color:#7a6652;margin-bottom:10px;text-align:center;">ฝึกเขียนตามลำดับขีด — คัดตามรอย</p>
+    <img src="p3-chinese-chapter7-trace1.png" style="width:100%;border-radius:10px;margin-bottom:8px;display:block;" alt="ฝึกคัด 喜 欢 颜 色 红">
+    <img src="p3-chinese-chapter7-trace2.png" style="width:100%;border-radius:10px;margin-bottom:8px;display:block;" alt="ฝึกคัด 呢 也">
+    <img src="p3-chinese-chapter7-trace3.png" style="width:100%;border-radius:10px;margin-bottom:8px;display:block;" alt="ฝึกคัด 粉">
+    <img src="p3-chinese-chapter7-trace4.png" style="width:100%;border-radius:10px;display:block;" alt="ฝึกคัด เพิ่มเติม">
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="nav-bar nav-bar-btm" style="margin-top:16px;">
+    <a href="index.html" class="nav-back">🏠 หน้าหลัก</a>
+    <div class="nav-title">↑ กลับด้านบน</div>
+    <button class="nav-back" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="background:var(--muted);box-shadow:0 3px 0 #3a3b45;">⬆️ บนสุด</button>
+  </div>
+
+</div><!-- /home -->
+
+
+<!-- QUIZ SCREEN -->
+<div id="screen-quiz" class="screen">
+  <div style="background:#2e7d32;border-radius:18px;padding:15px 18px;margin-bottom:16px;box-shadow:0 4px 16px rgba(46,125,50,.35);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button onclick="navigate('screen-home')" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 13px;border-radius:30px;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">← กลับ</button>
+      <span style="color:#fff;font-size:17px;font-weight:800;flex:1;text-align:center;">📝 สังเกตภาพเลือกคำตอบ</span>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">สังเกตภาพและเลือกคำตอบที่ถูกต้อง (三、看图选择正确答案)</p>
+    <div id="quiz-area"></div>
+  </div>
+</div>
+
+<!-- MATCH GAME (Pinyin ing/ong) -->
+<div id="screen-match" class="screen">
+  <div style="background:#7b2ff7;border-radius:18px;padding:15px 18px;margin-bottom:16px;box-shadow:0 4px 16px rgba(123,47,247,.35);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button onclick="navigate('screen-home')" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 13px;border-radius:30px;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">← กลับ</button>
+      <span style="color:#fff;font-size:17px;font-weight:800;flex:1;text-align:center;">🀄 จับคู่ Pinyin</span>
+      <span id="match-score-hdr" style="color:#ffe;font-size:14px;font-weight:700;">0 คู่</span>
+    </div>
+  </div>
+  <div id="match-set-select" class="card" style="text-align:center;padding:20px 16px;">
+    <p style="font-size:15px;font-weight:700;margin-bottom:14px;color:#1a0a00;">เลือกชุดสระผสม</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="ms-btn" onclick="startMatch('ing')" style="background:#2979ff;box-shadow:0 4px 0 #1a56c0;">สระ <strong>ing</strong><br><small>ping ding ting jing…</small></button>
+      <button class="ms-btn" onclick="startMatch('ong')" style="background:#d72638;box-shadow:0 4px 0 #9b1a25;">สระ <strong>ong</strong><br><small>dong tong gong hong…</small></button>
+    </div>
+  </div>
+  <div id="match-board" style="display:none;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div id="match-progress" style="flex:1;font-size:13px;color:#7a6652;font-weight:600;"></div>
+      <button onclick="resetMatch()" style="background:#f0ebe3;border:none;padding:8px 16px;border-radius:30px;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:#7a6652;">↺ รีเซ็ต</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div><div style="font-size:11px;font-weight:700;color:#7a6652;margin-bottom:6px;text-align:center;">ตัวอักษรจีน</div><div id="match-left" style="display:flex;flex-direction:column;gap:8px;"></div></div>
+      <div><div style="font-size:11px;font-weight:700;color:#7a6652;margin-bottom:6px;text-align:center;">Pinyin + แปล</div><div id="match-right" style="display:flex;flex-direction:column;gap:8px;"></div></div>
+    </div>
+  </div>
+  <div id="match-result" style="display:none;"></div>
+</div>
+
+
+<!-- MATCH GAME 2: คำศัพท์ + ประโยค -->
+<div id="screen-match2" class="screen">
+  <div style="background:#e65100;border-radius:18px;padding:15px 18px;margin-bottom:16px;box-shadow:0 4px 16px rgba(230,81,0,.35);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button onclick="navigate('screen-home')" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 13px;border-radius:30px;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">← กลับ</button>
+      <span style="color:#fff;font-size:17px;font-weight:800;flex:1;text-align:center;">📖 จับคู่คำศัพท์</span>
+      <span id="match2-score-hdr" style="color:#ffe;font-size:14px;font-weight:700;">0 คู่</span>
+    </div>
+  </div>
+
+  <div id="match2-set-select" class="card" style="text-align:center;padding:20px 16px;">
+    <p style="font-size:15px;font-weight:700;margin-bottom:14px;color:#1a0a00;">เลือกชุดคำ</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button onclick="startMatch2('vocab')" style="background:#e65100;box-shadow:0 4px 0 #bf360c;color:#fff;border:none;padding:14px 22px;border-radius:14px;font-family:'Kanit',sans-serif;font-size:16px;font-weight:800;cursor:pointer;min-width:120px;line-height:1.5;">🎨 คำศัพท์<br><small style="font-size:11px;">喜欢 颜色 红色 粉红色</small></button>
+      <button onclick="startMatch2('conv')" style="background:#00796b;box-shadow:0 4px 0 #004d40;color:#fff;border:none;padding:14px 22px;border-radius:14px;font-family:'Kanit',sans-serif;font-size:16px;font-weight:800;cursor:pointer;min-width:120px;line-height:1.5;">💬 ประโยค<br><small style="font-size:11px;">我喜欢… 不，他喜欢…</small></button>
+    </div>
+  </div>
+
+  <div id="match2-board" style="display:none;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div id="match2-progress" style="flex:1;font-size:13px;color:#7a6652;font-weight:600;"></div>
+      <button onclick="resetMatch2()" style="background:#f0ebe3;border:none;padding:8px 16px;border-radius:30px;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:#7a6652;">↺ รีเซ็ต</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div><div style="font-size:11px;font-weight:700;color:#7a6652;margin-bottom:6px;text-align:center;">ภาษาจีน</div><div id="match2-left" style="display:flex;flex-direction:column;gap:8px;"></div></div>
+      <div><div style="font-size:11px;font-weight:700;color:#7a6652;margin-bottom:6px;text-align:center;">ความหมาย</div><div id="match2-right" style="display:flex;flex-direction:column;gap:8px;"></div></div>
+    </div>
+  </div>
+  <div id="match2-result" style="display:none;"></div>
+</div>
+
+<!-- SETTINGS -->
+<div id="screen-settings" class="screen">
+  <div class="set-hdr"><span style="font-size:22px">⚙️</span><h2 id="settings-title">ตั้งค่าเกม</h2></div>
+  <div class="set-card"><div class="set-card-t">📋 จำนวนข้อ</div>
+    <div class="opts-row" id="opt-q">
+      <div class="opt-chip sel" onclick="setOpt('q',5)">5 ข้อ</div>
+      <div class="opt-chip" onclick="setOpt('q',10)">10 ข้อ</div>
+      <div class="opt-chip" onclick="setOpt('q',15)">15 ข้อ</div>
+      <div class="opt-chip" onclick="setOpt('q',20)">20 ข้อ</div>
+    </div>
+  </div>
+  <div class="set-card" id="time-setting"><div class="set-card-t">⏱️ เวลาต่อข้อ</div>
+    <div class="opts-row" id="opt-t">
+      <div class="opt-chip sel" onclick="setOpt('t',0)">∞</div>
+      <div class="opt-chip" onclick="setOpt('t',5)">5 วิ</div>
+      <div class="opt-chip" onclick="setOpt('t',10)">10 วิ</div>
+      <div class="opt-chip" onclick="setOpt('t',15)">15 วิ</div>
+      <div class="opt-chip" onclick="setOpt('t',20)">20 วิ</div>
+      <div class="opt-chip" onclick="setOpt('t',30)">30 วิ</div>
+    </div>
+  </div>
+  <button class="btn-start" onclick="startGame()">🎮 เริ่มเกมเลย!</button>
+  <button class="btn-back" onclick="navigate('screen-home')">← กลับหน้าหลัก</button>
+</div>
+
+<!-- GAME -->
+<div id="screen-game" class="screen">
+  <div class="g-topbar">
+    <button class="btn-quit" onclick="quitGame()">✕ ออก</button>
+    <div class="prog-pill" id="g-progress">ข้อ 1/5</div>
+    <div class="timer-wrap" id="timer-wrap">
+      <svg class="timer-svg"><circle class="t-bg" cx="24" cy="24" r="19"></circle><circle class="t-bar" id="t-bar" cx="24" cy="24" r="19"></circle></svg>
+      <div class="t-num" id="t-num">∞</div>
+    </div>
+  </div>
+  <div class="q-box" id="q-box"></div>
+  <div id="interact-box"></div>
+</div>
+
+<!-- SCORE -->
+<div id="screen-score" class="screen">
+  <div class="score-box">
+    <div class="sc-stars" id="s-stars">⭐⭐⭐</div>
+    <div class="sc-ratio" id="s-ratio">4/5</div>
+    <div class="sc-pct" id="s-pct">80%</div>
+    <div class="dots-row" id="s-dots"></div>
+    <div class="stat-row"><span>⏱️ หมดเวลา</span><span id="s-timeout">0 ข้อ</span></div>
+    <div class="stat-row"><span>✅ ตอบถูก</span><span id="s-correct">0 ข้อ</span></div>
+    <button class="btn-start" style="margin-top:4px;" id="btn-replay">🔄 เล่นอีกครั้ง</button>
+    <button class="btn-back" onclick="navigate('screen-home')">🏠 กลับหน้าหลัก</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="modal-ov" id="modal" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-close" onclick="closeModal()">✕</div>
+    <div class="modal-zh" id="m-zh">红色</div>
+    <div class="modal-py" id="m-py">hóng sè</div>
+    <div class="modal-th" id="m-th">แปลว่า: สีแดง</div>
+    <button class="btn-m-spk" id="m-speak">🔊 ฟังออกเสียง</button>
+  </div>
+</div>
+
+<script>
+// ======== VOCAB DATA ========
+const VOCAB = [
+  {zh:'喜欢',py:'xǐ huan',th:'ชอบ'},
+  {zh:'颜色',py:'yán sè',th:'สี'},
+  {zh:'红色',py:'hóng sè',th:'สีแดง'},
+  {zh:'呢',py:'ne',th:'ล่ะ'},
+  {zh:'也',py:'yě',th:'ก็/เช่นกัน'},
+  {zh:'不',py:'bù',th:'ไม่'},
+  {zh:'粉红色',py:'fěn hóng sè',th:'สีชมพู'},
+  {zh:'你',py:'nǐ',th:'คุณ'},
+  {zh:'我',py:'wǒ',th:'ฉัน'},
+  {zh:'他',py:'tā',th:'เขา'},
+  {zh:'什么',py:'shén me',th:'อะไร'},
+];
+
+const SENTENCES = [
+  {zh:'你喜欢什么颜色？',py:'Nǐ xǐ huan shén me yán sè?',th:'คุณชอบสีอะไร?'},
+  {zh:'我喜欢红色。你呢？',py:'Wǒ xǐ huan hóng sè. Nǐ ne?',th:'ฉันชอบสีแดง แล้วคุณล่ะ?'},
+  {zh:'我也喜欢红色。',py:'Wǒ yě xǐ huan hóng sè.',th:'ฉันก็ชอบสีแดงเช่นกัน'},
+  {zh:'他也喜欢红色吗？',py:'Tā yě xǐ huan hóng sè ma?',th:'เขาก็ชอบสีแดงด้วยไหม?'},
+  {zh:'不，他喜欢粉红色。',py:'Bù, tā xǐ huan fěn hóng sè.',th:'ไม่ เขาชอบสีชมพู'},
+];
+
+// ======== PINYIN COMBOS ========
+const PINYIN_COMBOS = [
+  {zh:'苹',py:'píng',th:'แอปเปิ้ล'},
+  {zh:'钉',py:'dīng',th:'ตะปู'},
+  {zh:'听',py:'tīng',th:'ฟัง'},
+  {zh:'星',py:'xīng',th:'ดาว'},
+  {zh:'东',py:'dōng',th:'ทิศตะวันออก'},
+  {zh:'公',py:'gōng',th:'สาธารณะ'},
+  {zh:'空',py:'kōng',th:'ว่าง'},
+  {zh:'红',py:'hóng',th:'แดง'},
+];
+
+// ======== STROKE DATA ========
+const S = 'stroke="#d72638" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"';
+
+const STROKE_SVG = {
+  '喜':[
+    {n:'横 Héng',    d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/>`},
+    {n:'撇 Piě',    d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/>`},
+    {n:'竖 Shù',    d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/><line x1="50" y1="16" x2="50" y2="32" ${S}/>`},
+    {n:'捺 Nà',     d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/><line x1="50" y1="16" x2="50" y2="32" ${S}/><path d="M50,16 L64,30" ${S}/>`},
+    {n:'横折 HZ',   d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/><line x1="50" y1="16" x2="50" y2="32" ${S}/><path d="M50,16 L64,30" ${S}/><path d="M24,42 L76,42 L76,56" ${S}/>`},
+    {n:'横 Héng',   d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/><line x1="50" y1="16" x2="50" y2="32" ${S}/><path d="M50,16 L64,30" ${S}/><path d="M24,42 L76,42 L76,56" ${S}/><line x1="24" y1="56" x2="76" y2="56" ${S}/>`},
+    {n:'竖 Shù',    d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/><line x1="50" y1="16" x2="50" y2="32" ${S}/><path d="M50,16 L64,30" ${S}/><path d="M24,42 L76,42 L76,56" ${S}/><line x1="24" y1="56" x2="76" y2="56" ${S}/><line x1="50" y1="56" x2="50" y2="84" ${S}/>`},
+    {n:'横 Héng',   d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/><line x1="50" y1="16" x2="50" y2="32" ${S}/><path d="M50,16 L64,30" ${S}/><path d="M24,42 L76,42 L76,56" ${S}/><line x1="24" y1="56" x2="76" y2="56" ${S}/><line x1="50" y1="56" x2="50" y2="84" ${S}/><line x1="22" y1="72" x2="78" y2="72" ${S}/>`},
+    {n:'横 Héng',   d:`<line x1="20" y1="16" x2="80" y2="16" ${S}/><path d="M50,16 L36,30" ${S}/><line x1="50" y1="16" x2="50" y2="32" ${S}/><path d="M50,16 L64,30" ${S}/><path d="M24,42 L76,42 L76,56" ${S}/><line x1="24" y1="56" x2="76" y2="56" ${S}/><line x1="50" y1="56" x2="50" y2="84" ${S}/><line x1="22" y1="72" x2="78" y2="72" ${S}/><line x1="22" y1="84" x2="78" y2="84" ${S}/>`},
+  ],
+  '欢':[
+    {n:'撇 Piě',    d:`<path d="M28,14 L14,36" ${S}/>`},
+    {n:'又 Yòu',    d:`<path d="M28,14 L14,36" ${S}/><path d="M32,24 L48,42" ${S}/>`},
+    {n:'撇点 PD',   d:`<path d="M28,14 L14,36" ${S}/><path d="M32,24 L48,42" ${S}/><path d="M40,28 L32,48 L52,48" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M28,14 L14,36" ${S}/><path d="M32,24 L48,42" ${S}/><path d="M40,28 L32,48 L52,48" ${S}/><path d="M62,14 L52,30" ${S}/>`},
+    {n:'横折钩 HZG',d:`<path d="M28,14 L14,36" ${S}/><path d="M32,24 L48,42" ${S}/><path d="M40,28 L32,48 L52,48" ${S}/><path d="M62,14 L52,30" ${S}/><path d="M56,36 L84,36 L84,78 Q84,84 76,80" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M28,14 L14,36" ${S}/><path d="M32,24 L48,42" ${S}/><path d="M40,28 L32,48 L52,48" ${S}/><path d="M62,14 L52,30" ${S}/><path d="M56,36 L84,36 L84,78 Q84,84 76,80" ${S}/><line x1="56" y1="56" x2="84" y2="56" ${S}/>`},
+    {n:'竖弯钩 SWG',d:`<path d="M28,14 L14,36" ${S}/><path d="M32,24 L48,42" ${S}/><path d="M40,28 L32,48 L52,48" ${S}/><path d="M62,14 L52,30" ${S}/><path d="M56,36 L84,36 L84,78 Q84,84 76,80" ${S}/><line x1="56" y1="56" x2="84" y2="56" ${S}/><path d="M68,36 L68,74 Q68,84 80,84" ${S}/>`},
+  ],
+  '红':[
+    {n:'撇 Piě',    d:`<path d="M18,16 L12,28" ${S}/>`},
+    {n:'横折 HZ',   d:`<path d="M18,16 L12,28" ${S}/><path d="M14,34 L36,34 L36,80" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M18,16 L12,28" ${S}/><path d="M14,34 L36,34 L36,80" ${S}/><line x1="14" y1="56" x2="36" y2="56" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M18,16 L12,28" ${S}/><path d="M14,34 L36,34 L36,80" ${S}/><line x1="14" y1="56" x2="36" y2="56" ${S}/><line x1="48" y1="24" x2="84" y2="24" ${S}/>`},
+    {n:'竖钩 SG',   d:`<path d="M18,16 L12,28" ${S}/><path d="M14,34 L36,34 L36,80" ${S}/><line x1="14" y1="56" x2="36" y2="56" ${S}/><line x1="48" y1="24" x2="84" y2="24" ${S}/><path d="M66,24 L66,82 L58,74" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M18,16 L12,28" ${S}/><path d="M14,34 L36,34 L36,80" ${S}/><line x1="14" y1="56" x2="36" y2="56" ${S}/><line x1="48" y1="24" x2="84" y2="24" ${S}/><path d="M66,24 L66,82 L58,74" ${S}/><path d="M54,54 L46,70" ${S}/>`},
+    {n:'捺 Nà',     d:`<path d="M18,16 L12,28" ${S}/><path d="M14,34 L36,34 L36,80" ${S}/><line x1="14" y1="56" x2="36" y2="56" ${S}/><line x1="48" y1="24" x2="84" y2="24" ${S}/><path d="M66,24 L66,82 L58,74" ${S}/><path d="M54,54 L46,70" ${S}/><path d="M66,54 L82,70" ${S}/>`},
+  ],
+  '颜':[
+    {n:'点 Diǎn',   d:`<path d="M22,14 L16,24" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M22,14 L16,24" ${S}/><line x1="14" y1="34" x2="40" y2="34" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M22,14 L16,24" ${S}/><line x1="14" y1="34" x2="40" y2="34" ${S}/><line x1="14" y1="48" x2="40" y2="48" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M22,14 L16,24" ${S}/><line x1="14" y1="34" x2="40" y2="34" ${S}/><line x1="14" y1="48" x2="40" y2="48" ${S}/><path d="M28,48 L16,68" ${S}/>`},
+    {n:'竖 Shù',    d:`<path d="M22,14 L16,24" ${S}/><line x1="14" y1="34" x2="40" y2="34" ${S}/><line x1="14" y1="48" x2="40" y2="48" ${S}/><path d="M28,48 L16,68" ${S}/><line x1="28" y1="14" x2="28" y2="82" ${S}/>`},
+    {n:'横折 HZ',   d:`<path d="M22,14 L16,24" ${S}/><line x1="14" y1="34" x2="40" y2="34" ${S}/><line x1="14" y1="48" x2="40" y2="48" ${S}/><path d="M28,48 L16,68" ${S}/><line x1="28" y1="14" x2="28" y2="82" ${S}/><path d="M52,20 L84,20 L84,46" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M22,14 L16,24" ${S}/><line x1="14" y1="34" x2="40" y2="34" ${S}/><line x1="14" y1="48" x2="40" y2="48" ${S}/><path d="M28,48 L16,68" ${S}/><line x1="28" y1="14" x2="28" y2="82" ${S}/><path d="M52,20 L84,20 L84,46" ${S}/><line x1="52" y1="46" x2="84" y2="46" ${S}/>`},
+    {n:'竖 Shù',    d:`<path d="M22,14 L16,24" ${S}/><line x1="14" y1="34" x2="40" y2="34" ${S}/><line x1="14" y1="48" x2="40" y2="48" ${S}/><path d="M28,48 L16,68" ${S}/><line x1="28" y1="14" x2="28" y2="82" ${S}/><path d="M52,20 L84,20 L84,46" ${S}/><line x1="52" y1="46" x2="84" y2="46" ${S}/><line x1="68" y1="46" x2="68" y2="82" ${S}/>`},
+  ],
+  '色':[
+    {n:'撇 Piě',    d:`<path d="M50,14 L30,34" ${S}/>`},
+    {n:'横折 HZ',   d:`<path d="M50,14 L30,34" ${S}/><path d="M32,42 L68,42 L68,64" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M50,14 L30,34" ${S}/><path d="M32,42 L68,42 L68,64" ${S}/><line x1="32" y1="64" x2="68" y2="64" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M50,14 L30,34" ${S}/><path d="M32,42 L68,42 L68,64" ${S}/><line x1="32" y1="64" x2="68" y2="64" ${S}/><path d="M50,64 L38,78" ${S}/>`},
+    {n:'横折 HZ',   d:`<path d="M50,14 L30,34" ${S}/><path d="M32,42 L68,42 L68,64" ${S}/><line x1="32" y1="64" x2="68" y2="64" ${S}/><path d="M50,64 L38,78" ${S}/><path d="M30,82 L70,82 Q78,82 70,90" ${S}/>`},
+    {n:'竖弯钩 SWG',d:`<path d="M50,14 L30,34" ${S}/><path d="M32,42 L68,42 L68,64" ${S}/><line x1="32" y1="64" x2="68" y2="64" ${S}/><path d="M50,64 L38,78" ${S}/><path d="M30,82 L70,82 Q78,82 70,90" ${S}/><path d="M50,42 L50,82" ${S}/>`},
+    {n:'点 Diǎn',   d:`<path d="M50,14 L30,34" ${S}/><path d="M32,42 L68,42 L68,64" ${S}/><line x1="32" y1="64" x2="68" y2="64" ${S}/><path d="M50,64 L38,78" ${S}/><path d="M30,82 L70,82 Q78,82 70,90" ${S}/><path d="M50,42 L50,82" ${S}/><path d="M56,24 L62,34" ${S}/>`},
+  ],
+  '呢':[
+    {n:'竖 Shù',    d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/>`},
+    {n:'横折 HZ',   d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/><path d="M12" y1="30 L34,30 L34,80" ${S}/>`},
+    {n:'横 Héng',   d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/><path d="M12,30 L34,30 L34,80" ${S}/><line x1="12" y1="52" x2="34" y2="52" ${S}/>`},
+    {n:'撇 Piě',    d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/><path d="M12,30 L34,30 L34,80" ${S}/><line x1="12" y1="52" x2="34" y2="52" ${S}/><path d="M56,16 L44,36" ${S}/>`},
+    {n:'横折 HZ',   d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/><path d="M12,30 L34,30 L34,80" ${S}/><line x1="12" y1="52" x2="34" y2="52" ${S}/><path d="M56,16 L44,36" ${S}/><path d="M46,44 L76,44 L76,60" ${S}/>`},
+    {n:'横 Héng',   d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/><path d="M12,30 L34,30 L34,80" ${S}/><line x1="12" y1="52" x2="34" y2="52" ${S}/><path d="M56,16 L44,36" ${S}/><path d="M46,44 L76,44 L76,60" ${S}/><line x1="46" y1="60" x2="76" y2="60" ${S}/>`},
+    {n:'撇点 PD',   d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/><path d="M12,30 L34,30 L34,80" ${S}/><line x1="12" y1="52" x2="34" y2="52" ${S}/><path d="M56,16 L44,36" ${S}/><path d="M46,44 L76,44 L76,60" ${S}/><line x1="46" y1="60" x2="76" y2="60" ${S}/><path d="M62,60 L52,78 L76,78" ${S}/>`},
+    {n:'竖弯钩 SWG',d:`<line x1="18" y1="16" x2="18" y2="24" ${S}/><path d="M12,30 L34,30 L34,80" ${S}/><line x1="12" y1="52" x2="34" y2="52" ${S}/><path d="M56,16 L44,36" ${S}/><path d="M46,44 L76,44 L76,60" ${S}/><line x1="46" y1="60" x2="76" y2="60" ${S}/><path d="M62,60 L52,78 L76,78" ${S}/><path d="M50,30 L50,72 Q50,82 62,82" ${S}/>`},
+  ],
+  '也':[
+    {n:'横折钩 HZG', d:`<path d="M22,20 L76,20 L76,82 Q76,88 64,84" ${S}/>`},
+    {n:'横折 HZ',    d:`<path d="M22,20 L76,20 L76,82 Q76,88 64,84" ${S}/><path d="M20,44 L52,44 L52,78" ${S}/>`},
+    {n:'竖弯钩 SWG', d:`<path d="M22,20 L76,20 L76,82 Q76,88 64,84" ${S}/><path d="M20,44 L52,44 L52,78" ${S}/><path d="M20,58 L38,58" ${S}/>`},
+  ],
+  '粉':[
+    {n:'点 Diǎn',   d:`<path d="M26,12 L20,22" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/>`},
+    {n:'竖 Shù',    d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/><path d="M24,66 L14,80" ${S}/>`},
+    {n:'捺 Nà',     d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/><path d="M24,66 L14,80" ${S}/><path d="M24,66 L36,80" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/><path d="M24,66 L14,80" ${S}/><path d="M24,66 L36,80" ${S}/><path d="M56,14 L48,28" ${S}/>`},
+    {n:'横折 HZ',   d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/><path d="M24,66 L14,80" ${S}/><path d="M24,66 L36,80" ${S}/><path d="M56,14 L48,28" ${S}/><path d="M50,36 L82,36 L82,54" ${S}/>`},
+    {n:'横 Héng',   d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/><path d="M24,66 L14,80" ${S}/><path d="M24,66 L36,80" ${S}/><path d="M56,14 L48,28" ${S}/><path d="M50,36 L82,36 L82,54" ${S}/><line x1="50" y1="54" x2="82" y2="54" ${S}/>`},
+    {n:'撇 Piě',    d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/><path d="M24,66 L14,80" ${S}/><path d="M24,66 L36,80" ${S}/><path d="M56,14 L48,28" ${S}/><path d="M50,36 L82,36 L82,54" ${S}/><line x1="50" y1="54" x2="82" y2="54" ${S}/><path d="M66,54 L56,72" ${S}/>`},
+    {n:'捺 Nà',     d:`<path d="M26,12 L20,22" ${S}/><path d="M26,12 L16,30" ${S}/><line x1="12" y1="38" x2="38" y2="38" ${S}/><line x1="24" y1="38" x2="24" y2="52" ${S}/><line x1="12" y1="52" x2="38" y2="52" ${S}/><path d="M24,66 L14,80" ${S}/><path d="M24,66 L36,80" ${S}/><path d="M56,14 L48,28" ${S}/><path d="M50,36 L82,36 L82,54" ${S}/><line x1="50" y1="54" x2="82" y2="54" ${S}/><path d="M66,54 L56,72" ${S}/><path d="M66,54 L80,72" ${S}/>`},
+  ],
+};
+
+const CHAR_LIST = [
+  {zh:'喜',py:'xǐ',th:'ยินดี',strokes:STROKE_SVG['喜']},
+  {zh:'欢',py:'huān',th:'สนุก/ยินดี',strokes:STROKE_SVG['欢']},
+  {zh:'颜',py:'yán',th:'สี/หน้า',strokes:STROKE_SVG['颜']},
+  {zh:'色',py:'sè',th:'สี',strokes:STROKE_SVG['色']},
+  {zh:'红',py:'hóng',th:'แดง',strokes:STROKE_SVG['红']},
+  {zh:'呢',py:'ne',th:'ล่ะ',strokes:STROKE_SVG['呢']},
+  {zh:'也',py:'yě',th:'ก็',strokes:STROKE_SVG['也']},
+  {zh:'粉',py:'fěn',th:'ชมพู',strokes:STROKE_SVG['粉']},
+];
+
+function buildPracticeArea(){
+  const box=document.getElementById('practice-area');
+  if(!box)return;
+  box.innerHTML='';
+  CHAR_LIST.forEach(char=>{
+    const pc=document.createElement('div');pc.className='pc';pc.style.marginBottom='18px';
+    const title=document.createElement('div');title.className='pc-title';
+    title.innerHTML='<span class="pt-zh" onclick="speakZh(\''+char.zh+'\')" style="cursor:pointer;">'+char.zh+'</span>'
+      +'<span class="pt-py">'+char.py+'</span>'
+      +'<span class="pt-th">'+char.th+'</span>'
+      +'<button onclick="speakZh(\''+char.zh+'\')" style="margin-left:auto;background:rgba(215,38,56,.1);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:13px;">🔊</button>';
+    const row=document.createElement('div');row.className='stroke-row';
+    char.strokes.forEach((step,si)=>{
+      const wrap=document.createElement('div');wrap.className='s-step';
+      const lbl=document.createElement('div');lbl.className='s-step-lbl';lbl.innerText=(si+1);
+      const cell=document.createElement('div');cell.className='scell';
+      cell.innerHTML='<svg class="guide" viewBox="0 0 100 100"><line x1="50" y1="0" x2="50" y2="100" stroke="rgba(215,38,56,.08)" stroke-width="1"/><line x1="0" y1="50" x2="100" y2="50" stroke="rgba(215,38,56,.08)" stroke-width="1"/></svg>'
+        +'<svg class="stroke-svg" viewBox="0 0 100 100">'+step.d+'</svg>';
+      const sname=document.createElement('div');sname.className='s-step-name';sname.innerText=step.n;
+      wrap.appendChild(lbl);wrap.appendChild(cell);wrap.appendChild(sname);
+      row.appendChild(wrap);
+    });
+    const fullCell=document.createElement('div');fullCell.className='s-step';
+    const fullLbl=document.createElement('div');fullLbl.className='s-step-lbl';fullLbl.innerText='✓';
+    const fullC=document.createElement('div');fullC.className='scell';fullC.style.border='2px solid rgba(215,38,56,.4)';
+    fullC.innerHTML='<svg class="guide" viewBox="0 0 100 100"><line x1="50" y1="0" x2="50" y2="100" stroke="rgba(215,38,56,.12)" stroke-width="1"/><line x1="0" y1="50" x2="100" y2="50" stroke="rgba(215,38,56,.12)" stroke-width="1"/></svg>'
+      +'<div style="position:relative;z-index:1;font-family:Noto Serif SC,serif;font-size:60px;color:#d72638;line-height:1;cursor:pointer;" onclick="speakZh(\''+char.zh+'\')">'+char.zh+'</div>';
+    fullCell.appendChild(fullLbl);fullCell.appendChild(fullC);
+    row.appendChild(fullCell);
+    pc.appendChild(title);pc.appendChild(row);
+    box.appendChild(pc);
+  });
+}
+
+// ======== QUIZ DATA — from image 9 ========
+const QUIZ_DATA = [
+  {
+    zh:'爸爸喜欢红色。',
+    question:'ถูกหรือผิด?',
+    options:['✔ ถูกต้อง (พ่อชอบสีแดง)','✘ ผิด (พ่อไม่ชอบสีแดง)'],
+    correct:1,
+    explain:'พ่อสวมเสื้อสีน้ำเงิน ไม่ได้ชอบสีแดง → ผิด'
+  },
+  {
+    zh:'老师喜欢粉红色。',
+    question:'ถูกหรือผิด?',
+    options:['✔ ถูกต้อง (ครูชอบสีชมพู)','✘ ผิด (ครูไม่ชอบสีชมพู)'],
+    correct:0,
+    explain:'ครูสวมเสื้อสีชมพู → ถูกต้อง'
+  },
+  {
+    zh:'她不喜欢红色。',
+    question:'ถูกหรือผิด?',
+    options:['✔ ถูกต้อง (เธอไม่ชอบสีแดง)','✘ ผิด (เธอชอบสีแดง)'],
+    correct:1,
+    explain:'เธอสวมเสื้อสีแดง แสดงว่าชอบสีแดง → ผิด'
+  },
+  {
+    zh:'他不喜欢粉红色。',
+    question:'ถูกหรือผิด?',
+    options:['✔ ถูกต้อง (เขาไม่ชอบสีชมพู)','✘ ผิด (เขาชอบสีชมพู)'],
+    correct:0,
+    explain:'เขาสวมเสื้อสีม่วง ไม่ใช่สีชมพู → ถูกต้อง'
+  },
+];
+
+function buildQuiz(){
+  const box=document.getElementById('quiz-area');
+  if(!box)return;
+  box.innerHTML='';
+  QUIZ_DATA.forEach((q,qi)=>{
+    const qDiv=document.createElement('div');
+    qDiv.style.cssText='margin-bottom:16px;padding:12px;background:#fdf6e3;border-radius:12px;';
+    const label=document.createElement('div');
+    label.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:10px;';
+    label.innerHTML='<span style="width:24px;height:24px;border-radius:50%;background:#d72638;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;">'+(qi+1)+'</span>'
+      +'<span style="font-family:Noto Serif SC,serif;font-size:15px;font-weight:700;color:#1a0a00;">'+q.zh+'</span>';
+    const qText=document.createElement('div');
+    qText.style.cssText='font-size:13px;color:#7a6652;margin-bottom:8px;';
+    qText.innerText=q.question;
+    qDiv.appendChild(label);qDiv.appendChild(qText);
+    const opts=document.createElement('div');
+    opts.style.cssText='display:flex;flex-direction:column;gap:7px;margin-bottom:0;';
+    const fb=document.createElement('div');
+    fb.style.cssText='font-size:12px;margin-top:7px;min-height:16px;color:#7a6652;display:none;';
+    q.options.forEach((opt,oi)=>{
+      const btn=document.createElement('button');
+      btn.style.cssText='padding:9px 10px;border-radius:12px;border:2px solid rgba(215,38,56,.25);background:#fff;font-family:Kanit,sans-serif;font-size:14px;font-weight:700;cursor:pointer;color:#1a0a00;transition:all .15s;text-align:left;';
+      btn.innerText=opt;
+      btn.onclick=()=>{
+        opts.querySelectorAll('button').forEach(b=>b.disabled=true);
+        if(oi===q.correct){
+          btn.style.cssText+=';border-color:#1db954;background:rgba(29,185,84,.1);color:#065f46;';
+          fb.innerText='🎉 ถูกต้อง! '+q.explain;
+          fb.style.color='#065f46';
+        } else {
+          btn.style.cssText+=';border-color:#ff4757;background:rgba(255,71,87,.07);color:#d72638;';
+          opts.querySelectorAll('button')[q.correct].style.cssText+=';border-color:#1db954;background:rgba(29,185,84,.1);color:#065f46;';
+          fb.innerText='❌ ผิด · '+q.explain;
+          fb.style.color='#d72638';
+        }
+        fb.style.display='block';
+      };
+      opts.appendChild(btn);
+    });
+    qDiv.appendChild(opts);
+    qDiv.appendChild(fb);
+    box.appendChild(qDiv);
+  });
+}
+
+// ======== NAVIGATION ========
+function navigate(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ======== SETTINGS ========
+let gConf={mode:'g1_vocab',q:5,t:0};
+function openSettings(mode){
+  gConf.mode=mode;
+  const titles={g1_vocab:'ทายคำศัพท์สี',g2_pinyin:'ฟัง→เลือก Pinyin',g3_write:'ฝึกเขียน',g1_sentence:'ทายประโยค'};
+  document.getElementById('settings-title').innerText=titles[mode]||'ตั้งค่า';
+  document.getElementById('time-setting').style.display=mode==='g3_write'?'none':'block';
+  navigate('screen-settings');
+}
+function setOpt(k,v){
+  gConf[k]=v;
+  document.querySelectorAll('#opt-'+k+' .opt-chip').forEach(c=>c.classList.remove('sel'));
+  event.target.classList.add('sel');
+}
+
+// ======== TTS ========
+function speakZh(text){
+  if(!window.speechSynthesis)return;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='zh-CN';u.rate=0.85;u.pitch=1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+function speakEn(text){
+  if(!window.speechSynthesis)return;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US';u.rate=0.9;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+// ======== GAME ENGINE ========
+let gs={mode:'',qList:[],qi:0,score:0,timeout:0,results:[],timer:null,timeLeft:0};
+
+function startGame(){
+  const mode=gConf.mode,N=gConf.q,T=gConf.t;
+  gs={mode,qList:[],qi:0,score:0,timeout:0,results:[],timer:null,timeLeft:T};
+  let pool=[];
+  if(mode==='g1_vocab') pool=buildVocabQ();
+  else if(mode==='g2_pinyin') pool=buildPinyinQ();
+  else if(mode==='g3_write') pool=buildWriteQ();
+  else if(mode==='g1_sentence') pool=buildSentenceQ();
+  gs.qList=pool.sort(()=>Math.random()-.5).slice(0,N);
+  navigate('screen-game');
+  renderQ();
+}
+
+function buildVocabQ(){
+  const qs=[];
+  VOCAB.forEach(v=>{
+    const wrong=VOCAB.filter(w=>w.zh!==v.zh).sort(()=>Math.random()-.5).slice(0,3);
+    const opts=[v,...wrong].sort(()=>Math.random()-.5);
+    const ci=opts.findIndex(o=>o.zh===v.zh);
+    qs.push({type:'zh2th',main:v.zh,hint:'แปลว่าอะไร?',opts:opts.map(o=>o.th),correct:ci,speak:v.zh});
+  });
+  VOCAB.forEach(v=>{
+    const wrong=VOCAB.filter(w=>w.zh!==v.zh).sort(()=>Math.random()-.5).slice(0,3);
+    const opts=[v,...wrong].sort(()=>Math.random()-.5);
+    const ci=opts.findIndex(o=>o.zh===v.zh);
+    qs.push({type:'th2zh',main:v.th,hint:'ภาษาจีนคือ?',opts:opts.map(o=>o.zh),correct:ci,speak:v.zh,isZh:true});
+  });
+  return qs;
+}
+
+function buildPinyinQ(){
+  const qs=[];
+  PINYIN_COMBOS.forEach(v=>{
+    const wrong=PINYIN_COMBOS.filter(w=>w.zh!==v.zh).sort(()=>Math.random()-.5).slice(0,3);
+    const opts=[v,...wrong].sort(()=>Math.random()-.5);
+    const ci=opts.findIndex(o=>o.zh===v.zh);
+    qs.push({type:'audio',main:v.zh,hint:'🔊 คลิกฟัง แล้วเลือก Pinyin',opts:opts.map(o=>o.py),correct:ci,speak:v.zh});
+  });
+  return qs;
+}
+
+function buildSentenceQ(){
+  const qs=[];
+  SENTENCES.forEach(v=>{
+    const wrong=SENTENCES.filter(w=>w.zh!==v.zh).sort(()=>Math.random()-.5).slice(0,3);
+    const opts=[v,...wrong].sort(()=>Math.random()-.5);
+    const ci=opts.findIndex(o=>o.zh===v.zh);
+    qs.push({type:'zh2th',main:v.zh,hint:'ประโยคนี้แปลว่าอะไร?',opts:opts.map(o=>o.th),correct:ci,speak:v.zh});
+  });
+  SENTENCES.forEach(v=>{
+    const wrong=SENTENCES.filter(w=>w.zh!==v.zh).sort(()=>Math.random()-.5).slice(0,3);
+    const opts=[v,...wrong].sort(()=>Math.random()-.5);
+    const ci=opts.findIndex(o=>o.zh===v.zh);
+    qs.push({type:'th2zh',main:v.th,hint:'ประโยคภาษาจีนคือ?',opts:opts.map(o=>o.zh),correct:ci,speak:v.zh,isZh:true});
+  });
+  return qs;
+}
+
+function buildWriteQ(){
+  return CHAR_LIST.map(c=>({type:'write',main:c.zh,hint:'เขียนอักษรจีน',opts:[],correct:-1,speak:c.zh,strokes:c.strokes,py:c.py,th:c.th}));
+}
+
+function renderQ(){
+  const q=gs.qList[gs.qi];
+  if(!q){showScore();return;}
+  document.getElementById('g-progress').innerText='ข้อ '+(gs.qi+1)+'/'+gs.qList.length;
+  const qBox=document.getElementById('q-box');
+  const iBox=document.getElementById('interact-box');
+  if(q.type==='write'){
+    qBox.innerHTML='<div class="q-main" style="cursor:pointer;" onclick="speakZh(\''+q.main+'\')">'+q.main+'</div>'
+      +'<div class="q-hint">'+q.py+' · '+q.th+'</div>';
+    const sg=document.createElement('div');sg.className='sg-wrap';
+    const cw=document.createElement('div');cw.className='sg-canvas-wrap';
+    const gl=document.createElement('div');gl.className='sg-grid-lines';
+    const gc=document.createElement('div');gc.className='sg-cross';
+    const guide=document.createElement('div');guide.className='sg-guide-char';guide.innerText=q.main;
+    const canvas=document.createElement('canvas');canvas.width=220;canvas.height=220;canvas.style.cssText='position:relative;z-index:2;touch-action:none;';
+    cw.appendChild(gl);cw.appendChild(gc);cw.appendChild(guide);cw.appendChild(canvas);
+    let drawing=false,ctx=canvas.getContext('2d');
+    ctx.strokeStyle='#d72638';ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';
+    canvas.addEventListener('pointerdown',e=>{drawing=true;ctx.beginPath();const r=canvas.getBoundingClientRect();ctx.moveTo(e.clientX-r.left,e.clientY-r.top);});
+    canvas.addEventListener('pointermove',e=>{if(!drawing)return;const r=canvas.getBoundingClientRect();ctx.lineTo(e.clientX-r.left,e.clientY-r.top);ctx.stroke();});
+    canvas.addEventListener('pointerup',()=>drawing=false);
+    canvas.addEventListener('pointerleave',()=>drawing=false);
+    const btns=document.createElement('div');btns.className='sg-btns';
+    const clearBtn=document.createElement('button');clearBtn.className='sg-btn sg-clear';clearBtn.innerText='🗑 ลบ';
+    clearBtn.onclick=()=>{ctx.clearRect(0,0,220,220);};
+    const nextBtn=document.createElement('button');nextBtn.className='sg-btn sg-check';nextBtn.innerText='ถัดไป →';
+    nextBtn.onclick=()=>{gs.qi++;gs.results.push('correct');gs.score++;renderQ();};
+    btns.appendChild(clearBtn);btns.appendChild(nextBtn);
+    sg.appendChild(cw);sg.appendChild(btns);
+    iBox.innerHTML='';iBox.appendChild(sg);
+    startTimer();
+    return;
+  }
+  let mainHTML='';
+  if(q.type==='audio') mainHTML='<div class="q-main audio" onclick="speakZh(\''+q.main+'\')">🔊</div>';
+  else if(q.isZh) mainHTML='<div class="q-main" style="font-family:Noto Serif SC,serif;">'+q.main+'</div>';
+  else if(q.main.length>6) mainHTML='<div class="q-main thai">'+q.main+'</div>';
+  else mainHTML='<div class="q-main">'+q.main+'</div>';
+  qBox.innerHTML=mainHTML+'<div class="q-hint">'+q.hint+'</div>';
+  if(q.type==='audio') speakZh(q.main);
+  const choices=document.createElement('div');choices.className='choices';
+  const labels=['A','B','C','D'];
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');btn.className='choice';
+    btn.innerHTML='<span class="cn">'+labels[i]+'</span>';
+    if(q.isZh) btn.innerHTML+='<span style="font-family:Noto Serif SC,serif;font-size:18px;color:#d72638;">'+opt+'</span>';
+    else btn.innerHTML+='<span>'+opt+'</span>';
+    btn.onclick=()=>answerQ(i,q,choices);
+    choices.appendChild(btn);
+  });
+  iBox.innerHTML='';iBox.appendChild(choices);
+  startTimer();
+}
+
+function answerQ(i,q,choices){
+  clearInterval(gs.timer);
+  const btns=choices.querySelectorAll('.choice');
+  btns.forEach(b=>b.onclick=null);
+  if(i===q.correct){
+    btns[i].classList.add('correct');gs.score++;gs.results.push('correct');
+    speakZh(q.speak);
+  } else {
+    btns[i].classList.add('wrong');btns[q.correct].classList.add('correct');gs.results.push('wrong');
+  }
+  setTimeout(()=>{gs.qi++;renderQ();},900);
+}
+
+function startTimer(){
+  clearInterval(gs.timer);
+  const T=gConf.t;
+  const bar=document.getElementById('t-bar');
+  const num=document.getElementById('t-num');
+  const wrap=document.getElementById('timer-wrap');
+  if(!T){num.innerText='∞';bar.style.strokeDashoffset=0;wrap.classList.remove('warn');return;}
+  gs.timeLeft=T;num.innerText=T;bar.style.strokeDashoffset=0;wrap.classList.remove('warn');
+  gs.timer=setInterval(()=>{
+    gs.timeLeft--;
+    num.innerText=gs.timeLeft;
+    bar.style.strokeDashoffset=120*(1-gs.timeLeft/T);
+    if(gs.timeLeft<=3)wrap.classList.add('warn');
+    if(gs.timeLeft<=0){
+      clearInterval(gs.timer);gs.timeout++;gs.results.push('timeout');gs.qi++;renderQ();
+    }
+  },1000);
+}
+
+function quitGame(){clearInterval(gs.timer);navigate('screen-home');}
+
+function showScore(){
+  clearInterval(gs.timer);
+  const N=gs.qList.length,sc=gs.score,pct=Math.round(sc/N*100);
+  const stars=pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐':'⭐';
+  document.getElementById('s-stars').innerText=stars;
+  document.getElementById('s-ratio').innerText=sc+'/'+N;
+  document.getElementById('s-pct').innerText=pct+'%';
+  document.getElementById('s-timeout').innerText=gs.timeout+' ข้อ';
+  document.getElementById('s-correct').innerText=sc+' ข้อ';
+  const dots=document.getElementById('s-dots');dots.innerHTML='';
+  gs.results.forEach((r,i)=>{const d=document.createElement('div');d.className='rdot '+r;d.innerText=(i+1);dots.appendChild(d);});
+  document.getElementById('btn-replay').onclick=()=>{navigate('screen-settings');};
+  navigate('screen-score');
+  if(pct>=90)speakEn('You are perfect!!!');else speakEn('Keep it up! You can do it!');
+}
+
+// ======== MATCH GAME (Pinyin ing/ong) ========
+const MATCH_DATA={
+  ing:[
+    {L:'苹',R:'píng (แอปเปิ้ล)',speak:'苹果'},
+    {L:'钉',R:'dīng (ตะปู)',speak:'钉'},
+    {L:'听',R:'tīng (ฟัง)',speak:'听'},
+    {L:'星',R:'xīng (ดาว)',speak:'星'},
+    {L:'请',R:'qǐng (กรุณา)',speak:'请'},
+  ],
+  ong:[
+    {L:'东',R:'dōng (ทิศตะวันออก)',speak:'东'},
+    {L:'公',R:'gōng (สาธารณะ)',speak:'公'},
+    {L:'空',R:'kōng (ว่าง)',speak:'空'},
+    {L:'红',R:'hóng (แดง)',speak:'红'},
+    {L:'通',R:'tōng (ผ่าน)',speak:'通'},
+  ]
+};
+let mst={set:'',pairs:[],selL:null,selR:null,matched:0,wrong:0,locked:false};
+
+function startMatch(set){
+  mst={set,pairs:[],selL:null,selR:null,matched:0,wrong:0,locked:false};
+  mst.pairs=[...MATCH_DATA[set]].sort(()=>Math.random()-.5);
+  document.getElementById('match-set-select').style.display='none';
+  document.getElementById('match-result').style.display='none';
+  document.getElementById('match-board').style.display='block';
+  renderMatchBoard();
+}
+function renderMatchBoard(){
+  const pairs=mst.pairs,N=pairs.length;
+  const colL=document.getElementById('match-left');const colR=document.getElementById('match-right');
+  colL.innerHTML='';colR.innerHTML='';
+  const rightOrder=[...Array(N).keys()].sort(()=>Math.random()-.5);
+  const accentCol=mst.set==='ong'?'#d72638':'#2979ff';
+  pairs.forEach((p,i)=>{
+    const btn=document.createElement('button');btn.className='mc';btn.dataset.idx=i;btn.dataset.side='L';
+    btn.style.cssText='font-family:"Noto Serif SC",serif;font-size:24px;color:'+accentCol+';font-weight:700;';
+    btn.innerText=p.L;btn.onclick=()=>selectMatch(btn,'L',i,accentCol);colL.appendChild(btn);
+  });
+  rightOrder.forEach(i=>{
+    const p=pairs[i];const btn=document.createElement('button');btn.className='mc';btn.dataset.idx=i;btn.dataset.side='R';
+    btn.style.cssText='font-size:12px;color:#1a0a00;line-height:1.4;text-align:left;';
+    btn.innerText=p.R;btn.onclick=()=>selectMatch(btn,'R',i,accentCol);colR.appendChild(btn);
+  });
+  updateMatchProg();
+}
+function selectMatch(btn,side,idx,col){
+  if(mst.locked||btn.classList.contains('matched'))return;
+  if(side==='L'){document.querySelectorAll('#match-left .mc.selected').forEach(b=>b.classList.remove('selected'));if(mst.selL&&mst.selL.dataset.idx==idx){mst.selL=null;return;}btn.classList.add('selected');mst.selL=btn;}
+  else{document.querySelectorAll('#match-right .mc.selected').forEach(b=>b.classList.remove('selected'));if(mst.selR&&mst.selR.dataset.idx==idx){mst.selR=null;return;}btn.classList.add('selected');mst.selR=btn;}
+  if(mst.selL&&mst.selR){
+    const li=parseInt(mst.selL.dataset.idx),ri=parseInt(mst.selR.dataset.idx);
+    if(li===ri){mst.selL.classList.remove('selected');mst.selR.classList.remove('selected');mst.selL.classList.add('matched');mst.selR.classList.add('matched');mst.selL.style.pointerEvents='none';mst.selR.style.pointerEvents='none';mst.matched++;speakZh(mst.pairs[li].speak);mst.selL=null;mst.selR=null;updateMatchProg();if(mst.matched===mst.pairs.length)setTimeout(showMatchResult,600);}
+    else{mst.wrong++;mst.locked=true;mst.selL.classList.add('wrong');mst.selR.classList.add('wrong');setTimeout(()=>{mst.selL.classList.remove('selected','wrong');mst.selR.classList.remove('selected','wrong');mst.selL=null;mst.selR=null;mst.locked=false;},700);}
+  }
+}
+function updateMatchProg(){
+  const el=document.getElementById('match-progress');const hdr=document.getElementById('match-score-hdr');
+  if(el)el.innerText='จับคู่ถูก '+mst.matched+'/'+mst.pairs.length+' · ผิด '+mst.wrong+' ครั้ง';
+  if(hdr)hdr.innerText=mst.matched+'/'+mst.pairs.length;
+}
+function showMatchResult(){
+  const N=mst.pairs.length,m=mst.matched,w=mst.wrong;const perfect=m===N&&w===0;
+  const res=document.getElementById('match-result');res.className='card';res.style.cssText='display:block;text-align:center;padding:24px 16px;margin-top:12px;';
+  const stars=perfect?'⭐⭐⭐':m===N?'⭐⭐':'⭐';const msg=perfect?'สุดยอด! ไม่มีผิดเลย!':m===N?'เก่งมาก! ครบทุกคู่!':'จับคู่ได้ '+m+'/'+N+' คู่';
+  res.innerHTML='<div style="font-size:38px;margin-bottom:8px;">'+stars+'</div>'+'<div style="font-size:22px;font-weight:900;color:#d72638;margin-bottom:4px;">'+msg+'</div>'+'<div style="font-size:14px;color:#7a6652;margin-bottom:20px;">ถูก '+m+' · ผิด '+w+' ครั้ง</div>'+'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button onclick="startMatch(mst.set)" style="background:#d72638;color:#fff;border:none;padding:12px 22px;border-radius:30px;font-family:Kanit,sans-serif;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #9b1a25;">🔄 เล่นอีกครั้ง</button><button onclick="resetMatch()" style="background:#f0ebe3;color:#7a6652;border:none;padding:12px 22px;border-radius:30px;font-family:Kanit,sans-serif;font-size:15px;font-weight:800;cursor:pointer;">เลือกชุดใหม่</button></div>';
+  document.getElementById('match-board').style.display='none';
+  if(perfect)speakEn('You are perfect!!!');else speakEn('Keep it up! You can do it!');
+}
+function resetMatch(){
+  mst={set:'',pairs:[],selL:null,selR:null,matched:0,wrong:0,locked:false};
+  document.getElementById('match-set-select').style.display='block';
+  document.getElementById('match-board').style.display='none';
+  document.getElementById('match-result').style.display='none';
+  document.getElementById('match-score-hdr').innerText='0 คู่';
+}
+
+// ======== MATCH GAME 2 ========
+const MATCH2_DATA={
+  vocab:[
+    {L:'喜欢',R:'ชอบ (xǐ huan)',speak:'喜欢'},
+    {L:'颜色',R:'สี (yán sè)',speak:'颜色'},
+    {L:'红色',R:'สีแดง (hóng sè)',speak:'红色'},
+    {L:'粉红色',R:'สีชมพู (fěn hóng sè)',speak:'粉红色'},
+    {L:'不',R:'ไม่ (bù)',speak:'不'},
+  ],
+  conv:[
+    {L:'我喜欢红色。',R:'ฉันชอบสีแดง',speak:'我喜欢红色。'},
+    {L:'你呢？',R:'แล้วคุณล่ะ?',speak:'你呢？'},
+    {L:'我也喜欢红色。',R:'ฉันก็ชอบสีแดง',speak:'我也喜欢红色。'},
+    {L:'他喜欢粉红色。',R:'เขาชอบสีชมพู',speak:'他喜欢粉红色。'},
+  ]
+};
+let mst2={set:'',pairs:[],selL:null,selR:null,matched:0,wrong:0,locked:false};
+
+function startMatch2(set){
+  mst2={set,pairs:[],selL:null,selR:null,matched:0,wrong:0,locked:false};
+  mst2.pairs=[...MATCH2_DATA[set]].sort(()=>Math.random()-.5);
+  document.getElementById('match2-set-select').style.display='none';
+  document.getElementById('match2-result').style.display='none';
+  document.getElementById('match2-board').style.display='block';
+  renderMatch2Board();
+}
+function renderMatch2Board(){
+  const pairs=mst2.pairs,N=pairs.length;
+  const colL=document.getElementById('match2-left');const colR=document.getElementById('match2-right');
+  colL.innerHTML='';colR.innerHTML='';
+  const rightOrder=[...Array(N).keys()].sort(()=>Math.random()-.5);
+  const accentCol=mst2.set==='conv'?'#00796b':'#e65100';
+  pairs.forEach((p,i)=>{
+    const btn=document.createElement('button');btn.className='mc';btn.dataset.idx=i;btn.dataset.side='L';
+    btn.style.cssText='font-family:"Noto Serif SC",serif;font-size:'+(mst2.set==='conv'?'13':'20')+'px;color:'+accentCol+';font-weight:700;line-height:1.3;';
+    btn.innerText=p.L;btn.onclick=()=>selectMatch2(btn,'L',i,accentCol);colL.appendChild(btn);
+  });
+  rightOrder.forEach(i=>{
+    const p=pairs[i];const btn=document.createElement('button');btn.className='mc';btn.dataset.idx=i;btn.dataset.side='R';
+    btn.style.cssText='font-size:12px;color:#1a0a00;line-height:1.4;text-align:left;';
+    btn.innerText=p.R;btn.onclick=()=>selectMatch2(btn,'R',i,accentCol);colR.appendChild(btn);
+  });
+  updateMatch2Prog();
+}
+function selectMatch2(btn,side,idx,col){
+  if(mst2.locked||btn.classList.contains('matched'))return;
+  if(side==='L'){document.querySelectorAll('#match2-left .mc.selected').forEach(b=>b.classList.remove('selected'));if(mst2.selL&&mst2.selL.dataset.idx==idx){mst2.selL=null;return;}btn.classList.add('selected');mst2.selL=btn;}
+  else{document.querySelectorAll('#match2-right .mc.selected').forEach(b=>b.classList.remove('selected'));if(mst2.selR&&mst2.selR.dataset.idx==idx){mst2.selR=null;return;}btn.classList.add('selected');mst2.selR=btn;}
+  if(mst2.selL&&mst2.selR){
+    const li=parseInt(mst2.selL.dataset.idx),ri=parseInt(mst2.selR.dataset.idx);
+    if(li===ri){mst2.selL.classList.remove('selected');mst2.selR.classList.remove('selected');mst2.selL.classList.add('matched');mst2.selR.classList.add('matched');mst2.selL.style.pointerEvents='none';mst2.selR.style.pointerEvents='none';mst2.matched++;speakZh(mst2.pairs[li].speak);mst2.selL=null;mst2.selR=null;updateMatch2Prog();if(mst2.matched===mst2.pairs.length)setTimeout(showMatch2Result,600);}
+    else{mst2.wrong++;mst2.locked=true;mst2.selL.classList.add('wrong');mst2.selR.classList.add('wrong');setTimeout(()=>{mst2.selL.classList.remove('selected','wrong');mst2.selR.classList.remove('selected','wrong');mst2.selL=null;mst2.selR=null;mst2.locked=false;},700);}
+  }
+}
+function updateMatch2Prog(){
+  const el=document.getElementById('match2-progress');const hdr=document.getElementById('match2-score-hdr');
+  if(el)el.innerText='จับคู่ถูก '+mst2.matched+'/'+mst2.pairs.length+' · ผิด '+mst2.wrong+' ครั้ง';
+  if(hdr)hdr.innerText=mst2.matched+'/'+mst2.pairs.length;
+}
+function showMatch2Result(){
+  const N=mst2.pairs.length,m=mst2.matched,w=mst2.wrong;const perfect=m===N&&w===0;
+  const res=document.getElementById('match2-result');res.className='card';res.style.cssText='display:block;text-align:center;padding:24px 16px;margin-top:12px;';
+  const stars=perfect?'⭐⭐⭐':m===N?'⭐⭐':'⭐';const msg=perfect?'สุดยอด! ไม่มีผิดเลย!':m===N?'เก่งมาก! ครบทุกคู่!':'จับคู่ได้ '+m+'/'+N+' คู่';
+  res.innerHTML='<div style="font-size:38px;margin-bottom:8px;">'+stars+'</div>'+'<div style="font-size:22px;font-weight:900;color:#e65100;margin-bottom:4px;">'+msg+'</div>'+'<div style="font-size:14px;color:#7a6652;margin-bottom:20px;">ถูก '+m+' · ผิด '+w+' ครั้ง</div>'+'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button onclick="startMatch2(mst2.set)" style="background:#e65100;color:#fff;border:none;padding:12px 22px;border-radius:30px;font-family:Kanit,sans-serif;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #bf360c;">🔄 เล่นอีกครั้ง</button><button onclick="resetMatch2()" style="background:#f0ebe3;color:#7a6652;border:none;padding:12px 22px;border-radius:30px;font-family:Kanit,sans-serif;font-size:15px;font-weight:800;cursor:pointer;">เลือกชุดใหม่</button></div>';
+  document.getElementById('match2-board').style.display='none';
+  if(perfect)speakEn('You are perfect!!!');else speakEn('Keep it up! You can do it!');
+}
+function resetMatch2(){
+  mst2={set:'',pairs:[],selL:null,selR:null,matched:0,wrong:0,locked:false};
+  document.getElementById('match2-set-select').style.display='block';
+  document.getElementById('match2-board').style.display='none';
+  document.getElementById('match2-result').style.display='none';
+  document.getElementById('match2-score-hdr').innerText='0 คู่';
+}
+
+function showModal(zh,py,th){document.getElementById('m-zh').innerText=zh;document.getElementById('m-py').innerText=py;document.getElementById('m-th').innerText='แปลว่า: '+th;document.getElementById('m-speak').onclick=()=>speakZh(zh);document.getElementById('modal').classList.add('open');speakZh(zh);}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+
+// ======== INIT ========
+window.addEventListener('DOMContentLoaded',()=>{
+  buildPracticeArea();
+  buildQuiz();
+});
+</script>
+</body>
+</html>
